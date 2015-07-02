@@ -2,13 +2,39 @@
 
 angular.module('myApp.view3', ['myApp.em', 'ngRoute'])
 
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/view3', {
-    templateUrl: 'view3/view3.html',
-    controller: 'View3Ctrl'
-  });
-}])
+        .config(['$routeProvider', function ($routeProvider) {
+                $routeProvider.when('/view3', {
+                    templateUrl: 'view3/view3.html',
+                    controller: 'View3Ctrl'
+                });
+            }])
 
-.controller('View3Ctrl', [function() {
-
-}]);
+        .controller('View3Ctrl', ['$scope', function ($scope) {
+                //Here we input the data we want to see in the tree
+                $scope.data = [
+                    {
+                        "name": "Top Level",
+                        "parent": "null",
+                        "children": [
+                            {
+                                "name": "Level 2: A",
+                                "parent": "Top Level",
+                                "children": [
+                                    {
+                                        "name": "Son of A",
+                                        "parent": "Level 2: A"
+                                    },
+                                    {
+                                        "name": "Daughter of A",
+                                        "parent": "Level 2: A"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Level 2: B",
+                                "parent": "Top Level"
+                            }
+                        ]
+                    }
+                ];
+            }]);
