@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute', 'myApp.analysis'])
+angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs'])
 
         .config(['$routeProvider', function ($routeProvider) {
                 $routeProvider.when('/view1', {
@@ -9,11 +9,11 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.analysis'])
                 });
             }])
 
-        .controller('View1Ctrl', function ($scope, Analysis) {
-            $scope.analyses = Analysis.getAnalyses();
+        .controller('View1Ctrl', function ($scope, Analyses) {
+            $scope.analyses = Analyses.getAnalyses();
 
             $scope.$watch('analyses', function () {
-                Analysis.setAnalyses($scope.analyses);
+                Analyses.setAnalyses($scope.analyses);
                 $scope.analysis = '';
             }, true);
 

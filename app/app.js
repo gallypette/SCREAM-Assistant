@@ -11,7 +11,7 @@ angular.module('myApp', [
     'myApp.view3',
     'myApp.view4',
     'myApp.emTree',
-    'myApp.analysis'
+    'myApp.rootLs'
 ])
         .config(['$routeProvider', function ($routeProvider) {
                 $routeProvider.otherwise({redirectTo: '/view1'});
