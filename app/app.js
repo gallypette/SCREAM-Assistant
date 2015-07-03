@@ -9,8 +9,8 @@ angular.module('myApp', [
   'myApp.view2',
   'myApp.view3',
   'myApp.view4',
-  'myApp.emTree'
-//  'myApp.analysis'
+  'myApp.emTree',
+  'myApp.analysis'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/view1'});
