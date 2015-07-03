@@ -1,16 +1,16 @@
 'use strict';
 
 angular.module('myApp.analysis', [])
-        .factory('Analysis', function () {
-            var analyses = ['item 1', 'sdfqsdf', 'item3'];
+        .factory('Analysis', function (localStorageService) {
             return {
                 "name": "Anonymous",
                 "Id": null,
                 "getAnalyses": function () {
-                    return analyses;
+                    var analysesInStore = localStorageService.get('analyses'); 
+                    return analysesInStore || [];
                 },
-                "addAnalysis": function (newAnalysis) {
-                    analyses.push(newAnalysis);
+                "setAnalyses": function (newSet) {
+                    localStorageService.set('analyses', newSet);
                 }
             }
         });

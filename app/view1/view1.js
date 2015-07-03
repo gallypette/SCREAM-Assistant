@@ -11,9 +11,17 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.analysis'])
 
         .controller('View1Ctrl', function ($scope, Analysis) {
             $scope.analyses = Analysis.getAnalyses();
-            $scope.addAnalysis = function () {
-                Analysis.addAnalysis($scope.analysis);
-                // Clears the input text field
+
+            $scope.$watch('analyses', function () {
+                Analysis.setAnalyses($scope.analyses);
                 $scope.analysis = '';
-            }           
+            }, true);
+
+            $scope.addAnalysis = function () {
+                $scope.analyses.push($scope.analysis);
+                // Clears the input text field
+                
+                // Update the view
+//                $scope.analyses = Analysis.getAnalyses();
+            }
         });
