@@ -9,8 +9,7 @@ angular.module('myApp', [
   'myApp.view2',
   'myApp.view3',
   'myApp.view4',
-  'myApp.version',
-  'myApp.emTree',
+  'myApp.emTree'
 //  'myApp.analysis'
 ]).
 config(['$routeProvider', function($routeProvider) {

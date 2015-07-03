@@ -2,3 +2,24 @@
 
 <p>Select one of the previous analysis from the list below or create a new one
 by clicking the 'New Analysis' button</p>
+
+<div class="container">
+  <h2>List of analyses</h2>
+
+  <!-- Analysis input -->
+  <form role="form" ng-submit="addAnalysis()">
+    <div class="row">
+      <div class="input-group">
+        <input type="text" ng-model="analysis" placeholder="Analysis \'s name" class="form-control">
+        <span class="input-group-btn">
+          <input type="submit" class="btn btn-primary" value="Add">
+        </span>
+      </div>
+    </div>
+  </form>
+
+    <!-- Analysis list -->
+    <p class="form-group" ng-repeat="analysis in analyses">
+      <input type="text" ng-model="analysis" class="form-control">
+    </p>
+</div>
