@@ -1,6 +1,6 @@
 'use strict';
 
-// Factory that loads scheams from json
+// Factory that loads schemas from json
 angular.module('schemas', [])
   .factory('schemasFactory', function ($q, $http) {
     return {

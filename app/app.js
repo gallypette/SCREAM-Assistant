@@ -4,13 +4,14 @@
 angular.module('myApp', [
   'ngRoute',
   'd3',
+  'schemas',
   'myApp.view1',
   'myApp.view2',
   'myApp.view3',
   'myApp.view4',
   'myApp.version',
-  'myApp.em',
-  'schemas'
+  'myApp.emTree',
+//  'myApp.analysis'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/view1'});

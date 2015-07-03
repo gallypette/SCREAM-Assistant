@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view3', ['myApp.em', 'ngRoute'])
+angular.module('myApp.view3', ['myApp.emTree', 'ngRoute'])
 
         .config(['$routeProvider', function ($routeProvider) {
                 $routeProvider.when('/view3', {
@@ -13,7 +13,7 @@ angular.module('myApp.view3', ['myApp.em', 'ngRoute'])
                 //Here we input the data we want to see in the tree
                 $scope.data = [
                     {
-                        "name": "Top Level",
+                        "name": "Wrong object",
                         "parent": "null",
                         "children": [
                             {
