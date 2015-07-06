@@ -7,12 +7,19 @@
 <!-- Analysis input -->
 <form role="form" ng-submit="addAnalysis()">
     <div class="row">
-        <div class="input-group">
+
+        <div class="form-group">
+            <label for="analysisName">Name of the new security analysis</label>
             <input type="text" ng-model="analysis.name" placeholder="Analysis's name" class="form-control">
+        </div>  
+        <div class="form-group">
+            <label for="analysisDesc">Description of the new analysis</label>
             <input type="textarea" ng-model="analysis.desc" placeholder="Description" class="form-control">
+            <input type="hidden" ng-model="analysis.date">
         </div>
+
         <span class="input-group-btn">
-            <input type="submit" class="btn btn-primary" value="Add">
+            <input type="submit" class="btn btn-primary" value="Create new analysis">
         </span>
     </div>
 </form>
@@ -34,13 +41,12 @@
         </tr>
     </thead>
     <tbody>
-    <form role="form" ng-submit="addAnalysis()">
         <tr ng-repeat="analysis in analyses">
             <td>{{analysis.name}}</td>
             <td>{{analysis.desc}}</td>
             <td>{{analysis.date}}</td>
-            <td><button type="button" class="btn btn-primary" ng-submit="()">Action</button></td>
+            <td><button type="button" class="btn btn-primary" ng-click="selectAnalysis(analysis)">Select</button></td>
+            <td><button type="button" class="btn btn-danger" ng-click="deleteAnalysis(analysis)">Delete</button></td>
         </tr>
-    </form>
 </tbody>
 </table>

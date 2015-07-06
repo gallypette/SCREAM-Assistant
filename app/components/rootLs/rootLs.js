@@ -19,6 +19,15 @@ angular.module('myApp.rootLs', [])
                     anal.push(newAnalysis);
                     console.log(anal);
                     localStorageService.set('anal', anal);
+                },
+                "deleteAnalysis": function (delAnalysis) {
+                    console.log(delAnalysis);
+                    var anal = localStorageService.get('anal') || [];
+                    anal = splice($scope.projects.indexOf(project),1);
+                    anal = $filter('filter')({name: delAnalysis.name, desc: delAnalysis.desc}, true);
+                    anal.push(newAnalysis);
+                    console.log(delAnalysis);
+                    localStorageService.set('anal', anal);
                 }
             }
         })
@@ -30,12 +39,15 @@ angular.module('myApp.rootLs', [])
                     var r = Root.getAnalysesList();
                     return r;
                 },
-                "addAnalysis": function (name, desc) {
-                    var tmp = {'name': name,
-                        'desc': desc,
-                        'date': new Date()
+                "addAnalysis": function (newAnalysis) {
+                    var tmp = {'name': newAnalysis.name,
+                        'desc': newAnalysis.desc,
+                        'date': newAnalysis.date
                     };
                     Root.addAnalysis(tmp);
+                },
+                "deleteAnalysis": function (delAnalysis) {
+                    Root.deleteAnalysis(delAnalysis);
                 }
             }
         })

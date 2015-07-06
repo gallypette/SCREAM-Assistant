@@ -10,19 +10,21 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore'])
             }])
 
         .controller('View1Ctrl', function ($scope, Analyses, _) {
-            
+
             $scope.analyses = Analyses.getAnalyses();
 
             $scope.$watch('analyses', function (newValue, oldValue) {
-                (_.isEmpty($scope.analysis)) ? "" : Analyses.addAnalysis($scope.analysis.name, $scope.analysis.desc);
-                $scope.analysis = '';
+                (_.isEmpty($scope.analysis)) ? "" : Analyses.addAnalysis($scope.analysis);
+                $scope.analysis = ''
             }, true);
 
             $scope.addAnalysis = function () {
+                $scope.analysis.date = new Date();
                 $scope.analyses.push($scope.analysis);
-                // Clears the input text field
+            }
 
-                // Update the view
-//                $scope.analyses = Analysis.getAnalyses();
+            $scope.deleteAnalysis = function (analysis) {
+//                console.log("deleting "+analysis.name);
+                Analyses.deleteAnalysis(analysis);
             }
         });
