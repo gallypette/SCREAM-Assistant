@@ -13,6 +13,7 @@
     "html5-boilerplate": "~5.2.0",
     "d3": "~3.5.5",
     "bootstrap": "~3.3.5",
-    "angular-local-storage": "~0.2.2"
+    "angular-local-storage": "~0.2.2",
+    "underscore": "~1.8.3"
   }
 }

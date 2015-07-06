@@ -4,6 +4,7 @@
 angular.module('myApp', [
     'ngRoute',
     'd3',
+    'underscore',
     'schemas',
     'LocalStorageModule',
     'myApp.view1',
