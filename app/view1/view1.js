@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs'])
+angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore'])
 
         .config(['$routeProvider', function ($routeProvider) {
                 $routeProvider.when('/view1', {
@@ -9,18 +9,19 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs'])
                 });
             }])
 
-        .controller('View1Ctrl', function ($scope, Analyses) {
+        .controller('View1Ctrl', function ($scope, Analyses, _) {
+            
             $scope.analyses = Analyses.getAnalyses();
 
-            $scope.$watch('analyses', function () {
-                Analyses.setAnalyses($scope.analyses);
+            $scope.$watch('analyses', function (newValue, oldValue) {
+                (_.isEmpty($scope.analysis)) ? "" : Analyses.addAnalysis($scope.analysis.name, $scope.analysis.desc);
                 $scope.analysis = '';
             }, true);
 
             $scope.addAnalysis = function () {
                 $scope.analyses.push($scope.analysis);
                 // Clears the input text field
-                
+
                 // Update the view
 //                $scope.analyses = Analysis.getAnalyses();
             }

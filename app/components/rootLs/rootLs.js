@@ -2,33 +2,45 @@
 
 angular.module('myApp.rootLs', [])
 
-        // Root store
-        .factory('Root', function (localStorageService) {
+        // Root store handler
+        .factory('Root', function (_, localStorageService, $filter) {
+
             return {
-                "getRoot": function () {
-                    var root = localStorageService.get('root'); 
-                    return root;
+                "getAnalysesList": function () {
+                    var anal = localStorageService.get('anal') || [];
+                    return anal;
                 },
-                "setRoot": function (root) {
-                    localStorageService.set('root', root);
+                "getAnalysis": function (match) {
+                    var anal = localStorageService.get('anal') || [];
+                    return anal = $filter('filter')({name: match}, true);
+                },
+                "addAnalysis": function (newAnalysis) {
+                    var anal = localStorageService.get('anal') || [];
+                    anal.push(newAnalysis);
+                    console.log(anal);
+                    localStorageService.set('anal', anal);
                 }
             }
         })
-        
+
         // Analyses stores a set of analysis
         .factory('Analyses', function (Root) {
             return {
                 "getAnalyses": function () {
-                    var r = Root.getRoot(); 
-                    return r || [];
+                    var r = Root.getAnalysesList();
+                    return r;
                 },
-                "setAnalyses": function (newSet) {
-                    Root.setRoot(newSet);
+                "addAnalysis": function (name, desc) {
+                    var tmp = {'name': name,
+                        'desc': desc,
+                        'date': new Date()
+                    };
+                    Root.addAnalysis(tmp);
                 }
             }
         })
-        
-        // Analysis stores the analysis details
+
+        // Analysis stores one analysis's details
         .factory('Analysis', function (Analyses) {
             return {
                 "getAnalysis": function (id) {

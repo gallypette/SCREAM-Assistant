@@ -3,23 +3,44 @@
 <p>Select one of the previous analysis from the list below or create a new one
     by clicking the 'New Analysis' button</p>
 
-<h2>List of analyses</h2>
-
+<h2>Create new analysis</h2>
 <!-- Analysis input -->
 <form role="form" ng-submit="addAnalysis()">
     <div class="row">
         <div class="input-group">
-            <input type="text" ng-model="analysis" placeholder="Analysis's name" class="form-control">
-            <span class="input-group-btn">
-                <input type="submit" class="btn btn-primary" value="Add">
-            </span>
+            <input type="text" ng-model="analysis.name" placeholder="Analysis's name" class="form-control">
+            <input type="textarea" ng-model="analysis.desc" placeholder="Description" class="form-control">
         </div>
+        <span class="input-group-btn">
+            <input type="submit" class="btn btn-primary" value="Add">
+        </span>
     </div>
 </form>
 
 <br/>
 
+<h2>List of analyses</h2>
 <!-- Analysis list -->
 <p class="form-group" ng-repeat="analysis in analyses">
-    <button type="button" class="btn btn-primary" ng-model="analysis">{{analysis}}</button>
+
 </p>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Creation date</th>
+        </tr>
+    </thead>
+    <tbody>
+    <form role="form" ng-submit="addAnalysis()">
+        <tr ng-repeat="analysis in analyses">
+            <td>{{analysis.name}}</td>
+            <td>{{analysis.desc}}</td>
+            <td>{{analysis.date}}</td>
+            <td><button type="button" class="btn btn-primary" ng-submit="()">Action</button></td>
+        </tr>
+    </form>
+</tbody>
+</table>
