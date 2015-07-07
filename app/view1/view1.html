@@ -1,36 +1,25 @@
-<p>Welcome in the SCREAM analysis tool.</p>
+<h2>Welcome in the SCREAM analysis tool.</h2>
 
-<p>Select one of the previous analysis from the list below or create a new one
-    by clicking the 'New Analysis' button</p>
+<p>Here is the current analysis running, select one of the previous analysis from the list below or create a new one
+by clicking the 'Create new analysis' button.</p>
 
-<h2>Create new analysis</h2>
-<!-- Analysis input -->
-<form name="addForm" role="form" ng-submit="addAnalysis()">
-    <div class="row">
-
-        <div class="form-group">
-            <label for="analysisName">Name of the new security analysis</label>
-            <div class="alert alert-warning" ng-show="!addForm.nameControl.$valid">
-                <span ng-show="addForm.nameControl.$error.required">Required!</span>
-                <span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
-                <span ng-hide="unique" >The name must be unique!</span>
-            </div>
-            <input type="text" ng-model="analysis.name" name="nameControl" placeholder="Analysis's name" class="form-control" required="required" ng-minlength="3">
-
-            <div class="form-group">
-                <label for="analysisDesc">Description of the new analysis</label>
-                <input type="textarea" ng-model="analysis.desc" placeholder="Description" class="form-control">
-                <input type="hidden" ng-model="analysis.date">
-            </div>
-
-            <span class="input-group-btn">
-                <input type="submit" class="btn btn-primary" value="Create new analysis">
-            </span>
-            <div class="alert alert-danger" ng-hide="unique">
-                <span>The name must be unique!</span>
-            </div>
-        </div>
-</form>
+<table class="table table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Creation date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{current.name}}</td>
+			<td>{{current.desc}}</td>
+			<td>{{current.date}}</td>
+			<td><button type="button" class="btn btn-primary" ng-click="storeCurrent(current)">Store</button></td>
+		</tr>
+	</tbody>
+</table>
 
 <br/>
 
@@ -41,22 +30,51 @@
 </p>
 
 <table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Creation date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="analysis in analyses">
-            <td>{{analysis.name}}</td>
-            <td>{{analysis.desc}}</td>
-            <td>{{analysis.date}}</td>
-            <td><button type="button" class="btn btn-success" ng-click="selectAnalysis(analysis)">Select</button></td>
-            <td><button type="button" class="btn btn-primary" ng-click="exportAnalysis(analysis)">Export</button></td>
-            <td><button type="button" class="btn btn-primary" ng-click="importAnalysis(analysis)">Import</button></td>
-            <td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAnalysis(analysis)">Delete</button></td>
-        </tr>
-    </tbody>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Creation date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="analysis in analyses">
+			<td>{{analysis.name}}</td>
+			<td>{{analysis.desc}}</td>
+			<td>{{analysis.date}}</td>
+			<td><button type="button" class="btn btn-success" ng-click="selectAnalysis(analysis)">Select</button></td>
+			<td><button type="button" class="btn btn-primary" ng-click="exportAnalysis(analysis)">Export</button></td>
+			<td><button type="button" class="btn btn-primary" ng-click="importAnalysis(analysis)">Import</button></td>
+			<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAnalysis(analysis)">Delete</button></td>
+		</tr>
+	</tbody>
 </table>
+
+<h2>Create new analysis</h2>
+<!-- Analysis input -->
+<form name="addForm" role="form" ng-submit="addAnalysis()">
+	<div class="row">
+
+		<div class="form-group">
+			<label for="analysisName">Name of the new security analysis</label>
+			<div class="alert alert-warning" ng-show="!addForm.nameControl.$valid">
+				<span ng-show="addForm.nameControl.$error.required">Required!</span>
+				<span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
+				<span ng-hide="unique" >The name must be unique!</span>
+			</div>
+			<input type="text" ng-model="analysis.name" name="nameControl" placeholder="Analysis's name" class="form-control" required="required" ng-minlength="3">
+
+			<div class="form-group">
+				<label for="analysisDesc">Description of the new analysis</label>
+				<input type="textarea" ng-model="analysis.desc" placeholder="Description" class="form-control">
+				<input type="hidden" ng-model="analysis.date">
+			</div>
+
+			<span class="input-group-btn">
+				<input type="submit" class="btn btn-primary" value="Create new analysis">
+			</span>
+			<div class="alert alert-danger" ng-hide="unique">
+				<span>The name must be unique!</span>
+			</div>
+		</div>
+</form>

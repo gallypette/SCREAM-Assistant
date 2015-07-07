@@ -62,6 +62,14 @@ angular.module('myApp.rootLs', [])
 				setCurrent(analysis);
 				// Eventually, we remove the new current from the repository
 				Root.deleteAnalysis(analysis);
+			},
+			"getCurrent": function () {
+				var curr = localStorageService.get('current');
+				if (curr == null) {
+					return null;
+				} else {
+					return curr;
+				}
 			}
 		}
 	})
