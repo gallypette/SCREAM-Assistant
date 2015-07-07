@@ -14,8 +14,11 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore'])
             $scope.analyses = Analyses.getAnalyses();
 
             $scope.$watch('analyses', function (newValue, oldValue) {
-                (_.isEmpty($scope.analysis)) ? "" : Analyses.addAnalysis($scope.analysis);
-                $scope.analysis = ''
+                // Add
+                if (newValue.length > oldValue.length) {
+                    (_.isEmpty($scope.analysis)) ? "" : Analyses.addAnalysis($scope.analysis);
+                    $scope.analysis = ''
+                }
             }, true);
 
             $scope.addAnalysis = function () {
@@ -25,6 +28,9 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore'])
 
             $scope.deleteAnalysis = function (analysis) {
 //                console.log("deleting "+analysis.name);
+                $scope.analyses = _.reject($scope.analyses, function (item) {
+                    return ((item.name == analysis.name) && (item.desc == analysis.desc))
+                });
                 Analyses.deleteAnalysis(analysis);
             }
         });

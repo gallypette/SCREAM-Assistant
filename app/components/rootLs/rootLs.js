@@ -21,12 +21,8 @@ angular.module('myApp.rootLs', [])
                     localStorageService.set('anal', anal);
                 },
                 "deleteAnalysis": function (delAnalysis) {
-                    console.log(delAnalysis);
                     var anal = localStorageService.get('anal') || [];
-                    anal = splice($scope.projects.indexOf(project),1);
-                    anal = $filter('filter')({name: delAnalysis.name, desc: delAnalysis.desc}, true);
-                    anal.push(newAnalysis);
-                    console.log(delAnalysis);
+                    anal = _.reject(anal, function(item){ return ((item.name == delAnalysis.name) && (item.desc == delAnalysis.desc)) });
                     localStorageService.set('anal', anal);
                 }
             }
