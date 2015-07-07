@@ -12,6 +12,7 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore', 'ngReall
         .controller('View1Ctrl', function ($scope, Root, _) {
 
             $scope.analyses = Root.getAnalyses();
+            $scope.unique = true;
 
             $scope.$watch('analyses', function (newValue, oldValue) {
                 // Add
@@ -22,8 +23,16 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore', 'ngReall
             }, true);
 
             $scope.addAnalysis = function () {
-                $scope.analysis.date = new Date();
-                $scope.analyses.push($scope.analysis);
+                if (_.isUndefined(_.find($scope.analyses, function (item) {
+                    return ($scope.analysis.name == item.name)
+                }))) {
+                    $scope.unique = true;
+                    $scope.analysis.date = new Date();
+                    $scope.analyses.push($scope.analysis);
+                } else {
+                    $scope.unique = false;
+                    console.log($scope.unique);
+                }
             }
 
             $scope.deleteAnalysis = function (analysis) {
