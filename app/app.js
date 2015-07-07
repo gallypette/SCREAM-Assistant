@@ -6,6 +6,7 @@ angular.module('myApp', [
     'd3',
     'underscore',
     'schemas',
+    'ngReally',
     'LocalStorageModule',
     'myApp.view1',
     'myApp.view2',

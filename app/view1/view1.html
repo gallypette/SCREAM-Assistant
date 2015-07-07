@@ -46,7 +46,7 @@
             <td>{{analysis.desc}}</td>
             <td>{{analysis.date}}</td>
             <td><button type="button" class="btn btn-primary" ng-click="selectAnalysis(analysis)">Select</button></td>
-            <td><button type="button" class="btn btn-danger" ng-click="deleteAnalysis(analysis)">Delete</button></td>
+            <td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAnalysis(analysis)">Delete</button></td>
         </tr>
 </tbody>
 </table>

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore'])
+angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore', 'ngReally'])
 
         .config(['$routeProvider', function ($routeProvider) {
                 $routeProvider.when('/view1', {
