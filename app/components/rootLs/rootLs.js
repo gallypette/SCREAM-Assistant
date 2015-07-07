@@ -3,7 +3,7 @@
 angular.module('myApp.rootLs', [])
 
         // Repository store handler
-        .factory('Root', function (_, localStorageService, $filter) {
+        .factory('Root', function (_, localStorageService) {
 
             return {
                 "getAnalyses": function () {
@@ -23,7 +23,7 @@ angular.module('myApp.rootLs', [])
                 "deleteAnalysis": function (delAnalysis) {
                     var anal = localStorageService.get('repository') || [];
                     anal = _.reject(anal, function (item) {
-                        return ((item.name == delAnalysis.name) && (item.desc == delAnalysis.desc))
+                        return (item.name == delAnalysis.name)
                     });
                     localStorageService.set('repository', anal);
                 }
@@ -31,7 +31,7 @@ angular.module('myApp.rootLs', [])
         })
 
         // Current analysis store handler
-        .factory('Curr', function (_, localStorageService, $filter) {
+        .factory('Curr', function (_, localStorageService) {
 
 
         })
