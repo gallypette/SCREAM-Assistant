@@ -2,60 +2,37 @@
 
 angular.module('myApp.rootLs', [])
 
-        // Root store handler
+        // Repository store handler
         .factory('Root', function (_, localStorageService, $filter) {
 
             return {
-                "getAnalysesList": function () {
-                    var anal = localStorageService.get('anal') || [];
+                "getAnalyses": function () {
+                    var anal = localStorageService.get('repository') || [];
                     return anal;
                 },
                 "getAnalysis": function (match) {
-                    var anal = localStorageService.get('anal') || [];
+                    var anal = localStorageService.get('repository') || [];
                     return anal = $filter('filter')({name: match}, true);
                 },
                 "addAnalysis": function (newAnalysis) {
-                    var anal = localStorageService.get('anal') || [];
+                    var anal = localStorageService.get('repository') || [];
                     anal.push(newAnalysis);
                     console.log(anal);
-                    localStorageService.set('anal', anal);
+                    localStorageService.set('repository', anal);
                 },
                 "deleteAnalysis": function (delAnalysis) {
-                    var anal = localStorageService.get('anal') || [];
-                    anal = _.reject(anal, function(item){ return ((item.name == delAnalysis.name) && (item.desc == delAnalysis.desc)) });
-                    localStorageService.set('anal', anal);
+                    var anal = localStorageService.get('repository') || [];
+                    anal = _.reject(anal, function (item) {
+                        return ((item.name == delAnalysis.name) && (item.desc == delAnalysis.desc))
+                    });
+                    localStorageService.set('repository', anal);
                 }
             }
         })
 
-        // Analyses stores a set of analysis
-        .factory('Analyses', function (Root) {
-            return {
-                "getAnalyses": function () {
-                    var r = Root.getAnalysesList();
-                    return r;
-                },
-                "addAnalysis": function (newAnalysis) {
-                    var tmp = {'name': newAnalysis.name,
-                        'desc': newAnalysis.desc,
-                        'date': newAnalysis.date
-                    };
-                    Root.addAnalysis(tmp);
-                },
-                "deleteAnalysis": function (delAnalysis) {
-                    Root.deleteAnalysis(delAnalysis);
-                }
-            }
+        // Current analysis store handler
+        .factory('Curr', function (_, localStorageService, $filter) {
+
+
         })
-
-        // Analysis stores one analysis's details
-        .factory('Analysis', function (Analyses) {
-            return {
-                "getAnalysis": function (id) {
-
-                },
-                "setAnalysis": function (newAnalysis) {
-
-                }
-            }
-        });
+;

@@ -9,14 +9,14 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore', 'ngReall
                 });
             }])
 
-        .controller('View1Ctrl', function ($scope, Analyses, _) {
+        .controller('View1Ctrl', function ($scope, Root, _) {
 
-            $scope.analyses = Analyses.getAnalyses();
+            $scope.analyses = Root.getAnalyses();
 
             $scope.$watch('analyses', function (newValue, oldValue) {
                 // Add
                 if (newValue.length > oldValue.length) {
-                    (_.isEmpty($scope.analysis)) ? "" : Analyses.addAnalysis($scope.analysis);
+                    (_.isEmpty($scope.analysis)) ? "" : Root.addAnalysis($scope.analysis);
                     $scope.analysis = ''
                 }
             }, true);
@@ -31,6 +31,6 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore', 'ngReall
                 $scope.analyses = _.reject($scope.analyses, function (item) {
                     return ((item.name == analysis.name) && (item.desc == analysis.desc))
                 });
-                Analyses.deleteAnalysis(analysis);
+                Root.deleteAnalysis(analysis);
             }
         });
