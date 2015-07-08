@@ -42,15 +42,7 @@ angular.module('myApp.rootLs', [])
 			//First we check if the current Ls exists
 			var curr = localStorageService.get('current');
 			if (curr !== null) {
-				// Then, we call Root.getAnalysis to see if we need to update or create
-				if (_.isUndefined(Root.getAnalysis(curr.name))) {
-					addAnalysis(curr);
-				} else {// Update
-					console.log('update !');
-					Root.deleteAnalysis(curr);
-					Root.addAnalysis(curr)
-				}
-
+				Root.addAnalysis(curr)
 			}
 		}
 
