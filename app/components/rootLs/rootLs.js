@@ -39,9 +39,9 @@ angular.module('myApp.rootLs', [])
 
 		// Save the current Analysis into the repository
 		var saveCurrent = function () {
-			//First we check if the current Ls exists
 			var curr = localStorageService.get('current');
-			if (curr !== null) {
+			//We check if the current Ls exists
+			if ((curr !== null) && (!_.isUndefined(curr.name))) {
 				Root.addAnalysis(curr)
 			}
 		}
@@ -62,6 +62,12 @@ angular.module('myApp.rootLs', [])
 				} else {
 					return curr;
 				}
+			},
+			"storeCurrent": function(){
+				// First we save the current analysis in the repository
+				saveCurrent();
+				// Then we pick the new one and place it in current
+				setCurrent('');
 			}
 		}
 	})

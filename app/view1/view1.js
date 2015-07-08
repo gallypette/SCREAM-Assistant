@@ -12,11 +12,19 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore', 'ngReall
 	.controller('View1Ctrl', function ($scope, Root, Current, _) {
 
 		$scope.unique = true;
+		$scope.currentIsSet = false;
 
 		var refresh = function () {
 			$scope.analyses = Root.getAnalyses();
 			$scope.current = Current.getCurrent();
+
+			if (($scope.current == '') || ($scope.current == null)) {
+				$scope.currentIsSet = false;
+			} else {
+				$scope.currentIsSet = true;
+			}
 		}
+
 
 		$scope.addAnalysis = function () {
 			if (_.isUndefined(_.find($scope.analyses, function (item) {
@@ -40,6 +48,11 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore', 'ngReall
 
 		$scope.selectAnalysis = function (analysis) {
 			Current.selectCurrent(analysis);
+			refresh();
+		}
+
+		$scope.storeCurrent = function (analysis) {
+			Current.storeCurrent(analysis);
 			refresh();
 		}
 
