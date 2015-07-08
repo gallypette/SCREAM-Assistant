@@ -27,9 +27,11 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore', 'ngReall
 
 
 		$scope.addAnalysis = function () {
-			if (_.isUndefined(_.find($scope.analyses, function (item) {
+			if ((_.isUndefined(_.find($scope.analyses, function (item) {
 				return ($scope.analysis.name == item.name)
-			}))) {
+			}))) && (
+				$scope.current.name != $scope.analysis.name)
+				) {
 				$scope.unique = true;
 				$scope.analysis.date = new Date();
 				(_.isEmpty($scope.analysis)) ? "" : Root.addAnalysis($scope.analysis);
