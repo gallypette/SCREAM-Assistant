@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view2', ['ngRoute', 'schemas'])
+angular.module('myApp.view2', [])
 
         .config(['$routeProvider', function ($routeProvider) {
                 $routeProvider.when('/view2', {
