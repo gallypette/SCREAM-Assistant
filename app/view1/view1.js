@@ -37,7 +37,6 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.rootLs', 'underscore', 'ngReall
 				(_.isEmpty($scope.analysis)) ? "" : Root.addAnalysis($scope.analysis);
 				$scope.analysis = ''
 				refresh();
-
 			} else {
 				$scope.unique = false;
 			}

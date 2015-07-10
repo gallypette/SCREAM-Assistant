@@ -68,7 +68,11 @@ angular.module('myApp.rootLs', [])
 				saveCurrent();
 				// Then we pick the new one and place it in current
 				setCurrent('');
+			},
+			"updateCurrent": function(analysis){
+				setCurrent(analysis);
 			}
+
 		}
 	})
 	;
