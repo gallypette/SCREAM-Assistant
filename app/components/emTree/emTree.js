@@ -1,7 +1,7 @@
 'use strict';
 
 // The emTree directive prints the tree corresponding to an error mode 
-angular.module('myApp.emTree', ['d3'])
+angular.module('myApp.emTree', [])
         .directive('errorModeTree', ['$window', 'd3Service', function ($window, d3Service) {
                 return {
                     restrict: 'A',
