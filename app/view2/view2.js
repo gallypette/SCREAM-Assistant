@@ -9,24 +9,37 @@ angular.module('myApp.view2', [])
 			});
 		}])
 
-	.controller('View2Ctrl', function ($scope, schemasFactory, xsltTransform) {
+	.controller('View2Ctrl', function ($scope, $q, schemasFactory, xsltTransform) {
 
 		var getScheme = function (scheme) {
-			schemasFactory.getFile(scheme)
+		}
+
+		var transform = function (xml, xsl) {
+
+			var xmlFile = schemasFactory.getFile(xml)
 				.then(function (response) {
 					return response;
 				}, function (error) {
 					console.error(error);
 					return(error);
 				});
-		}
 
-		var transform = function (xml, xsl) {
-			xml = getScheme('cdcatalog.xml');
-			xsl = getScheme('cdcatalog.xsl');
-			return xsltTransform.trans(xml, xsl);
+			var xslFile = schemasFactory.getFile(xsl)
+				.then(function (response) {
+					return response;
+				}, function (error) {
+					console.error(error);
+					return(error);
+				});
+
+			$q.all([xmlFile, xslFile]).then(function wrapUp(files) {
+				var transformResult = xsltTransform.transformXml(files[0].data, files[1].data);
+				console.log(transformResult);
+				$scope.result = transformResult;
+				return true;
+			});
+			return true;
 		}
 
 		$scope.result = transform('cdcatalog.xml', 'cdcatalog.xsl');
-
 	});
