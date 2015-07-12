@@ -12,7 +12,7 @@ angular.module('myApp.view2', [])
         .controller('View2Ctrl', function ($scope, schemasFactory) {
 
             $scope.creamtab = {};
-            schemasFactory.getCream()
+            schemasFactory.getFile('creamTables.json')
                     .then(function (response) {
                         $scope.creamtab = response;
                     }, function (error) {
