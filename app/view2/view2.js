@@ -9,7 +9,7 @@ angular.module('myApp.view2', [])
 			});
 		}])
 
-	.controller('View2Ctrl', function ($scope, $q, schemasFactory, xsltTransform) {
+	.controller('View2Ctrl', function ($sce, $scope, $q, schemasFactory, xsltTransform) {
 
 		var getScheme = function (scheme) {
 		}
@@ -35,11 +35,10 @@ angular.module('myApp.view2', [])
 			$q.all([xmlFile, xslFile]).then(function wrapUp(files) {
 				var transformResult = xsltTransform.transformXml(files[0].data, files[1].data);
 				console.log(transformResult);
-				$scope.result = transformResult;
+				$scope.result = $sce.trustAsHtml( transformResult );
 				return true;
 			});
-			return true;
 		}
 
-		$scope.result = transform('cdcatalog.xml', 'cdcatalog.xsl');
+		transform('cdcatalog.xml', 'cdcatalog.xsl');
 	});

@@ -46,7 +46,7 @@ angular.module('xsltProcessor', [])
 
 					var xsltProcessor = new XSLTProcessor();
 					xsltProcessor.importStylesheet(xslDoc);
-					result = xsltProcessor.transformToFragment(xmlDoc, document);
+					result = (new XMLSerializer()).serializeToString(xsltProcessor.transformToFragment(xmlDoc, document));
 				}
 				return result;
 			}
