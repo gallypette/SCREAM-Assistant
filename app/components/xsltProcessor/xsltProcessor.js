@@ -4,8 +4,7 @@ angular.module('xsltProcessor', [])
 	// Repository store handler
 	.factory('xsltTransform', function (_, $window, $document, schemasFactory) {
 
-// Return true if the webBrowser supports xslt
-
+		// Return true if the webBrowser supports xslt
 		var browserSupport = function () {
 			return ('ActiveXObject' in window ||
 				(angular.isDefined(XSLTProcessor) && angular.isDefined(XMLSerializer)));
@@ -27,7 +26,7 @@ angular.module('xsltProcessor', [])
 
 				var result = '';
 
-				// code for IE - untested, if you use IE YOLO...
+				// code for IE - untested, if you use IE, YOLO...
 				if (window.ActiveXObject)
 				{
 					_.map(parameters, function (value, param) {
