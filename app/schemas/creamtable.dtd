@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT cream (information,category+)>
+<!ATTLIST cream
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT information (name,desc)>
+<!ATTLIST information
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT category (name,desc,group+)>
+<!ATTLIST category
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT group (name,desc,gc+)>
+<!ATTLIST group
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT gc (name,desc,ga+,sa+,sc+)>
+<!ATTLIST gc
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT ga (name,desc)>
+<!ATTLIST ga
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT sa (name,desc)>
+<!ATTLIST sa
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT sc (name,desc)>
+<!ATTLIST sc
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT name (#PCDATA)>
+<!ATTLIST name
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT desc (#PCDATA)>
+<!ATTLIST desc
+  xmlns CDATA #FIXED ''>
