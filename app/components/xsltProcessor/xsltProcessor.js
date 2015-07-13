@@ -2,7 +2,7 @@
 angular.module('xsltProcessor', [])
 
 	// Repository store handler
-	.factory('xsltTransform', function ($window, $document, schemasFactory) {
+	.factory('xsltTransform', function (_, $window, $document, schemasFactory) {
 
 // Return true if the webBrowser supports xslt
 
@@ -20,15 +20,19 @@ angular.module('xsltProcessor', [])
 		}
 
 		return{
-			"transformXml": function (xml, xsl) {
+			// parameters is of {one: 1, two: 2, three: 3} type
+			"transformXml": function (xml, xsl, parameters) {
 				if (!browserSupport(window))
 					return 'XSL transformation is not supported by your browser';
 
 				var result = '';
 
-				// code for IE
+				// code for IE - untested, if you use IE YOLO...
 				if (window.ActiveXObject)
 				{
+					_.map(parameters, function (value, param) {
+						xsltProcessor.addParameter(param, value);
+					});
 					ex = xml.transformNode(xsl);
 					result = ex;
 				}
@@ -45,6 +49,9 @@ angular.module('xsltProcessor', [])
 						console.log('XSLT parse error: ' + err);
 
 					var xsltProcessor = new XSLTProcessor();
+					_.map(parameters, function (value, param) {
+						xsltProcessor.setParameter(null, param, value);
+					});
 					xsltProcessor.importStylesheet(xslDoc);
 					result = (new XMLSerializer()).serializeToString(xsltProcessor.transformToFragment(xmlDoc, document));
 				}

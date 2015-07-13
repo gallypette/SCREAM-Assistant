@@ -11,6 +11,12 @@ angular.module('myApp.view2', [])
 
 	.controller('View2Ctrl', function ($sce, $scope, $q, schemasFactory, xsltTransform) {
 
+		var parameters = {
+			"param1" : "Mon premier paramètre",
+			"param2" : "Mon deuxième paramètre",
+			"param3" : "Mon troisième paramètre"
+		};
+
 		var getScheme = function (scheme) {
 		}
 
@@ -33,12 +39,12 @@ angular.module('myApp.view2', [])
 				});
 
 			$q.all([xmlFile, xslFile]).then(function wrapUp(files) {
-				var transformResult = xsltTransform.transformXml(files[0].data, files[1].data);
+				var transformResult = xsltTransform.transformXml(files[0].data, files[1].data, parameters);
 				console.log(transformResult);
 				$scope.result = $sce.trustAsHtml( transformResult );
 				return true;
 			});
 		}
 
-		transform('cdcatalog.xml', 'cdcatalog.xsl');
+		transform('cdcatalog.xml', 'cdcatalog.xsl', parameters);
 	});
