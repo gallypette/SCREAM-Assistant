@@ -18,10 +18,14 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="ga[name='Wrong identification']">
+    <xsl:template match="category[name!='Error modes']/group/gc/ga[name='Wrong identification']">
         <name>Wrong identification</name>
         <desc></desc>
-        <tm>This is the Threat Model annotation</tm>
+        <tm>
+            !!
+            BOO
+            !!
+        </tm>
     </xsl:template>
 
 
