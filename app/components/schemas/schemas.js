@@ -4,9 +4,9 @@
 angular.module('schemas', [])
   .factory('schemasFactory', function ($q, $http) {
     return {
-      getCream: function () {
+      getFile: function (scheme) {
         var deferred = $q.defer(),
-          httpPromise = $http.get('schemas/creamTables.json');
+          httpPromise = $http.get('schemas/'+scheme);
 
         httpPromise.then(function (response) {
           deferred.resolve(response);

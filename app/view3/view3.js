@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view3', ['myApp.emTree', 'ngRoute'])
+angular.module('myApp.view3', [])
 
         .config(['$routeProvider', function ($routeProvider) {
                 $routeProvider.when('/view3', {
