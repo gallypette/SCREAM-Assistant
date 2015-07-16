@@ -9,12 +9,14 @@ angular.module('myApp.view2', [])
 			});
 		}])
 
-	.controller('View2Ctrl', function ($sce, $scope, $q, schemasFactory, xsltTransform) {
+	.controller('View2Ctrl', function ($sce, $scope, $q, schemasFactory, xsltTransform, analysisMenu) {
+
+		$scope.itemsMenu = analysisMenu;
 
 		var parameters = {
-			"param1" : "Mon premier paramètre",
-			"param2" : "Mon deuxième paramètre",
-			"param3" : "Mon troisième paramètre"
+			"param1": "Mon premier paramètre",
+			"param2": "Mon deuxième paramètre",
+			"param3": "Mon troisième paramètre"
 		};
 
 		var getScheme = function (scheme) {
@@ -41,7 +43,7 @@ angular.module('myApp.view2', [])
 			$q.all([xmlFile, xslFile]).then(function wrapUp(files) {
 				var transformResult = xsltTransform.transformXml(files[0].data, files[1].data, parameters);
 				console.log(transformResult);
-				$scope.result = $sce.trustAsHtml( transformResult );
+				$scope.result = $sce.trustAsHtml(transformResult);
 				return true;
 			});
 		}

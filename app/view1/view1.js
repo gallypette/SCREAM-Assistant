@@ -9,8 +9,9 @@ angular.module('myApp.view1', [])
 			});
 		}])
 
-	.controller('View1Ctrl', function ($scope, Root, Current, _) {
+	.controller('View1Ctrl', function ($scope, Root, Current, _, analysisMenu) {
 
+		$scope.itemsMenu = analysisMenu;
 		$scope.unique = true;
 		$scope.currentIsSet = false;
 
