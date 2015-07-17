@@ -9,8 +9,16 @@ angular.module('myApp.view1', [])
 			});
 		}])
 
-	.controller('View1Ctrl', function ($scope, Root, Current, _) {
+	.controller('View1Ctrl', function ($scope, Root, Current, _, analysisMenu) {
 
+		// Setting the menu
+		$scope.itemsMenu = analysisMenu;
+		$scope.isActive = function (url) {
+			return url === "#/view1" ? 'active' : '';
+		}
+		$scope.isActiveM = function (url) {
+			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
+		}
 		$scope.unique = true;
 		$scope.currentIsSet = false;
 

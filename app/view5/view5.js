@@ -1,19 +1,19 @@
 'use strict';
 
-angular.module('myApp.view4', [])
+angular.module('myApp.view5', [])
 
 	.config(['$routeProvider', function ($routeProvider) {
-			$routeProvider.when('/view4', {
-				templateUrl: 'view4/view4.html',
-				controller: 'View4Ctrl'
+			$routeProvider.when('/view5', {
+				templateUrl: 'view5/view5.html',
+				controller: 'View5Ctrl'
 			});
 		}])
 
-	.controller('View4Ctrl', function ($scope, analysisMenu) {
+	.controller('View5Ctrl', function ($scope, analysisMenu) {
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.isActive = function (url) {
-			return url === "#/view4" ? 'active' : '';
+			return url === "#/view5" ? 'active' : '';
 		}
 		$scope.isActiveM = function (url) {
 			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';

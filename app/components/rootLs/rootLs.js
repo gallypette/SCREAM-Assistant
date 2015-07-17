@@ -75,4 +75,18 @@ angular.module('myApp.rootLs', [])
 
 		}
 	})
+
+	// Attack Handler
+	.factory('Attack', function (_, localStorageService, Current) {
+
+		return{
+			"getAttack": function () {
+
+			},
+			"setAttack": function(attack){
+
+			}
+		}
+	})
+
 	;
