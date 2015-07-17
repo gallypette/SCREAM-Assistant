@@ -1,6 +1,4 @@
-<ul class="menu">
-	<li ng-repeat="item in itemsMenu"><a href={{item.url}}>{{item.text}}</a></li>
-</ul>
+<top-bar></top-bar>
 
 <h2>Welcome in the SCREAM analysis tool.</h2>
 
@@ -20,7 +18,7 @@
 			<tr>
 				<td>{{current.name}}</td>
 				<td>{{current.desc}}</td>
-				<td>{{current.date | date:'MM/dd/yyyy @ h:mma'}}</td>
+				<td>{{current.date| date:'MM/dd/yyyy @ h:mma'}}</td>
 				<td><button type="button" class="btn btn-primary" ng-click="storeCurrent(current)">Unselect</button></td>
 			</tr>
 		</tbody>
@@ -48,7 +46,7 @@
 			<tr ng-repeat="analysis in analyses">
 				<td>{{analysis.name}}</td>
 				<td>{{analysis.desc}}</td>
-				<td>{{analysis.date | date:'MM/dd/yyyy @ h:mma'}}</td>
+				<td>{{analysis.date| date:'MM/dd/yyyy @ h:mma'}}</td>
 				<td><button type="button" class="btn btn-success" ng-click="selectAnalysis(analysis)">Select</button></td>
 				<td><button type="button" class="btn btn-primary" ng-click="exportAnalysis(analysis)">Export</button></td>
 				<td><button type="button" class="btn btn-primary" ng-click="importAnalysis(analysis)">Import</button></td>

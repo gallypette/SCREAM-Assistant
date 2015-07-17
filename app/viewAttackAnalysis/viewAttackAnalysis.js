@@ -9,14 +9,14 @@ angular.module('myApp.viewAttackAnalysis', [])
 			});
 		}])
 
-	.controller('ViewAttackAnalysisCtrl', function ($scope) {
+	.controller('ViewAttackAnalysisCtrl', function ($scope, analysisMenu) {
 
-			$scope.itemsMenu = [
-				{url: '#/view1', text: 'view1' },
-				{url: '#/view2', text: 'view2' },
-				{url: '#/view3', text: 'view3' },
-				{url: '#/view4', text: 'view4' },
-				{url: '#/view5', text: 'view5' }
-			];
+		$scope.itemsMenu = analysisMenu;
+		$scope.isActive = function (url) {
+			return '';
+		}
+		$scope.isActiveM = function (url) {
+			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
+		}
 
-		});
+	});

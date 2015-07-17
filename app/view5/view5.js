@@ -11,6 +11,12 @@ angular.module('myApp.view5', [])
 
 	.controller('View5Ctrl', function ($scope, analysisMenu) {
 
-			$scope.itemsMenu = analysisMenu;
+		$scope.itemsMenu = analysisMenu;
+		$scope.isActive = function (url) {
+			return url === "#/view5" ? 'active' : '';
+		}
+		$scope.isActiveM = function (url) {
+			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
+		}
 
-		});
+	});

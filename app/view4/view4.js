@@ -11,6 +11,12 @@ angular.module('myApp.view4', [])
 
 	.controller('View4Ctrl', function ($scope, analysisMenu) {
 
-			$scope.itemsMenu = analysisMenu;
+		$scope.itemsMenu = analysisMenu;
+		$scope.isActive = function (url) {
+			return url === "#/view4" ? 'active' : '';
+		}
+		$scope.isActiveM = function (url) {
+			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
+		}
 
-		});
+	});

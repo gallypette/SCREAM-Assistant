@@ -12,6 +12,12 @@ angular.module('myApp.view2', [])
 	.controller('View2Ctrl', function ($sce, $scope, $q, schemasFactory, xsltTransform, analysisMenu) {
 
 		$scope.itemsMenu = analysisMenu;
+		$scope.isActive = function (url) {
+			return url === "#/view2" ? 'active' : '';
+		}
+		$scope.isActiveM = function (url) {
+			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
+		}
 
 		var parameters = {
 			"param1": "Mon premier paramètre",

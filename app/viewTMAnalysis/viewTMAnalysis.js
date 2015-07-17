@@ -9,11 +9,14 @@ angular.module('myApp.viewTMAnalysis', [])
 			});
 		}])
 
-	.controller('ViewTMAnalysisCtrl', function ($scope) {
+	.controller('ViewTMAnalysisCtrl', function ($scope,TMMenu) {
 
-			$scope.itemsMenu = [
-				{url: '#/TMview1', text: 'TMview1'},
-				{url: '#/TMview2', text: 'TMview2'}
-			];
+		$scope.itemsMenu = TMMenu;
+		$scope.isActive = function (url) {
+			return '';
+		}
+		$scope.isActiveM = function (url) {
+			return url === "#/viewTMAnalysis" ? 'active' : 'brand';
+		}
 
-		});
+	});

@@ -11,33 +11,40 @@ angular.module('myApp.view3', [])
 
 	.controller('View3Ctrl', function ($scope, analysisMenu) {
 
-			$scope.itemsMenu = analysisMenu;
-		
-			//Here we input the data we want to see in the tree
-			$scope.data = [
-				{
-					"name": "Wrong object",
-					"parent": "null",
-					"children": [
-						{
-							"name": "Level 2: A",
-							"parent": "Top Level",
-							"children": [
-								{
-									"name": "Son of A",
-									"parent": "Level 2: A"
-								},
-								{
-									"name": "Daughter of A",
-									"parent": "Level 2: A"
-								}
-							]
-						},
-						{
-							"name": "Level 2: B",
-							"parent": "Top Level"
-						}
-					]
-				}
-			];
-		});
+		$scope.itemsMenu = analysisMenu;
+
+		$scope.isActive = function (url) {
+			return url === "#/view3" ? 'active' : '';
+		}
+		$scope.isActiveM = function (url) {
+			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
+		}
+
+		//Here we input the data we want to see in the tree
+		$scope.data = [
+			{
+				"name": "Wrong object",
+				"parent": "null",
+				"children": [
+					{
+						"name": "Level 2: A",
+						"parent": "Top Level",
+						"children": [
+							{
+								"name": "Son of A",
+								"parent": "Level 2: A"
+							},
+							{
+								"name": "Daughter of A",
+								"parent": "Level 2: A"
+							}
+						]
+					},
+					{
+						"name": "Level 2: B",
+						"parent": "Top Level"
+					}
+				]
+			}
+		];
+	});

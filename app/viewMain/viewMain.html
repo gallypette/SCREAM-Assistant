@@ -1,8 +1,26 @@
-<ul class="menu">
-	<li ng-repeat="item in itemsMenu"><a href={{item.url}}>{{item.text}}</a></li>
-</ul>
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#/viewMain"><span class="glyphicon glyphicon-home"></span> Stool</a>
+		</div>
+		<div>
+			<ul class="nav navbar-nav">
+				<li ng-class="brand"><a href="#/viewTMAnalysis">STTM</a></li>
+				<li ng-class="brand"><a href="#/viewAttackAnalysis">SCREAM</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
 
-<h2>Welcome to Stool</h2>
+
+<div class="jumbotron">
+	<h2>Stool: the Socio-Technical Threat Modeller</h2>      
+	<p>Get started</p>
+</div>
+<p>This is some text.</p>      
+<p>This is another text.</p>     
+
+
 
 
 <p>You can either Analyse a Socio-Technical Capabilities by clicking on the

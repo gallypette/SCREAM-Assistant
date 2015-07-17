@@ -8,6 +8,7 @@ angular.module('myApp', [
 	'ngReally',
 	'LocalStorageModule',
 	'xsltProcessor',
+	'myApp.navBar',
 	'myApp.viewAttackAnalysis',
 	'myApp.viewMain',
 	'myApp.viewTMAnalysis',
@@ -26,11 +27,6 @@ angular.module('myApp', [
 	.config(['localStorageServiceProvider', function (localStorageServiceProvider) {
 			localStorageServiceProvider.setPrefix('scream');
 		}])
-
-	.constant('mainMenu', [
-		{url: '#/view1', text: 'view1'},
-		{url: '#/view2', text: 'view2'}
-	])
 
 	.constant('analysisMenu', [
 		{url: '#/view1', text: 'view1'},
