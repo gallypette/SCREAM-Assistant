@@ -1,6 +1,7 @@
 'use strict';
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
+	'js-data',
 	'ngRoute',
 	'd3',
 	'underscore',
@@ -29,14 +30,30 @@ angular.module('myApp', [
 		}])
 
 	.constant('analysisMenu', [
-		{url: '#/view1', text: 'view1'},
-		{url: '#/view2', text: 'view2'},
-		{url: '#/view3', text: 'view3'},
-		{url: '#/view4', text: 'view4'},
-		{url: '#/view5', text: 'view5'}
+		{url: '#/view1', text: 'Manage ST Capabilities'},
+		{url: '#/view5', text: 'Manage Attacks'},
+		{url: '#/view3', text: 'SCREAM Analysis'},
+		{url: '#/view4', text: 'Analysis Summary'},
+		{url: '#/view2', text: 'STC Summary'}
 	])
 
 	.constant('TMMenu', [
 		{url: '#/TMview1', text: 'TMview1'},
 		{url: '#/TMview2', text: 'TMview2'}
 	])
+	
+	.run(function (DS) {
+		var adapter = new DSLocalStorageAdapter();
+		var store = new JSData.DS();
+		store.registerAdapter('localstorage', adapter, {default: true});
+	})
+
+	.factory('Comment', function (DS) {
+		return DS.defineResource('comment');
+	})
+	
+	.controller('commentsCtrl', function ($scope, Comment) {
+		Comment.findAll().then(function (comments) {
+			$scope.comments = comments;
+		});
+	})
