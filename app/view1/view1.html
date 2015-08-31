@@ -56,29 +56,29 @@
 	</table>
 </div>
 
-<h2>Create new analysis</h2>
+<h2>Create new Socio-Technical Capability</h2>
 <!-- Analysis input -->
 <div class="well">
-	<form name="addForm" role="form" ng-submit="addAnalysis()">
+	<form name="addForm" role="form" ng-submit="addStc()">
 		<div class="row">
 
 			<div class="form-group">
-				<label for="analysisName">Name of the new security analysis</label>
+				<label for="stcName">Name of the new security capability</label>
 				<div class="alert alert-warning" ng-show="!addForm.nameControl.$valid">
 					<span ng-show="addForm.nameControl.$error.required">Required!</span>
 					<span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
 					<span ng-hide="unique" >The name must be unique!</span>
 				</div>
-				<input type="text" ng-model="analysis.name" name="nameControl" placeholder="Analysis's name" class="form-control" required="required" ng-minlength="3">
+				<input type="text" ng-model="stc.name" name="nameControl" placeholder="Capablity's name" class="form-control" required="required" ng-minlength="3">
 
 				<div class="form-group">
-					<label for="analysisDesc">Description of the new analysis</label>
-					<input type="textarea" ng-model="analysis.desc" placeholder="Description" class="form-control">
-					<input type="hidden" ng-model="analysis.date">
+					<label for="stcDesc">Description of the new capability</label>
+					<input type="textarea" ng-model="stc.desc" placeholder="Description" class="form-control">
+					<input type="hidden" ng-model="stc.date">
 				</div>
 
 				<span class="input-group-btn">
-					<input type="submit" class="btn btn-primary" value="Create new analysis">
+					<input type="submit" class="btn btn-primary" value="Create new capability">
 				</span>
 				<div class="alert alert-danger" ng-hide="unique">
 					<span>The name must be unique!</span>

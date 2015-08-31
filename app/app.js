@@ -25,9 +25,9 @@ angular.module('myApp', [
 			$routeProvider.otherwise({redirectTo: '/viewMain'});
 		}])
 
-	.config(['localStorageServiceProvider', function (localStorageServiceProvider) {
-			localStorageServiceProvider.setPrefix('scream');
-		}])
+//	.config(['localStorageServiceProvider', function (localStorageServiceProvider) {
+//			localStorageServiceProvider.setPrefix('scream');
+//		}])
 
 	.constant('analysisMenu', [
 		{url: '#/view1', text: 'Manage ST Capabilities'},
@@ -42,16 +42,20 @@ angular.module('myApp', [
 		{url: '#/TMview2', text: 'TMview2'}
 	])
 
-	.run(function (DS) {
-		var adapter = new DSLocalStorageAdapter();
-		var store = new JSData.DS();
-		store.registerAdapter('localstorage', adapter, {default: true});
+	.config(function (DSProvider, DSHttpAdapterProvider) {
+		angular.extend(DSProvider.defaults);
+		angular.extend(DSHttpAdapterProvider.defaults);
+	})
 
-		// We define our model here
-		// A Socio-Technical Capability has many Attack Modes
-		var Stc = store.defineResource({
-			name: 'stc',
-			relations: {
+	.factory('store', function () {
+		var store = new JSData.DS();
+		store.registerAdapter('localstorage', new DSLocalStorageAdapter(), {default: true});
+		return store;
+	})
+
+	.factory('Stc', function (store) {
+		return store.defineResource({
+			name: 'stc', relations: {
 				hasMany: {
 					am: [
 						{
@@ -62,9 +66,10 @@ angular.module('myApp', [
 				}
 			}
 		});
+	})
 
-		// An Attack Mode has one Analysis
-		var Am = store.defineResource({
+	.factory('Am', function (store) {
+		return store.defineResource({
 			name: 'am',
 			relations: {
 				hasOne: {
@@ -83,9 +88,10 @@ angular.module('myApp', [
 				}
 			}
 		});
+	})
 
-		// An Analysis
-		var Analysis = store.defineResource({
+	.factory('Analysis', function (store) {
+		return store.defineResource({
 			name: 'analysis',
 			relations: {
 				belongsTo: {

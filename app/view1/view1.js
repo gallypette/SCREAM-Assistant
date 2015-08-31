@@ -9,7 +9,7 @@ angular.module('myApp.view1', [])
 			});
 		}])
 
-	.controller('View1Ctrl', function ($scope, Root, Current, _, analysisMenu) {
+	.controller('View1Ctrl', function ($scope, Root, Current, _, analysisMenu, store, Stc) {
 
 		// Setting the menu
 		$scope.itemsMenu = analysisMenu;
@@ -48,6 +48,17 @@ angular.module('myApp.view1', [])
 			} else {
 				$scope.unique = false;
 			}
+		}
+
+		$scope.addStc = function () {
+			Stc.create({
+				id: 1,
+				name: $scope.stc.name,
+				desc: $scope.stc.desc
+//				date: $scope.stc.date,
+//				current: false
+			});
+			console.log('injected');
 		}
 
 		$scope.deleteAnalysis = function (analysis) {
