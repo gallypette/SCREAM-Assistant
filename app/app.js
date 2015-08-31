@@ -41,19 +41,59 @@ angular.module('myApp', [
 		{url: '#/TMview1', text: 'TMview1'},
 		{url: '#/TMview2', text: 'TMview2'}
 	])
-	
+
 	.run(function (DS) {
 		var adapter = new DSLocalStorageAdapter();
 		var store = new JSData.DS();
 		store.registerAdapter('localstorage', adapter, {default: true});
-	})
 
-	.factory('Comment', function (DS) {
-		return DS.defineResource('comment');
-	})
-	
-	.controller('commentsCtrl', function ($scope, Comment) {
-		Comment.findAll().then(function (comments) {
-			$scope.comments = comments;
+		// We define our model here
+		// A Socio-Technical Capability has many Attack Modes
+		var Stc = store.defineResource({
+			name: 'stc',
+			relations: {
+				hasMany: {
+					am: [
+						{
+							localField: 'ams',
+							foreignKey: 'stcId'
+						}
+					]
+				}
+			}
+		});
+
+		// An Attack Mode has one Analysis
+		var Am = store.defineResource({
+			name: 'am',
+			relations: {
+				hasOne: {
+					analysis: [
+						{
+							localField: 'analysis',
+							foreignKey: 'amId'
+						}
+					]
+				},
+				belongsTo: {
+					stc: {
+						localField: 'stc',
+						localKey: 'stcId'
+					}
+				}
+			}
+		});
+
+		// An Analysis
+		var Analysis = store.defineResource({
+			name: 'analysis',
+			relations: {
+				belongsTo: {
+					stc: {
+						localField: 'am',
+						localKey: 'amId'
+					}
+				}
+			}
 		});
 	})
