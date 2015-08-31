@@ -1,5 +1,4 @@
 'use strict';
-
 angular.module('myApp.view1', [])
 
 	.config(['$routeProvider', function ($routeProvider) {
@@ -21,11 +20,9 @@ angular.module('myApp.view1', [])
 		}
 		$scope.unique = true;
 		$scope.currentIsSet = false;
-
 		var refresh = function () {
 			$scope.analyses = Root.getAnalyses();
 			$scope.current = Current.getCurrent();
-
 			if (($scope.current == '') || ($scope.current == null)) {
 				$scope.currentIsSet = false;
 			} else {
@@ -50,15 +47,14 @@ angular.module('myApp.view1', [])
 			}
 		}
 
-		$scope.addStc = function () {
-			Stc.create({
-				id: 1,
-				name: $scope.stc.name,
-				desc: $scope.stc.desc
-//				date: $scope.stc.date,
-//				current: false
+		$scope.addStc = function (stc) {
+			stc.date = new Date();
+			return Stc.create(stc).then(function () {
+				console.log(stc.name + ' injected.');
+				stc.name = '';
+				stc.desc = '';
+				stc.id = null;
 			});
-			console.log('injected');
 		}
 
 		$scope.deleteAnalysis = function (analysis) {
