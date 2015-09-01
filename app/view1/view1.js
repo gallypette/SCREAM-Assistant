@@ -16,7 +16,7 @@ angular.module('myApp.view1', [])
 			});
 		}])
 
-	.controller('View1Ctrl', function ($route, $scope, Root, Current, _, analysisMenu, store, Stc) {
+	.controller('View1Ctrl', function ($route, $scope, _, analysisMenu, store, Stc) {
 
 		// We copy the list of stcs into the view
 		$scope.stcs = $route.current.locals.stcs;

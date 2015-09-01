@@ -18,16 +18,11 @@ angular.module('myApp', [
 	'myApp.view3',
 	'myApp.view4',
 	'myApp.view5',
-	'myApp.emTree',
-	'myApp.rootLs'
+	'myApp.emTree'
 ])
 	.config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.otherwise({redirectTo: '/viewMain'});
 		}])
-
-//	.config(['localStorageServiceProvider', function (localStorageServiceProvider) {
-//			localStorageServiceProvider.setPrefix('scream');
-//		}])
 
 	.constant('analysisMenu', [
 		{url: '#/view1', text: 'Manage ST Capabilities'},
