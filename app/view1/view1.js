@@ -4,11 +4,20 @@ angular.module('myApp.view1', [])
 	.config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.when('/view1', {
 				templateUrl: 'view1/view1.html',
-				controller: 'View1Ctrl'
+				controller: 'View1Ctrl',
+				resolve: {
+					stcs: function ($route, Stc) {
+						return Stc.findAll();
+					}
+				}
 			});
 		}])
 
-	.controller('View1Ctrl', function ($scope, Root, Current, _, analysisMenu, store, Stc) {
+	.controller('View1Ctrl', function ($route, $scope, Root, Current, _, analysisMenu, store, Stc) {
+
+		// We copy the list of stcs into the view
+		$scope.stcs = $route.current.locals.stcs;
+		console.log($scope.stcs.length + ' items were loaded from the store.');
 
 		// Setting the menu
 		$scope.itemsMenu = analysisMenu;
@@ -21,29 +30,11 @@ angular.module('myApp.view1', [])
 		$scope.unique = true;
 		$scope.currentIsSet = false;
 		var refresh = function () {
-			$scope.analyses = Root.getAnalyses();
 			$scope.current = Current.getCurrent();
 			if (($scope.current == '') || ($scope.current == null)) {
 				$scope.currentIsSet = false;
 			} else {
 				$scope.currentIsSet = true;
-			}
-		}
-
-
-		$scope.addAnalysis = function () {
-			if ((_.isUndefined(_.find($scope.analyses, function (item) {
-				return ($scope.analysis.name == item.name)
-			}))) && (
-				$scope.current.name != $scope.analysis.name)
-				) {
-				$scope.unique = true;
-				$scope.analysis.date = new Date();
-				(_.isEmpty($scope.analysis)) ? "" : Root.addAnalysis($scope.analysis);
-				$scope.analysis = ''
-				refresh();
-			} else {
-				$scope.unique = false;
 			}
 		}
 
@@ -57,9 +48,8 @@ angular.module('myApp.view1', [])
 			});
 		}
 
-		$scope.deleteAnalysis = function (analysis) {
-			Root.deleteAnalysis(analysis);
-			refresh();
+		$scope.deleteStc = function (stc) {
+			Stc.destroy(stc.id);
 		}
 
 		$scope.selectAnalysis = function (analysis) {
@@ -72,5 +62,5 @@ angular.module('myApp.view1', [])
 			refresh();
 		}
 
-		refresh();
+		Stc.bindAll({}, $scope, 'stcs');
 	});
