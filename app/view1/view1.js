@@ -8,6 +8,9 @@ angular.module('myApp.view1', [])
 				resolve: {
 					stcs: function ($route, Stc) {
 						return Stc.findAll();
+					},
+					current: function($route, Stc){
+						return Stc.findAll({current: 'true'});
 					}
 				}
 			});
@@ -52,9 +55,8 @@ angular.module('myApp.view1', [])
 			Stc.destroy(stc.id);
 		}
 
-		$scope.selectAnalysis = function (analysis) {
-			Current.selectCurrent(analysis);
-			refresh();
+		$scope.selectStc = function (stc) {
+			Stc.update(stc.id, {current: 'true'}).then(function(stc){console.log(stc);});
 		}
 
 		$scope.storeCurrent = function (analysis) {

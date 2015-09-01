@@ -2,8 +2,8 @@
 
 <h2>Welcome in the SCREAM analysis tool</h2>
 
-<p>Here is the current analysis running, select one of the previous analysis from the list below or create a new one
-	by clicking the 'Create new analysis' button.</p>
+<p>Here is the current Socio Technical Capability under scrutiny, select one of the previous one from the list below or create a new one
+	by clicking the 'Create new capability' button.</p>
 
 <div class="well" ng-show="currentIsSet">
 	<table class="table table">
@@ -26,7 +26,7 @@
 </div>
 
 <div class="alert alert-warning" ng-hide="currentIsSet">
-	<span>No analysis selected.</span>
+	<span>No capability selected.</span>
 </div>
 
 <br/>
@@ -47,9 +47,9 @@
 				<td>{{stc.name}}</td>
 				<td>{{stc.desc}}</td>
 				<td>{{stc.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><button type="button" class="btn btn-success" ng-click="selectAnalysis(analysis)">Select</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click="exportAnalysis(analysis)">Export</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click="importAnalysis(analysis)">Import</button></td>
+				<td><button type="button" class="btn btn-success" ng-click="selectStc(stc)">Select</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click="exportStc(stc)">Export</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click="importStc(stc)">Import</button></td>
 				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteStc(stc)">Delete</button></td>
 			</tr>
 		</tbody>
