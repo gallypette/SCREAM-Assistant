@@ -5,7 +5,7 @@
 <p>Here is the current Socio Technical Capability under scrutiny, select one of the previous one from the list below or create a new one
 	by clicking the 'Create new capability' button.</p>
 
-<div class="well" ng-show="currentIsSet">
+<div class="well">
 	<table class="table table">
 		<thead>
 			<tr>
@@ -19,14 +19,9 @@
 				<td>{{current.name}}</td>
 				<td>{{current.desc}}</td>
 				<td>{{current.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><button type="button" class="btn btn-primary" ng-click="storeCurrent(current)">Unselect</button></td>
 			</tr>
 		</tbody>
 	</table>
-</div>
-
-<div class="alert alert-warning" ng-hide="currentIsSet">
-	<span>No capability selected.</span>
 </div>
 
 <br/>
@@ -67,7 +62,6 @@
 				<div class="alert alert-warning" ng-show="!addForm.nameControl.$valid">
 					<span ng-show="addForm.nameControl.$error.required">Required!</span>
 					<span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
-					<span ng-hide="unique" >The name must be unique!</span>
 				</div>
 				<input type="text" ng-model="stc.name" name="nameControl" placeholder="Capablity's name" class="form-control" required="required" ng-minlength="3">
 
@@ -80,9 +74,6 @@
 				<span class="input-group-btn">
 					<input type="submit" class="btn btn-primary" value="Create new capability">
 				</span>
-				<div class="alert alert-danger" ng-hide="unique">
-					<span>The name must be unique!</span>
-				</div>
 			</div>
 	</form>
 </div>

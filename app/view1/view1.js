@@ -9,7 +9,7 @@ angular.module('myApp.view1', [])
 					stcs: function ($route, Stc) {
 						return Stc.findAll();
 					},
-					current: function($route, Stc){
+					current: function ($route, Stc) {
 						return Stc.findAll({current: 'true'});
 					}
 				}
@@ -20,6 +20,7 @@ angular.module('myApp.view1', [])
 
 		// We copy the list of stcs into the view
 		$scope.stcs = $route.current.locals.stcs;
+		$scope.current = $route.current.locals.current[0];
 		console.log($scope.stcs.length + ' items were loaded from the store.');
 
 		// Setting the menu
@@ -29,16 +30,6 @@ angular.module('myApp.view1', [])
 		}
 		$scope.isActiveM = function (url) {
 			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
-		}
-		$scope.unique = true;
-		$scope.currentIsSet = false;
-		var refresh = function () {
-			$scope.current = Current.getCurrent();
-			if (($scope.current == '') || ($scope.current == null)) {
-				$scope.currentIsSet = false;
-			} else {
-				$scope.currentIsSet = true;
-			}
 		}
 
 		$scope.addStc = function (stc) {
@@ -52,11 +43,20 @@ angular.module('myApp.view1', [])
 		}
 
 		$scope.deleteStc = function (stc) {
+			if($scope.current.id === stc.id) $scope.current = '';
 			Stc.destroy(stc.id);
 		}
 
 		$scope.selectStc = function (stc) {
-			Stc.update(stc.id, {current: 'true'}).then(function(stc){console.log(stc);});
+			// We set all other Stc.current to false
+			_.each($scope.stcs, function (stc) {
+				Stc.update(stc.id, {current: 'false'});
+			})
+
+			// We set the target as current
+			Stc.update(stc.id, {current: 'true'});
+			// We update the view
+			$scope.current = Stc.get(stc.id);
 		}
 
 		$scope.storeCurrent = function (analysis) {
