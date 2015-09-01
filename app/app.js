@@ -29,7 +29,7 @@ angular.module('myApp', [
 		{url: '#/view5', text: 'Manage Attacks'},
 		{url: '#/view3', text: 'SCREAM Analysis'},
 		{url: '#/view4', text: 'Analysis Summary'},
-		{url: '#/view2', text: 'STC Summary'}
+		{url: '#/view2', text: 'STC Attack Modes'}
 	])
 
 	.constant('TMMenu', [
@@ -54,7 +54,7 @@ angular.module('myApp', [
 				hasMany: {
 					am: [
 						{
-							localField: 'ams',
+							localField: 'atcks',
 							foreignKey: 'stcId'
 						}
 					]
@@ -63,7 +63,7 @@ angular.module('myApp', [
 		});
 	})
 
-	.factory('Am', function (store) {
+	.factory('Atck', function (store) {
 		return store.defineResource({
 			name: 'am',
 			relations: {
@@ -71,7 +71,7 @@ angular.module('myApp', [
 					analysis: [
 						{
 							localField: 'analysis',
-							foreignKey: 'amId'
+							foreignKey: 'atckId'
 						}
 					]
 				},
@@ -91,8 +91,8 @@ angular.module('myApp', [
 			relations: {
 				belongsTo: {
 					stc: {
-						localField: 'am',
-						localKey: 'amId'
+						localField: 'atck',
+						localKey: 'atckId'
 					}
 				}
 			}

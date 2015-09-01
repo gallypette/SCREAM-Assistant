@@ -1,3 +1,79 @@
 <top-bar></top-bar>
 
-<p>View5 is the view where we define the attack.</p>
+<h2>Investigatin Attack Modes for the STC: <b>{{stc.name}}</b></h2>
+
+<p>Here is the Attack under investigation:</p>
+
+<div class="well">
+	<table class="table table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Creation date</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{current.name}}</td>
+				<td>{{current.desc}}</td>
+				<td>{{current.date| date:'MM/dd/yyyy @ h:mma'}}</td>
+				<td><a href="#/view5/{{current.id}}" class="btn btn-info" role="button">Investigate Attack</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<br/>
+
+<h2>List of Attacks linked to the STC: <b>{{stc.name}}</b></h2>
+<!-- Analysis list -->
+<div class="well">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Creation date</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="stc in stcs">
+				<td>{{stc.name}}</td>
+				<td>{{stc.desc}}</td>
+				<td>{{stc.date| date:'MM/dd/yyyy @ h:mma'}}</td>
+				<td><button type="button" class="btn btn-success" ng-click="selectStc(stc)">Select</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click="exportStc(stc)">Export</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click="importStc(stc)">Import</button></td>
+				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteStc(stc)">Delete</button></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<h2>Create a new Attack to investigate</h2>
+<!-- Analysis input -->
+<div class="well">
+	<form name="addForm" role="form" ng-submit="addStc(stc)">
+		<div class="row">
+
+			<div class="form-group">
+				<label for="stcName">Name of the new security capability</label>
+				<div class="alert alert-warning" ng-show="!addForm.nameControl.$valid">
+					<span ng-show="addForm.nameControl.$error.required">Required!</span>
+					<span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
+				</div>
+				<input type="text" ng-model="stc.name" name="nameControl" placeholder="Capablity's name" class="form-control" required="required" ng-minlength="3">
+
+				<div class="form-group">
+					<label for="stcDesc">Description of the new capability</label>
+					<input type="textarea" ng-model="stc.desc" placeholder="Description" class="form-control">
+					<input type="hidden" ng-model="stc.date">
+				</div>
+
+				<span class="input-group-btn">
+					<input type="submit" class="btn btn-primary" value="Create new capability">
+				</span>
+			</div>
+	</form>
+</div>

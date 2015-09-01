@@ -9,10 +9,10 @@ angular.module('myApp.view5', [])
 					templateUrl: 'view5/view5.html',
 					controller: 'View5Ctrl',
 					resolve: {
-						stc: function ($route, Stc, Am) {
+						stc: function ($route, Stc, Atck) {
 							return Stc.find($route.current.params.id).then(function (stc) {
 //							Am.create({stcId: stc.id});
-								return Stc.loadRelations(stc.id, ['am']);
+								return Stc.loadRelations(stc.id, ['atck']);
 							});
 						}
 					}
@@ -22,9 +22,9 @@ angular.module('myApp.view5', [])
 					templateUrl: 'view5/view5.html',
 					controller: 'View5Ctrl',
 					resolve: {
-						stc: function ($route, Stc, Am) {
+						stc: function ($route, Stc, Atck) {
 							return Stc.findAll({current: 'true'}).then(function (stc) {
-								return Stc.loadRelations(stc[0].id, ['am']);
+								return Stc.loadRelations(stc[0].id, ['atcks']);
 							});
 						}
 					}
@@ -46,6 +46,6 @@ angular.module('myApp.view5', [])
 
 		$scope.stc = $route.current.locals.stc;
 		console.log($scope.stc);
-		console.log($scope.stc.ams);
+		console.log($scope.stc.atcks);
 
 	});
