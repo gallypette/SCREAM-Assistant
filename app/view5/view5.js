@@ -61,4 +61,8 @@ angular.module('myApp.view5', [])
 			});
 		}
 
+		$scope.deleteAtck = function (atck) {
+			Atck.destroy(atck.id);
+		}
+
 	});

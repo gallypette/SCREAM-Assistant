@@ -59,10 +59,5 @@ angular.module('myApp.view1', [])
 			$scope.current = Stc.get(stc.id);
 		}
 
-		$scope.storeCurrent = function (analysis) {
-			Current.storeCurrent(analysis);
-			refresh();
-		}
-
 		Stc.bindAll({}, $scope, 'stcs');
 	});

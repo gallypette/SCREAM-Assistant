@@ -43,7 +43,7 @@
 				<td>{{atck.desc}}</td>
 				<td>{{atck.date| date:'MM/dd/yyyy @ h:mma'}}</td>
 				<td><button type="button" class="btn btn-success" ng-click="selectStc(stc)">Select</button></td>
-				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteStc(stc)">Delete</button></td>
+				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAtck(atck)">Delete</button></td>
 			</tr>
 		</tbody>
 	</table>
@@ -56,21 +56,21 @@
 		<div class="row">
 
 			<div class="form-group">
-				<label for="stcName">Name of the new security capability</label>
+				<label for="stcName">Name of the new Attack</label>
 				<div class="alert alert-warning" ng-show="!addForm.nameControl.$valid">
 					<span ng-show="addForm.nameControl.$error.required">Required!</span>
 					<span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
 				</div>
-				<input type="text" ng-model="atck.name" name="nameControl" placeholder="Capablity's name" class="form-control" required="required" ng-minlength="3">
+				<input type="text" ng-model="atck.name" name="nameControl" placeholder="Attack's name" class="form-control" required="required" ng-minlength="3">
 
 				<div class="form-group">
-					<label for="stcDesc">Description of the new capability</label>
+					<label for="stcDesc">Description of the new Attack</label>
 					<input type="textarea" ng-model="atck.desc" placeholder="Description" class="form-control">
 					<input type="hidden" ng-model="atck.date">
 				</div>
 
 				<span class="input-group-btn">
-					<input type="submit" class="btn btn-primary" value="Create new capability">
+					<input type="submit" class="btn btn-primary" value="Create new Attack">
 				</span>
 			</div>
 	</form>
