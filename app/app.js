@@ -42,6 +42,52 @@ angular.module('myApp', [
 		angular.extend(DSHttpAdapterProvider.defaults);
 	})
 
+	.constant('descriptionTypes', [
+		{
+			name: 'STEAL',
+			desc: 'Describe the attack in term of message flowing between the attacker and the victim.',
+			fields: [
+				{
+					fieldName: 'Source',
+					desc: 'The principal that the user believes he is interacting with',
+					type: 'text'
+				},
+				{
+					fieldName: 'Declared Identity',
+					desc: 'Is the attacker stating that he is the source',
+					type: 'boolean'
+				},
+				{
+					fieldName: 'Imitated Identity',
+					desc: 'Is the attacker using the logo or the visual identity of the source',
+					type: 'boolean'
+				},
+				{
+					fieldName: 'Command',
+					desc: 'Describe the command that the user is asked to execute',
+					type: 'text'
+				},
+				{
+					fieldName: 'Action',
+					desc: 'Describe the action, if it is a genuine action or if the action is loaded',
+					type: 'boolean'
+				},
+				{
+					fieldName: 'Sequence',
+					desc: 'Where is the message located in the sequence of messages',
+					type: 'list',
+					value: ['initiation', 'continuation', 'reply to user request'] 
+				},
+				{
+					fieldName: 'Medium',
+					desc: 'On which medium is the message issued',
+					type: 'list',
+					value: ['web', 'phone', 'paper']
+				},
+			]
+		}
+	])
+
 	.factory('store', function () {
 		var store = new JSData.DS();
 		store.registerAdapter('localstorage', new DSLocalStorageAdapter(), {default: true});

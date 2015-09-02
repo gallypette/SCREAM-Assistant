@@ -31,7 +31,8 @@ angular.module('myApp.view5', [])
 				});
 		}])
 
-	.controller('View5Ctrl', function ($route, $scope, analysisMenu, Atck) {
+	.controller('View5Ctrl', function ($route, $scope, analysisMenu, Atck, descriptionTypes) {
+		console.log(descriptionTypes)
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.isActive = function (url) {
