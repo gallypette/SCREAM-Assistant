@@ -1,5 +1,4 @@
 'use strict';
-
 angular.module('myApp.view5', [])
 
 	.config(['$routeProvider', function ($routeProvider) {
@@ -39,8 +38,7 @@ angular.module('myApp.view5', [])
 				});
 		}])
 
-	.controller('View5Ctrl', function ($route, $scope, analysisMenu, Atck, descriptionTypes) {
-		console.log(descriptionTypes)
+	.controller('View5Ctrl', function ($route, $scope, $modal, analysisMenu, Atck, descriptionTypes) {
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.isActive = function (url) {
@@ -55,7 +53,6 @@ angular.module('myApp.view5', [])
 		$scope.stc = $route.current.locals.stc;
 		console.log($scope.stc);
 		console.log($scope.stc.atcks);
-
 		$scope.addAtck = function (atck) {
 			// Set the date and stcId before injecting
 			atck.date = new Date();
@@ -74,16 +71,43 @@ angular.module('myApp.view5', [])
 		}
 
 		$scope.selectAtck = function (atck) {
-			// We set all other Stc.current to false
+			// We set all other Atck.current to false
 			_.each($scope.stc.atcks, function (atck) {
 				Atck.update(atck.id, {current: 'false'});
 			})
 
-			// We set the target as current
+			// We set the attack target as current
 			Atck.update(atck.id, {current: 'true'});
 			// We update the view
 			$scope.current = Atck.get(atck.id);
 		}
 
+		// Opens a modal to describe the attack
+		$scope.describeAtck = function (atck) {
+			var modalInstance = $modal.open({
+				animation: true,
+				templateUrl: 'myDescriptionModal',
+				size: 'lg',
+				controller: function ($scope, $modalInstance) {
+					
+					$scope.atckMod = atck;
+					$scope.descriptionTypes = descriptionTypes;
+					
+					$scope.ok = function () {
+						$scope.addDescription(atck.id, item);
+						$modalInstance.close();
+					};
+
+					$scope.cancel = function () {
+						$modalInstance.dismiss('cancel');
+					};
+				}
+			});
+		}
+	
+		// Injects a description for an attack into the storage.
+		$scope.addDescription = function (id, description){
+			
+		}
 
 	});

@@ -1,6 +1,7 @@
 'use strict';
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
+	'ui.bootstrap',
 	'js-data',
 	'ngRoute',
 	'd3',
@@ -76,7 +77,7 @@ angular.module('myApp', [
 					fieldName: 'Sequence',
 					desc: 'Where is the message located in the sequence of messages',
 					type: 'list',
-					value: ['initiation', 'continuation', 'reply to user request'] 
+					value: ['initiation', 'continuation', 'reply to user request']
 				},
 				{
 					fieldName: 'Medium',
@@ -85,62 +86,67 @@ angular.module('myApp', [
 					value: ['web', 'phone', 'paper']
 				},
 			]
+		},
+		{
+			name: 'empty',
+			desc: 'empty description schema',
+			fields: []
 		}
 	])
 
-	.factory('store', function () {
-		var store = new JSData.DS();
-		store.registerAdapter('localstorage', new DSLocalStorageAdapter(), {default: true});
-		return store;
-	})
+		.factory('store', function () {
+			var store = new JSData.DS();
+			store.registerAdapter('localstorage', new DSLocalStorageAdapter(), {default: true});
+			return store;
+		})
 
-	.factory('Stc', function (store) {
-		return store.defineResource({
-			name: 'stc', relations: {
-				hasMany: {
-					atck: [
-						{
-							localField: 'atcks',
-							foreignKey: 'stcId'
-						}
-					]
-				}
-			}
-		});
-	})
-
-	.factory('Atck', function (store) {
-		return store.defineResource({
-			name: 'atck',
-			relations: {
-				hasOne: {
-					analysis: [
-						{
-							localField: 'analysis',
-							foreignKey: 'atckId'
-						}
-					]
-				},
-				belongsTo: {
-					stc: {
-						localField: 'stc',
-						localKey: 'stcId'
+		.factory('Stc', function (store) {
+			return store.defineResource({
+				name: 'stc', relations: {
+					hasMany: {
+						atck: [
+							{
+								localField: 'atcks',
+								foreignKey: 'stcId'
+							}
+						]
 					}
 				}
-			}
-		});
-	})
+			});
+		})
 
-	.factory('Analysis', function (store) {
-		return store.defineResource({
-			name: 'analysis',
-			relations: {
-				belongsTo: {
-					stc: {
-						localField: 'atck',
-						localKey: 'atckId'
+		.factory('Atck', function (store) {
+			return store.defineResource({
+				name: 'atck',
+				relations: {
+					hasOne: {
+						analysis: [
+							{
+								localField: 'analysis',
+								foreignKey: 'atckId'
+							}
+						]
+					},
+					belongsTo: {
+						stc: {
+							localField: 'stc',
+							localKey: 'stcId'
+						}
 					}
 				}
-			}
-		});
-	})
+			});
+		})
+
+		.factory('Analysis', function (store) {
+			return store.defineResource({
+				name: 'analysis',
+				relations: {
+					belongsTo: {
+						stc: {
+							localField: 'atck',
+							localKey: 'atckId'
+						}
+					}
+				}
+			});
+		})
