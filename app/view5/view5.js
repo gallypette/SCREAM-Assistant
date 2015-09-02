@@ -31,7 +31,7 @@ angular.module('myApp.view5', [])
 				});
 		}])
 
-	.controller('View5Ctrl', function ($route, $scope, analysisMenu) {
+	.controller('View5Ctrl', function ($route, $scope, analysisMenu, Atck) {
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.isActive = function (url) {
@@ -47,5 +47,18 @@ angular.module('myApp.view5', [])
 		$scope.stc = $route.current.locals.stc;
 		console.log($scope.stc);
 		console.log($scope.stc.atcks);
+
+		$scope.addAtck = function (atck) {
+			// Set the date and stcId before injecting
+			atck.date = new Date();
+			atck.stcId = $scope.stc.id;
+			// Inject and clear the view
+			return Atck.create(atck).then(function () {
+				atck.name = '';
+				atck.desc = '';
+				atck.id = null;
+				console.log(atck.name + ' injected.');
+			});
+		}
 
 	});

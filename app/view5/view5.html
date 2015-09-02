@@ -38,13 +38,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="stc in stcs">
-				<td>{{stc.name}}</td>
-				<td>{{stc.desc}}</td>
-				<td>{{stc.date| date:'MM/dd/yyyy @ h:mma'}}</td>
+			<tr ng-repeat="atck in stc.atcks">
+				<td>{{atck.name}}</td>
+				<td>{{atck.desc}}</td>
+				<td>{{atck.date| date:'MM/dd/yyyy @ h:mma'}}</td>
 				<td><button type="button" class="btn btn-success" ng-click="selectStc(stc)">Select</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click="exportStc(stc)">Export</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click="importStc(stc)">Import</button></td>
 				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteStc(stc)">Delete</button></td>
 			</tr>
 		</tbody>
@@ -54,7 +52,7 @@
 <h2>Create a new Attack to investigate</h2>
 <!-- Analysis input -->
 <div class="well">
-	<form name="addForm" role="form" ng-submit="addStc(stc)">
+	<form name="addForm" role="form" ng-submit="addAtck(atck)">
 		<div class="row">
 
 			<div class="form-group">
@@ -63,12 +61,12 @@
 					<span ng-show="addForm.nameControl.$error.required">Required!</span>
 					<span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
 				</div>
-				<input type="text" ng-model="stc.name" name="nameControl" placeholder="Capablity's name" class="form-control" required="required" ng-minlength="3">
+				<input type="text" ng-model="atck.name" name="nameControl" placeholder="Capablity's name" class="form-control" required="required" ng-minlength="3">
 
 				<div class="form-group">
 					<label for="stcDesc">Description of the new capability</label>
-					<input type="textarea" ng-model="stc.desc" placeholder="Description" class="form-control">
-					<input type="hidden" ng-model="stc.date">
+					<input type="textarea" ng-model="atck.desc" placeholder="Description" class="form-control">
+					<input type="hidden" ng-model="atck.date">
 				</div>
 
 				<span class="input-group-btn">

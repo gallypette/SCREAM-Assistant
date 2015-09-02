@@ -52,7 +52,7 @@ angular.module('myApp', [
 		return store.defineResource({
 			name: 'stc', relations: {
 				hasMany: {
-					am: [
+					atck: [
 						{
 							localField: 'atcks',
 							foreignKey: 'stcId'
@@ -65,7 +65,7 @@ angular.module('myApp', [
 
 	.factory('Atck', function (store) {
 		return store.defineResource({
-			name: 'am',
+			name: 'atck',
 			relations: {
 				hasOne: {
 					analysis: [
