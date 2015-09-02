@@ -1,3 +1,77 @@
 <top-bar></top-bar>
 
-<p>View5 is the view where we define the attack.</p>
+<h2>Investigatin Attack Modes for the STC: <b>{{stc.name}}</b></h2>
+
+<p>Here is the Attack under investigation:</p>
+
+<div class="well">
+	<table class="table table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Creation date</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{current.name}}</td>
+				<td>{{current.desc}}</td>
+				<td>{{current.date| date:'MM/dd/yyyy @ h:mma'}}</td>
+				<td><a href="#/view5/{{current.id}}" class="btn btn-info" role="button">Investigate Attack with SCREAM</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<br/>
+
+<h2>List of Attacks linked to the STC: <b>{{stc.name}}</b></h2>
+<!-- Analysis list -->
+<div class="well">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Creation date</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="atck in stc.atcks">
+				<td>{{atck.name}}</td>
+				<td>{{atck.desc}}</td>
+				<td>{{atck.date| date:'MM/dd/yyyy @ h:mma'}}</td>
+				<td><button type="button" class="btn btn-success" ng-click="selectStc(stc)">Select</button></td>
+				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAtck(atck)">Delete</button></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<h2>Create a new Attack to investigate</h2>
+<!-- Analysis input -->
+<div class="well">
+	<form name="addForm" role="form" ng-submit="addAtck(atck)">
+		<div class="row">
+
+			<div class="form-group">
+				<label for="stcName">Name of the new Attack</label>
+				<div class="alert alert-warning" ng-show="!addForm.nameControl.$valid">
+					<span ng-show="addForm.nameControl.$error.required">Required!</span>
+					<span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
+				</div>
+				<input type="text" ng-model="atck.name" name="nameControl" placeholder="Attack's name" class="form-control" required="required" ng-minlength="3">
+
+				<div class="form-group">
+					<label for="stcDesc">Description of the new Attack</label>
+					<input type="textarea" ng-model="atck.desc" placeholder="Description" class="form-control">
+					<input type="hidden" ng-model="atck.date">
+				</div>
+
+				<span class="input-group-btn">
+					<input type="submit" class="btn btn-primary" value="Create new Attack">
+				</span>
+			</div>
+	</form>
+</div>

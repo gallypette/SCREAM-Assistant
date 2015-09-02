@@ -1,15 +1,27 @@
 'use strict';
-
 angular.module('myApp.view1', [])
 
 	.config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.when('/view1', {
 				templateUrl: 'view1/view1.html',
-				controller: 'View1Ctrl'
+				controller: 'View1Ctrl',
+				resolve: {
+					stcs: function ($route, Stc) {
+						return Stc.findAll();
+					},
+					current: function ($route, Stc) {
+						return Stc.findAll({current: 'true'});
+					}
+				}
 			});
 		}])
 
-	.controller('View1Ctrl', function ($scope, Root, Current, _, analysisMenu) {
+	.controller('View1Ctrl', function ($route, $scope, _, analysisMenu, store, Stc) {
+
+		// We copy the list of stcs into the view
+		$scope.stcs = $route.current.locals.stcs;
+		$scope.current = $route.current.locals.current[0];
+		console.log($scope.stcs.length + ' items were loaded from the store.');
 
 		// Setting the menu
 		$scope.itemsMenu = analysisMenu;
@@ -19,51 +31,33 @@ angular.module('myApp.view1', [])
 		$scope.isActiveM = function (url) {
 			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
 		}
-		$scope.unique = true;
-		$scope.currentIsSet = false;
 
-		var refresh = function () {
-			$scope.analyses = Root.getAnalyses();
-			$scope.current = Current.getCurrent();
-
-			if (($scope.current == '') || ($scope.current == null)) {
-				$scope.currentIsSet = false;
-			} else {
-				$scope.currentIsSet = true;
-			}
+		$scope.addStc = function (stc) {
+			stc.date = new Date();
+			return Stc.create(stc).then(function () {
+				console.log(stc.name + ' injected.');
+				stc.name = '';
+				stc.desc = '';
+				stc.id = null;
+			});
 		}
 
-
-		$scope.addAnalysis = function () {
-			if ((_.isUndefined(_.find($scope.analyses, function (item) {
-				return ($scope.analysis.name == item.name)
-			}))) && (
-				$scope.current.name != $scope.analysis.name)
-				) {
-				$scope.unique = true;
-				$scope.analysis.date = new Date();
-				(_.isEmpty($scope.analysis)) ? "" : Root.addAnalysis($scope.analysis);
-				$scope.analysis = ''
-				refresh();
-			} else {
-				$scope.unique = false;
-			}
+		$scope.deleteStc = function (stc) {
+			if($scope.current.id === stc.id) $scope.current = '';
+			Stc.destroy(stc.id);
 		}
 
-		$scope.deleteAnalysis = function (analysis) {
-			Root.deleteAnalysis(analysis);
-			refresh();
+		$scope.selectStc = function (stc) {
+			// We set all other Stc.current to false
+			_.each($scope.stcs, function (stc) {
+				Stc.update(stc.id, {current: 'false'});
+			})
+
+			// We set the target as current
+			Stc.update(stc.id, {current: 'true'});
+			// We update the view
+			$scope.current = Stc.get(stc.id);
 		}
 
-		$scope.selectAnalysis = function (analysis) {
-			Current.selectCurrent(analysis);
-			refresh();
-		}
-
-		$scope.storeCurrent = function (analysis) {
-			Current.storeCurrent(analysis);
-			refresh();
-		}
-
-		refresh();
+		Stc.bindAll({}, $scope, 'stcs');
 	});

@@ -1,11 +1,11 @@
 <top-bar></top-bar>
 
-<h2>Welcome in the SCREAM analysis tool.</h2>
+<h2>Welcome in the SCREAM analysis tool</h2>
 
-<p>Here is the current analysis running, select one of the previous analysis from the list below or create a new one
-	by clicking the 'Create new analysis' button.</p>
+<p>Here is the current Socio Technical Capability under scrutiny, select one of the previous one from the list below or create a new one
+	by clicking the 'Create new capability' button.</p>
 
-<div class="well" ng-show="currentIsSet">
+<div class="well">
 	<table class="table table">
 		<thead>
 			<tr>
@@ -19,19 +19,15 @@
 				<td>{{current.name}}</td>
 				<td>{{current.desc}}</td>
 				<td>{{current.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><button type="button" class="btn btn-primary" ng-click="storeCurrent(current)">Unselect</button></td>
+				<td><a href="#/view5/{{current.id}}" class="btn btn-info" role="button">Manage Attacks</a></td>
 			</tr>
 		</tbody>
 	</table>
 </div>
 
-<div class="alert alert-warning" ng-hide="currentIsSet">
-	<span>No analysis selected.</span>
-</div>
-
 <br/>
 
-<h2>List of analyses</h2>
+<h2>List of Socio-Techincal Capabilities</h2>
 <!-- Analysis list -->
 <div class="well">
 	<table class="table table-hover">
@@ -43,46 +39,42 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="analysis in analyses">
-				<td>{{analysis.name}}</td>
-				<td>{{analysis.desc}}</td>
-				<td>{{analysis.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><button type="button" class="btn btn-success" ng-click="selectAnalysis(analysis)">Select</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click="exportAnalysis(analysis)">Export</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click="importAnalysis(analysis)">Import</button></td>
-				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAnalysis(analysis)">Delete</button></td>
+			<tr ng-repeat="stc in stcs">
+				<td>{{stc.name}}</td>
+				<td>{{stc.desc}}</td>
+				<td>{{stc.date| date:'MM/dd/yyyy @ h:mma'}}</td>
+				<td><button type="button" class="btn btn-success" ng-click="selectStc(stc)">Select</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click="exportStc(stc)">Export</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click="importStc(stc)">Import</button></td>
+				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteStc(stc)">Delete</button></td>
 			</tr>
 		</tbody>
 	</table>
 </div>
 
-<h2>Create new analysis</h2>
+<h2>Create new Socio-Technical Capability</h2>
 <!-- Analysis input -->
 <div class="well">
-	<form name="addForm" role="form" ng-submit="addAnalysis()">
+	<form name="addForm" role="form" ng-submit="addStc(stc)">
 		<div class="row">
 
 			<div class="form-group">
-				<label for="analysisName">Name of the new security analysis</label>
+				<label for="stcName">Name of the new security capability</label>
 				<div class="alert alert-warning" ng-show="!addForm.nameControl.$valid">
 					<span ng-show="addForm.nameControl.$error.required">Required!</span>
 					<span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
-					<span ng-hide="unique" >The name must be unique!</span>
 				</div>
-				<input type="text" ng-model="analysis.name" name="nameControl" placeholder="Analysis's name" class="form-control" required="required" ng-minlength="3">
+				<input type="text" ng-model="stc.name" name="nameControl" placeholder="Capablity's name" class="form-control" required="required" ng-minlength="3">
 
 				<div class="form-group">
-					<label for="analysisDesc">Description of the new analysis</label>
-					<input type="textarea" ng-model="analysis.desc" placeholder="Description" class="form-control">
-					<input type="hidden" ng-model="analysis.date">
+					<label for="stcDesc">Description of the new capability</label>
+					<input type="textarea" ng-model="stc.desc" placeholder="Description" class="form-control">
+					<input type="hidden" ng-model="stc.date">
 				</div>
 
 				<span class="input-group-btn">
-					<input type="submit" class="btn btn-primary" value="Create new analysis">
+					<input type="submit" class="btn btn-primary" value="Create new capability">
 				</span>
-				<div class="alert alert-danger" ng-hide="unique">
-					<span>The name must be unique!</span>
-				</div>
 			</div>
 	</form>
 </div>

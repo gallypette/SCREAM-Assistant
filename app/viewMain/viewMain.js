@@ -9,8 +9,8 @@ angular.module('myApp.viewMain', [])
 			});
 		}])
 
-	.controller('ViewMainCtrl', function ($scope, mainMenu) {
+	.controller('ViewMainCtrl', function ($scope) {
 
-			$scope.itemsMenu = mainMenu;
+		
 
 		});
