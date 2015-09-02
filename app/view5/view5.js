@@ -14,7 +14,11 @@ angular.module('myApp.view5', [])
 //							Am.create({stcId: stc.id});
 								return Stc.loadRelations(stc.id, ['atck']);
 							});
+						},
+						current: function ($route, Atck) {
+							return Atck.findAll({current: 'true'});
 						}
+
 					}
 				}).
 				// .when we land on the view5's root, we need to get the current stc
@@ -26,7 +30,11 @@ angular.module('myApp.view5', [])
 							return Stc.findAll({current: 'true'}).then(function (stc) {
 								return Stc.loadRelations(stc[0].id, ['atcks']);
 							});
+						},
+						current: function ($route, Atck) {
+							return Atck.findAll({current: 'true'});
 						}
+
 					}
 				});
 		}])
@@ -42,9 +50,8 @@ angular.module('myApp.view5', [])
 			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
 		}
 
-
 		// Load the data into the view
-
+		$scope.current = $route.current.locals.current[0];
 		$scope.stc = $route.current.locals.stc;
 		console.log($scope.stc);
 		console.log($scope.stc.atcks);
@@ -65,5 +72,18 @@ angular.module('myApp.view5', [])
 		$scope.deleteAtck = function (atck) {
 			Atck.destroy(atck.id);
 		}
+
+		$scope.selectAtck = function (atck) {
+			// We set all other Stc.current to false
+			_.each($scope.stc.atcks, function (atck) {
+				Atck.update(atck.id, {current: 'false'});
+			})
+
+			// We set the target as current
+			Atck.update(atck.id, {current: 'true'});
+			// We update the view
+			$scope.current = Atck.get(atck.id);
+		}
+
 
 	});
