@@ -125,6 +125,12 @@ angular.module('myApp', [
 								localField: 'analysis',
 								foreignKey: 'atckId'
 							}
+						],
+						desc: [
+							{
+								localField: 'description',
+								foreignKey: 'atckId'
+							}
 						]
 					},
 					belongsTo: {
@@ -142,7 +148,21 @@ angular.module('myApp', [
 				name: 'analysis',
 				relations: {
 					belongsTo: {
-						stc: {
+						atck: {
+							localField: 'atck',
+							localKey: 'atckId'
+						}
+					}
+				}
+			});
+		})
+		
+		.factory('Description', function (store) {
+			return store.defineResource({
+				name: 'description',
+				relations: {
+					belongsTo: {
+						atck: {
 							localField: 'atck',
 							localKey: 'atckId'
 						}

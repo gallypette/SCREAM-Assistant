@@ -92,7 +92,7 @@
 					<b>{{schema.name}}</b>: {{schema.desc}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 				</accordion-heading>
 				<p>Fill-out the following fields to describe the attack using <b>{{schema.name}}</b>:</p>
-				<form name="addForm" role="form" ng-submit="addDescription(atck)">
+				<form name="addForm" role="form" ng-submit="registerDescription(atckMod.id, description.data)">
 					<div class="form-group">
 					<table class="table table-hover">
 						<thead>
@@ -104,26 +104,27 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="field in schema.fields">
+							<ng-form name="form">
 								<td>{{field.fieldName}}</td>
 								<td>{{field.desc}}</td>
 								<td ng-switch on="field.type">
 							
 									<div ng-switch-when="boolean">
-										<input type="radio" name={{field.fieldName}} value="true">True
-										<input type="radio" name={{field.fieldName}} value="false">False
+										<input type="radio" ng-model="model[field.fieldName]" value="true">True
+										<input type="radio" ng-model="model[field.fieldName]"  value="false">False
 									</div>
 								
 									<div ng-switch-when="text">
-										<input type="textarea" ng-model="atckDesc" class="form-control">
+										<input type="textarea" ng-model="model[field.fieldName]" class="form-control">
 									</div>
 								
 									<div ng-switch-when="list">
-										<select>
-											<option  ng-repeat="value in field.value" value="value">{{value}}</option>
+										<select ng-model="model[field.fieldName]">
+											<option ng-repeat="value in field.value" value={{value}}>{{value}}</option>
 										</select> 
 									</div>
-							
 								</td>
+							<ng-form>
 							</tr>
 						</tbody>
 					</table>

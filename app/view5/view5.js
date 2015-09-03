@@ -38,7 +38,7 @@ angular.module('myApp.view5', [])
 				});
 		}])
 
-	.controller('View5Ctrl', function ($route, $scope, $modal, analysisMenu, Atck, descriptionTypes) {
+	.controller('View5Ctrl', function ($route, $scope, $modal, analysisMenu, Atck, descriptionTypes, Description) {
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.isActive = function (url) {
@@ -53,6 +53,7 @@ angular.module('myApp.view5', [])
 		$scope.stc = $route.current.locals.stc;
 		console.log($scope.stc);
 		console.log($scope.stc.atcks);
+		
 		$scope.addAtck = function (atck) {
 			// Set the date and stcId before injecting
 			atck.date = new Date();
@@ -88,26 +89,42 @@ angular.module('myApp.view5', [])
 				animation: true,
 				templateUrl: 'myDescriptionModal',
 				size: 'lg',
+				resolve: {
+					// We will need to fetch the existing description and feed it into the view
+//					description
+				},
 				controller: function ($scope, $modalInstance) {
-					
+
+					// The model that will get the description back
+					$scope.model = {};
+
 					$scope.atckMod = atck;
 					$scope.descriptionTypes = descriptionTypes;
-					
-					$scope.ok = function () {
-						$scope.addDescription(atck.id, item);
+
+					$scope.registerDescription = function (id) {
+						$scope.addDescription(id, $scope.model);
 						$modalInstance.close();
 					};
 
 					$scope.cancel = function () {
 						$modalInstance.dismiss('cancel');
 					};
+
+					// Injects a description for an attack into the storage.
+					$scope.addDescription = function (id, description) {
+						console.log(id);
+						console.log(description);
+						// Set the date and stcId before injecting
+						description.date = new Date();
+						description.atckId = id;
+						// Inject and clear the view
+						return Description.create(description).then(function () {
+							console.log(description.id + ' injected.');
+						});
+						return true;
+					};
 				}
 			});
-		}
-	
-		// Injects a description for an attack into the storage.
-		$scope.addDescription = function (id, description){
-			
 		}
 
 	});
