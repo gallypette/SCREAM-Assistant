@@ -1,4 +1,7 @@
 /* app css stylesheet */
+input[type="radio"]{
+  margin: 0 10px 0 10px;
+}
 
 .menu {
     list-style: none;

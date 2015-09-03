@@ -92,33 +92,48 @@
 					<b>{{schema.name}}</b>: {{schema.desc}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 				</accordion-heading>
 				<p>Fill-out the following fields to describe the attack using <b>{{schema.name}}</b>:</p>
-				<table class="table table-hover">
-					<thead>
-						<tr>
-							<th>Field</th>
-							<th>Description</th>
-							<th>Value</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="field in schema.fields">
-							<td>{{field.fieldName}}</td>
-							<td>{{field.desc}}</td>
-							<td ng-switch on="field.type">
+				<form name="addForm" role="form" ng-submit="addDescription(atck)">
+					<div class="form-group">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Field</th>
+								<th>Description</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="field in schema.fields">
+								<td>{{field.fieldName}}</td>
+								<td>{{field.desc}}</td>
+								<td ng-switch on="field.type">
 							
-								<div ng-switch-when="boolean">Radio button</div>
-								<div ng-switch-when="text">Textarea</div>
+									<div ng-switch-when="boolean">
+										<input type="radio" name={{field.fieldName}} value="true">True
+										<input type="radio" name={{field.fieldName}} value="false">False
+									</div>
+								
+									<div ng-switch-when="text">
+										<input type="textarea" ng-model="atckDesc" class="form-control">
+									</div>
+								
+									<div ng-switch-when="list">
+										<select>
+											<option  ng-repeat="value in field.value" value="value">{{value}}</option>
+										</select> 
+									</div>
 							
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<button class="btn btn-primary" type="button" ng-click="ok()">Select</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<input type="submit" class="btn btn-primary" value="Register Description">
+					<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+			
+				</form>
 			</accordion-group>
 		</accordion>
-        </div>
-        <div class="modal-footer">
-		<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
         </div>
 	</script>
 </div>
