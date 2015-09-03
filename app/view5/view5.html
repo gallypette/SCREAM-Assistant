@@ -86,22 +86,36 @@
 		<h3 class="modal-title">Select a Scheme to describe the attack <b>{{atckMod.name}}</b>:</h3>
         </div>
         <div class="modal-body">
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="item in descriptionTypes">
-					<td>{{item.name}}</td>
-					<td>{{item.desc}}</td>
-					<td><button class="btn btn-primary" type="button" ng-click="ok()">Select</button></td>
-				</tr>
-			</tbody>
-		</table>
-
+		<accordion close-others="true">
+			<accordion-group ng-repeat="schema in descriptionTypes">
+				<accordion-heading>
+					<b>{{schema.name}}</b>: {{schema.desc}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+				</accordion-heading>
+				<p>Fill-out the following fields to describe the attack using <b>{{schema.name}}</b>:</p>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Field</th>
+							<th>Description</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="field in schema.fields">
+							<td>{{field.fieldName}}</td>
+							<td>{{field.desc}}</td>
+							<td ng-switch on="field.type">
+							
+								<div ng-switch-when="boolean">Radio button</div>
+								<div ng-switch-when="text">Textarea</div>
+							
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<button class="btn btn-primary" type="button" ng-click="ok()">Select</button>
+			</accordion-group>
+		</accordion>
         </div>
         <div class="modal-footer">
 		<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
