@@ -53,7 +53,7 @@ angular.module('myApp.view5', [])
 		$scope.stc = $route.current.locals.stc;
 		console.log($scope.stc);
 		console.log($scope.stc.atcks);
-		
+
 		$scope.addAtck = function (atck) {
 			// Set the date and stcId before injecting
 			atck.date = new Date();
@@ -91,12 +91,16 @@ angular.module('myApp.view5', [])
 				size: 'lg',
 				resolve: {
 					// We will need to fetch the existing description and feed it into the view
-//					description
+					atckDesc: function (Atck) {
+						return Atck.find(atck.id, {with: ['description']});
+					}
+
 				},
-				controller: function ($scope, $modalInstance) {
+				controller: function ($scope, $modalInstance,atckDesc) {
 
 					// The model that will get the description back
-					$scope.model = {};
+					console.log(atckDesc.description);
+//					$scope.model = atckDesc.desc;
 
 					$scope.atckMod = atck;
 					$scope.descriptionTypes = descriptionTypes;
@@ -114,7 +118,7 @@ angular.module('myApp.view5', [])
 					$scope.addDescription = function (id, description) {
 						console.log(id);
 						console.log(description);
-						// Set the date and stcId before injecting
+						// Set the date and atckId before injecting
 						description.date = new Date();
 						description.atckId = id;
 						// Inject and clear the view

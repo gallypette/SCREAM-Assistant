@@ -126,7 +126,7 @@ angular.module('myApp', [
 								foreignKey: 'atckId'
 							}
 						],
-						desc: [
+						description: [
 							{
 								localField: 'description',
 								foreignKey: 'atckId'
