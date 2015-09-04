@@ -67,8 +67,9 @@ angular.module('myApp.view5', [])
 			});
 		}
 
+		// Delete an Attack and its description.
 		$scope.deleteAtck = function (atck) {
-			Atck.destroy(atck.id);
+			Atck.loadRelations(atck.id, ['description']).then(function(atck){Description.destroy(atck.description.id);}).then(function(){Atck.destroy(atck.id);});
 		}
 
 		$scope.selectAtck = function (atck) {
@@ -96,23 +97,20 @@ angular.module('myApp.view5', [])
 					}
 
 				},
-				controller: function ($scope, $modalInstance, Description, Atck, atckDesc) {
-
-//					Atck.loadRelations(atck.id, ['description']).then(function (atck) {
-//						console.log(atck.description); // object
-//						console.log(atck);
-//					});
-
+				controller: function ($scope, $modalInstance, Description, atckDesc, _) {
+					
 					// The model that will get the description back
 					console.log(atckDesc.description);
 					console.log(atckDesc);
-					$scope.model = {};
-
-					$scope.atckMod = atck;
+					
+					// The model where we store the values linked in the view (form)
+					_.isUndefined(atckDesc.description) ? $scope.model = {} : $scope.model = atckDesc.description;
+					
+					$scope.atckMod = atckDesc;
 					$scope.descriptionTypes = descriptionTypes;
-
+					
 					$scope.registerDescription = function (id) {
-						$scope.addDescription(id, $scope.model);
+						$scope.addDescription(id);
 						$modalInstance.close();
 					};
 
@@ -121,18 +119,17 @@ angular.module('myApp.view5', [])
 					};
 
 					// Injects a description for an attack into the storage.
-					$scope.addDescription = function (id, description) {
-						console.log(id);
-						console.log(description);
+					$scope.addDescription = function (id) {
+						console.log('Addind description to atck:'+id);
+						console.log($scope.model);
 						// Set the date and atckId before injecting
-						description.date = new Date();
-						description.atckId = id;
-						// Inject and clear the view
-						return Description.create(description).then(function (desc) {
-							console.log(description.id + ' injected.');
-//							return Atck.update(id, {descriptionId: desc.id});
+						$scope.model.date = new Date();
+						$scope.model.atckId = id;
+						// Inject
+						return Description.create($scope.model).then(function (desc) {
+							console.log(desc.id + ' injected.');
 						});
-					};
+					};	
 				}
 			});
 		}
