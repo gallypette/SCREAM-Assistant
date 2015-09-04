@@ -38,7 +38,7 @@ angular.module('myApp.view5', [])
 				});
 		}])
 
-	.controller('View5Ctrl', function ($route, $scope, $modal, analysisMenu, Atck, descriptionTypes, Description) {
+	.controller('View5Ctrl', function ($route, $scope, $modal, analysisMenu, Atck, descriptionTypes, Description, _) {
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.isActive = function (url) {
@@ -69,7 +69,12 @@ angular.module('myApp.view5', [])
 
 		// Delete an Attack and its description.
 		$scope.deleteAtck = function (atck) {
-			Atck.loadRelations(atck.id, ['description']).then(function(atck){Description.destroy(atck.description.id);}).then(function(){Atck.destroy(atck.id);});
+			Atck.loadRelations(atck.id, ['description']).then(function(atck){
+				if(_.isUndefined(atck.description)){
+					return true;
+				}else{
+				 return Description.destroy(atck.description.id);
+				}}).then(function(){Atck.destroy(atck.id);});
 		}
 
 		$scope.selectAtck = function (atck) {
