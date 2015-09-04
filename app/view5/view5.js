@@ -91,20 +91,20 @@ angular.module('myApp.view5', [])
 				size: 'lg',
 				resolve: {
 					// We will need to fetch the existing description and feed it into the view
-//					atckDesc: function (Atck) {
-//						return Atck.find(atck.id, {with: ['description']});
-//					},
-					atckDesc: function (Description, Atck, Stc) {
-						console.log('searching atckId:' + atck.id);
-						return Description.findAll({atckId: atck.id}).then(function (desc) {
-							return Description.loadRelations(desc[0].id, ['atck']);
-						});
+					atckDesc: function (Atck) {
+						return Atck.loadRelations(atck.id, ['description']);
 					}
 
 				},
-				controller: function ($scope, $modalInstance, atckDesc) {
+				controller: function ($scope, $modalInstance, Description, Atck, atckDesc) {
+
+//					Atck.loadRelations(atck.id, ['description']).then(function (atck) {
+//						console.log(atck.description); // object
+//						console.log(atck);
+//					});
 
 					// The model that will get the description back
+					console.log(atckDesc.description);
 					console.log(atckDesc);
 					$scope.model = {};
 
@@ -128,10 +128,10 @@ angular.module('myApp.view5', [])
 						description.date = new Date();
 						description.atckId = id;
 						// Inject and clear the view
-						return Description.create(description).then(function () {
+						return Description.create(description).then(function (desc) {
 							console.log(description.id + ' injected.');
+//							return Atck.update(id, {descriptionId: desc.id});
 						});
-						return true;
 					};
 				}
 			});

@@ -120,14 +120,15 @@ angular.module('myApp', [
 			name: 'atck',
 			relations: {
 				hasOne: {
-					analysis: {
-						localField: 'analysis',
-						foreignKey: 'atckId'
-					},
-					description: {
-						localField: 'description',
-						foreignKey: 'atckId'
-					}
+//					analysis: {
+//						localField: 'analysis',
+//						foreignKey: 'atckId'
+//					},
+					description:
+						{
+							localField: 'description',
+							foreignKey: 'atckId'
+						}
 				},
 				belongsTo: {
 					stc: {
