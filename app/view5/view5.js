@@ -10,14 +10,12 @@ angular.module('myApp.view5', [])
 					resolve: {
 						stc: function ($route, Stc, Atck) {
 							return Stc.find($route.current.params.id).then(function (stc) {
-//							Am.create({stcId: stc.id});
 								return Stc.loadRelations(stc.id, ['atck']);
 							});
 						},
 						current: function ($route, Atck) {
 							return Atck.findAll({current: 'true'});
 						}
-
 					}
 				}).
 				// .when we land on the view5's root, we need to get the current stc
@@ -31,9 +29,13 @@ angular.module('myApp.view5', [])
 							});
 						},
 						current: function ($route, Atck) {
-							return Atck.findAll({current: 'true'});
+							console.log("ok");
+							return Atck.findAll({where: {
+									'current': {
+										'===': 'true'
+									}
+								}}, { cacheResponse: false });
 						}
-
 					}
 				});
 		}])
@@ -51,8 +53,10 @@ angular.module('myApp.view5', [])
 		// Load the data into the view
 		$scope.current = $route.current.locals.current[0];
 		$scope.stc = $route.current.locals.stc;
-		console.log($scope.stc);
-		console.log($scope.stc.atcks);
+//		console.log($scope.stc);
+//		console.log($scope.stc.atcks);
+
+		console.log($route.current.locals.current);
 
 		$scope.addAtck = function (atck) {
 			// Set the date and stcId before injecting
@@ -60,21 +64,28 @@ angular.module('myApp.view5', [])
 			atck.stcId = $scope.stc.id;
 			// Inject and clear the view
 			return Atck.create(atck).then(function () {
+				// We create and link an analysis at the same time
+				var analysis = {};
+				analysis.date = atck.date;
+				analysis.atckId = atck.id;
+				Analysis.create(analysis);
+				console.log(atck.name + ' injected.');
 				atck.name = '';
 				atck.desc = '';
 				atck.id = null;
-				console.log(atck.name + ' injected.');
 			});
 		}
-
 		// Delete an Attack and its description.
 		$scope.deleteAtck = function (atck) {
-			Atck.loadRelations(atck.id, ['description']).then(function(atck){
-				if(_.isUndefined(atck.description)){
+			Atck.loadRelations(atck.id, ['description']).then(function (atck) {
+				if (_.isUndefined(atck.description)) {
 					return true;
-				}else{
-				 return Description.destroy(atck.description.id);
-				}}).then(function(){Atck.destroy(atck.id);});
+				} else {
+					return Description.destroy(atck.description.id);
+				}
+			}).then(function () {
+				Atck.destroy(atck.id);
+			});
 		}
 
 		$scope.selectAtck = function (atck) {
@@ -103,17 +114,17 @@ angular.module('myApp.view5', [])
 
 				},
 				controller: function ($scope, $modalInstance, Description, atckDesc, _) {
-					
+
 					// The model that will get the description back
 					console.log(atckDesc.description);
 					console.log(atckDesc);
-					
+
 					// The model where we store the values linked in the view (form)
 					_.isUndefined(atckDesc.description) ? $scope.model = {} : $scope.model = atckDesc.description;
-					
+
 					$scope.atckMod = atckDesc;
 					$scope.descriptionTypes = descriptionTypes;
-					
+
 					$scope.registerDescription = function (id) {
 						$scope.addDescription(id);
 						$modalInstance.close();
@@ -125,7 +136,7 @@ angular.module('myApp.view5', [])
 
 					// Injects a description for an attack into the storage.
 					$scope.addDescription = function (id) {
-						console.log('Addind description to atck:'+id);
+						console.log('Addind description to atck:' + id);
 						console.log($scope.model);
 						// Set the date and atckId before injecting
 						$scope.model.date = new Date();
@@ -134,7 +145,7 @@ angular.module('myApp.view5', [])
 						return Description.create($scope.model).then(function (desc) {
 							console.log(desc.id + ' injected.');
 						});
-					};	
+					};
 				}
 			});
 		}
