@@ -102,14 +102,14 @@ angular.module('myApp', [
 
 	.factory('Stc', function (store) {
 		return store.defineResource({
-			name: 'stc', relations: {
+			name: 'stc',
+			relations: {
 				hasMany: {
-					atck: [
+					atck:
 						{
 							localField: 'atcks',
 							foreignKey: 'stcId'
 						}
-					]
 				}
 			}
 		});
@@ -120,10 +120,10 @@ angular.module('myApp', [
 			name: 'atck',
 			relations: {
 				hasOne: {
-//					analysis: {
-//						localField: 'analysis',
-//						foreignKey: 'atckId'
-//					},
+					analysis: {
+						localField: 'analysis',
+						foreignKey: 'atckId'
+					},
 					description:
 						{
 							localField: 'description',
