@@ -43,7 +43,8 @@ angular.module('myApp.view1', [])
 		}
 
 		$scope.deleteStc = function (stc) {
-			if(!_.isUndefined($scope.current) && $scope.current.id === stc.id) $scope.current = '';
+			if (!_.isUndefined($scope.current) && $scope.current.id === stc.id)
+				$scope.current = '';
 			Stc.destroy(stc.id);
 		}
 

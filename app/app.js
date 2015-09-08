@@ -100,7 +100,7 @@ angular.module('myApp', [
 		return store;
 	})
 
-	.factory('Stc', function (store) {
+	.factory('Stc', function ($q, store, Atck) {
 		return store.defineResource({
 			name: 'stc',
 			relations: {
@@ -111,6 +111,33 @@ angular.module('myApp', [
 							foreignKey: 'stcId'
 						}
 				}
+			},
+			beforeDestroy: function (resource, data, cb, DSUtils) {
+				console.log('Slaying Stc' + data.id + ' and relatives.');
+				return resource.loadRelations(data.id, ['atcks']).
+					then(function () {
+						if (_.isUndefined(data.atcks)) {
+							return true;
+						} else {
+							console.log('Calling DestroyAll with stc: ' + data.id);
+							// The following code should work, but no luck :'(
+//							Atck.destroyAll({
+//								stcId: data.id
+//							});
+
+							// Instead this ugly piece of code does:
+							var defer = $q.defer();
+							angular.forEach(data.atcks, function (item) {
+								defer.resolve(Atck.destroy(item.id));
+							});
+							return defer.promise;
+
+							// I should build a plunkr and fill an issue on js-data
+						}
+					}).
+					then(function () {
+//						return cb(null, data);
+					});
 			}
 		});
 	})
@@ -124,11 +151,10 @@ angular.module('myApp', [
 						localField: 'analysis',
 						foreignKey: 'atckId'
 					},
-					description:
-						{
-							localField: 'description',
-							foreignKey: 'atckId'
-						}
+					description: {
+						localField: 'description',
+						foreignKey: 'atckId'
+					}
 				},
 				belongsTo: {
 					stc: {
@@ -137,24 +163,28 @@ angular.module('myApp', [
 					}
 				}
 			},
+//			}
 			// Before destroying the attack , we take care of cleaning up children
 			beforeDestroy: function (resource, data, cb) {
-				console.log('Slaying '+data.id+' and relatives.');
-					return resource.loadRelations(data.id, ['description', 'analysis']).
+				console.log(resource);
+				console.log(data);
+				console.log(cb);
+				console.log('Slaying Atck ' + data.id + ' and relatives.');
+				return resource.loadRelations(data.id, ['description', 'analysis']).
 					then(function () {
 						if (_.isUndefined(data.description)) {
 							return true;
 						} else {
-							console.log('Deletion of description: '+data.description.id);
+							console.log('Deletion of description: ' + data.description.id);
 							return Description.destroy(data.description.id);
 						}
 					}).
 					then(function () {
-						
+
 						if (_.isUndefined(data.analysis)) {
 							return true;
 						} else {
-							console.log('Deletion of analysis: '+data.analysis.id);
+							console.log('Deletion of analysis: ' + data.analysis.id);
 							return Analysis.destroy(data.analysis.id);
 						}
 					}).
