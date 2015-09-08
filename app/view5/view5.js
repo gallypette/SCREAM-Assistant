@@ -34,8 +34,8 @@ angular.module('myApp.view5', [])
 									'current': {
 										'===': 'true'
 									}
-								}}, { cacheResponse: false });
-						}
+								}}, {cacheResponse: false});
+						},
 					}
 				});
 		}])
@@ -77,15 +77,11 @@ angular.module('myApp.view5', [])
 		}
 		// Delete an Attack and its description.
 		$scope.deleteAtck = function (atck) {
-			Atck.loadRelations(atck.id, ['description']).then(function (atck) {
-				if (_.isUndefined(atck.description)) {
-					return true;
-				} else {
-					return Description.destroy(atck.description.id);
-				}
-			}).then(function () {
-				Atck.destroy(atck.id);
-			});
+			Atck.destroy(atck.id).then(function () {
+				// Update the view
+				$scope.current = "";
+				return true;
+			})
 		}
 
 		$scope.selectAtck = function (atck) {

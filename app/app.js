@@ -115,7 +115,7 @@ angular.module('myApp', [
 		});
 	})
 
-	.factory('Atck', function (store) {
+	.factory('Atck', function (store, _, Description, Analysis) {
 		return store.defineResource({
 			name: 'atck',
 			relations: {
@@ -136,6 +136,31 @@ angular.module('myApp', [
 						localKey: 'stcId'
 					}
 				}
+			},
+			// Before destroying the attack , we take care of cleaning up children
+			beforeDestroy: function (resource, data, cb) {
+				console.log('Slaying '+data.id+' and relatives.');
+					return resource.loadRelations(data.id, ['description', 'analysis']).
+					then(function () {
+						if (_.isUndefined(data.description)) {
+							return true;
+						} else {
+							console.log('Deletion of description: '+data.description.id);
+							return Description.destroy(data.description.id);
+						}
+					}).
+					then(function () {
+						
+						if (_.isUndefined(data.analysis)) {
+							return true;
+						} else {
+							console.log('Deletion of analysis: '+data.analysis.id);
+							return Analysis.destroy(data.analysis.id);
+						}
+					}).
+					then(function () {
+						return cb(null, data);
+					});
 			}
 		});
 	})
