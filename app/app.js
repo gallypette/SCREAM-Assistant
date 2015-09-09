@@ -119,7 +119,6 @@ angular.module('myApp', [
 						if (_.isUndefined(data.atcks)) {
 							return true;
 						} else {
-							console.log('Calling DestroyAll with stc: ' + data.id);
 							// The following code should work, but no luck :'(
 //							Atck.destroyAll({
 //								stcId: data.id
@@ -161,12 +160,8 @@ angular.module('myApp', [
 					}
 				}
 			},
-//			}
 			// Before destroying the attack , we take care of cleaning up children
 			beforeDestroy: function (resource, data, cb) {
-				console.log(resource);
-				console.log(data);
-				console.log(cb);
 				console.log('Slaying Atck ' + data.id + ' and relatives.');
 				return resource.loadRelations(data.id, ['description', 'analysis']).
 					then(function () {
@@ -193,14 +188,54 @@ angular.module('myApp', [
 		});
 	})
 
-	.factory('Analysis', function (store) {
+	.factory('Analysis', function (store, ErrorMode) {
 		return store.defineResource({
 			name: 'analysis',
 			relations: {
+				hasMany: {
+					em:
+						{
+							localField: 'ems',
+							foreignKey: 'analysisId'
+						}
+				},
 				belongsTo: {
 					atck: {
 						localField: 'atck',
 						localKey: 'atckId'
+					}
+				}
+			},
+			// Before destroying the analysis , we take care of destroying the children
+			beforeDestroy: function (resource, data, cb) {
+				console.log('Slaying Analysis' + data.id + ' and relatives.');
+				return resource.loadRelations(data.id, ['em']).
+					then(function () {
+						if (_.isUndefined(data.ems)) {
+							return true;
+						} else {
+							var defer = $q.defer();
+							angular.forEach(data.ems, function (item) {
+								defer.resolve(ErrorMode.destroy(item.id));
+							});
+							return defer.promise;
+						}
+					}).
+					then(function () {
+						return cb(null, data);
+					});
+			}
+		});
+	})
+
+	.factory('ErrorMode', function (store) {
+		return store.defineResource({
+			name: 'em',
+			relations: {
+				belongsTo: {
+					analysis: {
+						localField: 'analysis',
+						localKey: 'analysisId'
 					}
 				}
 			}
