@@ -36,14 +36,46 @@ angular.module('myApp.view3', [])
 				});
 		}])
 
-	.controller('View3Ctrl', function ($scope, $route, $modal, analysisMenu, Analysis, Atck, Description) {
-		
+	.controller('View3Ctrl', function ($scope, $route, $modal, $q, analysisMenu, Analysis, Atck, Description, screamFlavors, schemasFactory, xsltTransform) {
+
 		console.log($route.current.locals.atck);
 		console.log($route.current.locals.atck.description);
 		console.log($route.current.locals.atck.analysis);
+		
+		var creamtable = "";
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.atck = $route.current.locals.atck;
+		$scope.flavors = screamFlavors;
+
+		$scope.importFlavor = function (flavor) {
+
+			creamtable = schemasFactory.getFile("creamtable.xml")
+				.then(function (response) {
+					return response;
+				}, function (error) {
+					console.error(error);
+					return(error);
+				});
+
+			if (flavor.file != null) {
+
+				var xslFile = schemasFactory.getFile(flavor.file)
+					.then(function (response) {
+						return response;
+					}, function (error) {
+						console.error(error);
+						return(error);
+					});
+
+				creamtable = $q.all([creamtable, xslFile]).then(function wrapUp(files) {
+					var transformResult = xsltTransform.transformXml(files[0].data, files[1].data, null);
+					return transformResult;
+				});
+			} 
+			
+			console.log(creamtable);
+		}
 
 		$scope.isActive = function (url) {
 			return url === "#/view3" ? 'active' : '';
@@ -51,7 +83,7 @@ angular.module('myApp.view3', [])
 		$scope.isActiveM = function (url) {
 			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
 		}
-		
+
 		// Opens a modal to select an Error Mode to create
 		$scope.addEM = function () {
 			var modalInstance = $modal.open({
@@ -60,11 +92,10 @@ angular.module('myApp.view3', [])
 				size: 'lg',
 				scope: $scope,
 				resolve: {
-
 				},
 				controller: function ($scope, $modalInstance) {
-					
-					
+
+
 
 					$scope.registerDescription = function (id) {
 						$scope.addEMtoAnalysis(id);

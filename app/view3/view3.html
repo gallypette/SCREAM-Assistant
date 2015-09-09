@@ -1,5 +1,12 @@
 <top-bar></top-bar>
 
+<h2>Select a CREAM database flavor to analyze<b>{{atck.name}}</b></h2>
+<!-- Error Mode list -->
+<div class="well">
+	<select ng-model="myflavor" ng-options="value.name for value in flavors"></select>
+	<button type="button" class="btn btn-primary" ng-click="importFlavor(myflavor)">Import SCREAM flavor</button>
+</div>
+
 <h2>List of Error Modes identified in <b>{{atck.name}}</b></h2>
 <!-- Error Mode list -->
 <div class="well">

@@ -37,6 +37,11 @@ angular.module('myApp', [
 		{url: '#/TMview1', text: 'TMview1'},
 		{url: '#/TMview2', text: 'TMview2'}
 	])
+	
+	.constant('screamFlavors', [
+//		{name: 'Cdcatalog test', file: "cdcatalog.xsl"},
+		{name: 'Basic CREAM tables', file: null}
+	])
 
 	.config(function (DSProvider, DSHttpAdapterProvider) {
 		angular.extend(DSProvider.defaults);
