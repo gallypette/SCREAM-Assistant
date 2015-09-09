@@ -10,7 +10,7 @@ angular.module('myApp.view1', [])
 						return Stc.findAll();
 					},
 					current: function ($route, Stc) {
-						return Stc.findAll({current: 'true'});
+						return Stc.findAll({current: 'true'}, {cacheResponse: false});
 					}
 				}
 			});

@@ -131,12 +131,10 @@ angular.module('myApp', [
 								defer.resolve(Atck.destroy(item.id));
 							});
 							return defer.promise;
-
-							// I should build a plunkr and fill an issue on js-data
 						}
 					}).
 					then(function () {
-//						return cb(null, data);
+						return cb(null, data);
 					});
 			}
 		});
