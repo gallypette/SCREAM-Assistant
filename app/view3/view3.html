@@ -1,10 +1,43 @@
 <top-bar></top-bar>
 
-<p>This is the partial for view 3.</p>
-<p>
-This is were the new D3 tree directive will land
-</p>
+<h2>List of Error Modes identified in <b>{{atck.name}}</b></h2>
+<!-- Error Mode list -->
+<div class="well">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="em in atck.analysis.ems">
+				<td>{{em.name}}</td>
+				<td>{{em.desc}}</td>
+				<td><button type="button" class="btn btn-success" ng-click="selectEM(em)">Analyze</button></td>
+				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteEM(em)">Delete</button></td>
+			</tr>
+
+		</tbody>
+	</table>
+	<button type="button" class="btn btn-primary" ng-click="addEM()">Add</button>
+</div>
 
 <div>
-  <div error-mode-tree data="data"></div>
+	<script type="text/ng-template" id="myEmSelectionModal">
+        <div class="modal-header">
+		<h3 class="modal-title">Select an Error Mode occuring in <b>{{atck.name}}</b>:</h3>
+        </div>
+
+        <div class="modal-body">
+
+		<input type="submit" class="btn btn-primary" value="Add Error Mode">
+		<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>	
+        </div>
+	</script>
+</div>
+
+
+<div>
+	<!--<div error-mode-tree data="data"></div>-->
 </div>

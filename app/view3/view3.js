@@ -15,7 +15,7 @@ angular.module('myApp.view3', [])
 							});
 						},
 						current: function ($route, Stc, Atck, Analysis, Description) {
-							return Atck.findAll({current: 'true'});
+							return Atck.findAll({current: 'true'}, {cacheResponse: false});
 						}
 					}
 				}).
@@ -30,25 +30,52 @@ angular.module('myApp.view3', [])
 							});
 						},
 						current: function ($route, Stc, Atck, Analysis, Description) {
-							return Atck.findAll({current: 'true'});
+							return Atck.findAll({current: 'true'}, {cacheResponse: false});
 						}
 					}
 				});
 		}])
 
-	.controller('View3Ctrl', function ($scope, $route, analysisMenu, Analysis, Atck, Description) {
+	.controller('View3Ctrl', function ($scope, $route, $modal, analysisMenu, Analysis, Atck, Description) {
 		
 		console.log($route.current.locals.atck);
 		console.log($route.current.locals.atck.description);
 		console.log($route.current.locals.atck.analysis);
 
 		$scope.itemsMenu = analysisMenu;
+		$scope.atck = $route.current.locals.atck;
 
 		$scope.isActive = function (url) {
 			return url === "#/view3" ? 'active' : '';
 		}
 		$scope.isActiveM = function (url) {
 			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
+		}
+		
+		// Opens a modal to select an Error Mode to create
+		$scope.addEM = function () {
+			var modalInstance = $modal.open({
+				animation: true,
+				templateUrl: 'myEmSelectionModal',
+				size: 'lg',
+				scope: $scope,
+				resolve: {
+
+				},
+				controller: function ($scope, $modalInstance) {
+					
+					
+
+					$scope.registerDescription = function (id) {
+						$scope.addEMtoAnalysis(id);
+						$modalInstance.close();
+					};
+
+					$scope.cancel = function () {
+						$modalInstance.dismiss('cancel');
+					};
+				}
+			});
 		}
 
 		//Here we input the data we want to see in the tree

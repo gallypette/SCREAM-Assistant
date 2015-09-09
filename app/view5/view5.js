@@ -14,7 +14,7 @@ angular.module('myApp.view5', [])
 							});
 						},
 						current: function ($route, Atck) {
-							return Atck.findAll({current: 'true'});
+							return Atck.findAll({current: 'true'}, {cacheResponse: false});
 						}
 					}
 				}).
