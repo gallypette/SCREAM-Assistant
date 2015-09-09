@@ -36,21 +36,22 @@ angular.module('myApp.view3', [])
 				});
 		}])
 
-	.controller('View3Ctrl', function ($scope, $route, $modal, $q, analysisMenu, Analysis, Atck, Description, screamFlavors, schemasFactory, xsltTransform) {
+	.controller('View3Ctrl', function ($sce, $scope, $route, $modal, $q, analysisMenu, Analysis, Atck, Description, screamFlavors, schemasFactory, xsltTransform, x2js) {
 
 		console.log($route.current.locals.atck);
 		console.log($route.current.locals.atck.description);
 		console.log($route.current.locals.atck.analysis);
-		
-		var creamtable = "";
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.atck = $route.current.locals.atck;
 		$scope.flavors = screamFlavors;
 
-		$scope.importFlavor = function (flavor) {
+		var creamtable = "";
 
-			creamtable = schemasFactory.getFile("creamtable.xml")
+		$scope.importFlavor = function (flavor, creamtable) {
+			console.log("importing " + flavor.name);
+
+			var creamFile = schemasFactory.getFile("creamtable.xml")
 				.then(function (response) {
 					return response;
 				}, function (error) {
@@ -59,7 +60,7 @@ angular.module('myApp.view3', [])
 				});
 
 			if (flavor.file != null) {
-
+				console.log('Applying XSL stylesheet: ' + flavor.name);
 				var xslFile = schemasFactory.getFile(flavor.file)
 					.then(function (response) {
 						return response;
@@ -68,13 +69,18 @@ angular.module('myApp.view3', [])
 						return(error);
 					});
 
-				creamtable = $q.all([creamtable, xslFile]).then(function wrapUp(files) {
-					var transformResult = xsltTransform.transformXml(files[0].data, files[1].data, null);
-					return transformResult;
+				$q.all([creamFile, xslFile]).then(function wrapUp(files) {
+					creamtable = xsltTransform.transformXml(files[0].data, files[1].data, null);
+					return true;
 				});
-			} 
-			
-			console.log(creamtable);
+			} else {
+				creamtable = $q.resolve(creamFile).then(function(result){
+//					console.log(result.data);
+					console.log(x2js.xml_str2json(result.data));
+					return true;
+				});
+			}
+//			
 		}
 
 		$scope.isActive = function (url) {

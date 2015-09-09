@@ -1,6 +1,7 @@
 'use strict';
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
+	'cb.x2js',
 	'ui.bootstrap',
 	'js-data',
 	'ngRoute',
