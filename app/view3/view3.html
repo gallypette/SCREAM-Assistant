@@ -4,7 +4,7 @@
 <!-- Error Mode list -->
 <div class="well">
 	<select ng-model="myflavor" ng-options="value.name for value in flavors"></select>
-	<button type="button" class="btn btn-primary" ng-click="importFlavor(myflavor)">Import SCREAM flavor</button>
+	<button type="button" class="btn btn-primary" ng-click="getFlavor(myflavor)">Import SCREAM flavor</button>
 </div>
 
 <h2>List of Error Modes identified in <b>{{atck.name}}</b></h2>

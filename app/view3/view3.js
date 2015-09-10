@@ -31,12 +31,16 @@ angular.module('myApp.view3', [])
 						},
 						current: function ($route, Stc, Atck, Analysis, Description) {
 							return Atck.findAll({current: 'true'}, {cacheResponse: false});
+						},
+						creamtable: function (screamFlavors, xsltTransform) {
+							// We resolve Basic CREAM by default
+							return xsltTransform.importFlavor(screamFlavors[0]);
 						}
 					}
 				});
 		}])
 
-	.controller('View3Ctrl', function ($sce, $scope, $route, $modal, $q, analysisMenu, Analysis, Atck, Description, screamFlavors, schemasFactory, xsltTransform, x2js) {
+	.controller('View3Ctrl', function ($sce, $scope, $route, $modal, $q, analysisMenu, Analysis, Atck, Description, screamFlavors, xsltTransform) {
 
 		console.log($route.current.locals.atck);
 		console.log($route.current.locals.atck.description);
@@ -46,45 +50,15 @@ angular.module('myApp.view3', [])
 		$scope.atck = $route.current.locals.atck;
 		$scope.flavors = screamFlavors;
 
-		$scope.creamtable = "";
-		
+		$scope.creamtable = $route.current.locals.creamtable;
+
 		$scope.model = {};
 
-		$scope.importFlavor = function (flavor, creamtable) {
+		$scope.getFlavor = function (flavor) {
 			console.log("importing " + flavor.name);
-
-			var creamFile = schemasFactory.getFile("creamtable.xml")
-				.then(function (response) {
-					return response;
-				}, function (error) {
-					console.error(error);
-					return(error);
-				});
-
-			if (flavor.file != null) {
-				console.log('Applying XSL stylesheet: ' + flavor.name);
-				var xslFile = schemasFactory.getFile(flavor.file)
-					.then(function (response) {
-						return response;
-					}, function (error) {
-						console.error(error);
-						return(error);
-					});
-
-				$q.all([creamFile, xslFile]).then(function wrapUp(files) {
-					$scope.creamtable = xsltTransform.transformXml(files[0].data, files[1].data, null);
-					return true;
-				});
-			} else {
-				$q.resolve(creamFile).then(function(result){
-//					console.log(result.data);
-					// firefox throws a syntax error in the console about this - I tracked it down it's no big deal.
-					$scope.creamtable = x2js.xml_str2json(result.data);
-					console.log($scope.creamtable);
-					console.log($scope.creamtable.cream.category[0].group.gc)
-					return true;
-				});
-			}		
+			$q.resolve(xsltTransform.importFlavor(flavor)).then(function (result) {
+				$scope.creamtable = result;
+			});
 		}
 
 		$scope.isActive = function (url) {
@@ -109,7 +83,7 @@ angular.module('myApp.view3', [])
 						$scope.addEMtoAnalysis(id);
 						$modalInstance.close();
 					};
-					
+
 					// Injects the Error Mode into the analysis linked to the attack
 					$scope.addEMtoAnalysis = function () {
 						console.log('Addind Error Modes to analysis:' + $scope.atck.analysis.id);
