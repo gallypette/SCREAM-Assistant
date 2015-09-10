@@ -47,6 +47,8 @@ angular.module('myApp.view3', [])
 		$scope.flavors = screamFlavors;
 
 		$scope.creamtable = "";
+		
+		$scope.model = {};
 
 		$scope.importFlavor = function (flavor, creamtable) {
 			console.log("importing " + flavor.name);
@@ -103,11 +105,22 @@ angular.module('myApp.view3', [])
 				},
 				controller: function ($scope, $modalInstance) {
 
-
-
-					$scope.registerDescription = function (id) {
+					$scope.registerEM = function (id) {
 						$scope.addEMtoAnalysis(id);
 						$modalInstance.close();
+					};
+					
+					// Injects the Error Mode into the analysis linked to the attack
+					$scope.addEMtoAnalysis = function () {
+						console.log('Addind Error Modes to analysis:' + $scope.atck.analysis.id);
+						console.log($scope.model);
+						// Set the date and atckId before injecting
+//						$scope.model.date = new Date();
+//						$scope.model.atckId = id;
+						// Inject
+//						return Description.create($scope.model).then(function (desc) {
+//							console.log(desc.id + ' injected.');
+//						});
 					};
 
 					$scope.cancel = function () {
