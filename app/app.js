@@ -124,6 +124,8 @@ angular.module('myApp', [
 					then(function () {
 						if (_.isUndefined(data.atcks)) {
 							return true;
+						} else if (data.atcks.length == 0){
+							return true;
 						} else {
 							// The following code should work, but no luck :'(
 //							Atck.destroyAll({
@@ -194,7 +196,7 @@ angular.module('myApp', [
 		});
 	})
 
-	.factory('Analysis', function (store, ErrorMode) {
+	.factory('Analysis', function ($q, store, ErrorMode, _) {
 		return store.defineResource({
 			name: 'analysis',
 			relations: {
@@ -219,7 +221,10 @@ angular.module('myApp', [
 					then(function () {
 						if (_.isUndefined(data.ems)) {
 							return true;
+						} else if (data.ems.length == 0){
+							return true;
 						} else {
+							console.log(data.ems);
 							var defer = $q.defer();
 							angular.forEach(data.ems, function (item) {
 								defer.resolve(ErrorMode.destroy(item.id));
