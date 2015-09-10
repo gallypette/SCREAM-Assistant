@@ -16,6 +16,16 @@ angular.module('myApp.view3', [])
 						},
 						current: function ($route, Stc, Atck, Analysis, Description) {
 							return Atck.findAll({current: 'true'}, {cacheResponse: false});
+						},
+						creamtable: function ($q, $route, Atck, Analysis, screamFlavors, xsltTransform) {
+							// First we need to get the Analysis's CREAM flavor
+							return $q.resolve(Atck.find($route.current.params.id)).
+								then(function (atck) {
+									return Atck.loadRelations(atck.id, ['analysis', 'description']);
+								}).
+								then(function (atck) {
+									return xsltTransform.importFlavor(atck.analysis.flavor);
+								});
 						}
 					}
 				}).
@@ -32,9 +42,15 @@ angular.module('myApp.view3', [])
 						current: function ($route, Stc, Atck, Analysis, Description) {
 							return Atck.findAll({current: 'true'}, {cacheResponse: false});
 						},
-						creamtable: function (screamFlavors, xsltTransform) {
-							// We resolve Basic CREAM by default
-							return xsltTransform.importFlavor(screamFlavors[0]);
+						creamtable: function ($q, Atck, Analysis, screamFlavors, xsltTransform) {
+							// First we need to get the Analysis's CREAM flavor
+							return $q.resolve(Atck.findAll({current: 'true'})).
+								then(function (atcks) {
+									return Atck.loadRelations(atcks[0].id, ['analysis', 'description']);
+								}).
+								then(function (atck) {
+									return xsltTransform.importFlavor(atck.analysis.flavor);
+								});
 						}
 					}
 				});

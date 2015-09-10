@@ -147,7 +147,7 @@ angular.module('myApp', [
 		});
 	})
 
-	.factory('Atck', function (store, _, Description, Analysis) {
+	.factory('Atck', function (store, _, Description, Analysis, screamFlavors) {
 		return store.defineResource({
 			name: 'atck',
 			relations: {
@@ -167,6 +167,17 @@ angular.module('myApp', [
 						localKey: 'stcId'
 					}
 				}
+			},
+			// Once we create an attack, we also create an default analysis linked to it.
+			afterCreate: function(resource, data, cb){
+				// We create and link an analysis at the same time
+				var analysis = {};
+				analysis.date = data.date;
+				analysis.flavor = screamFlavors[0];
+				analysis.atckId = data.id;
+				Analysis.create(analysis).then(function(){
+					return cb(null, data);
+				});
 			},
 			// Before destroying the attack , we take care of cleaning up children
 			beforeDestroy: function (resource, data, cb) {
