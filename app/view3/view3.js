@@ -72,9 +72,14 @@ angular.module('myApp.view3', [])
 
 		$scope.getFlavor = function (flavor) {
 			console.log("importing " + flavor.name);
-			$q.resolve(xsltTransform.importFlavor(flavor)).then(function (result) {
-				$scope.creamtable = result;
-			});
+			// First we Update the Flavor for the analysis
+			return Analysis.update($scope.atck.analysis.id, {flavor: flavor}).
+				then(function (success) {
+					console.log(success.id + ' updated with flavor' + flavor.name);
+					return xsltTransform.importFlavor(flavor);
+				}).then(function(result){// Now we import the flavor in the app
+					$scope.creamtable = result;
+				});
 		}
 
 		$scope.isActive = function (url) {
