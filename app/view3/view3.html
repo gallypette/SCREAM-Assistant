@@ -33,12 +33,46 @@
 <div>
 	<script type="text/ng-template" id="myEmSelectionModal">
         <div class="modal-header">
-		<h3 class="modal-title">Select an Error Mode occuring in <b>{{atck.name}}</b>:</h3>
+		<h3 class="modal-title">Select the Error Mode(s) occuring in <b>{{atck.name}}</b>:</h3>
         </div>
 
         <div class="modal-body">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Error Modes</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="cat in creamtable.cream.category[0].group.gc">
+					<td>{{cat.name}}</td>
+					<td>{{cat.desc}}</td>
+					<td>
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Description</th>
+									<th>Select</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="sc in cat.sc">
+									<td>{{sc.name}}</td>
+									<td>{{sc.desc}}</td>
+									<td> <input type="radio" name={{cat.name}}
+               value={{sc.name}} ng-model="analysis.ems" /></td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
 
-		<input type="submit" class="btn btn-primary" value="Add Error Mode">
+			</tbody>
+		</table>
+		<input type="submit" class="btn btn-primary" value="Add Selected Error Mode(s)">
 		<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>	
         </div>
 	</script>

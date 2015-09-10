@@ -46,7 +46,7 @@ angular.module('myApp.view3', [])
 		$scope.atck = $route.current.locals.atck;
 		$scope.flavors = screamFlavors;
 
-		var creamtable = "";
+		$scope.creamtable = "";
 
 		$scope.importFlavor = function (flavor, creamtable) {
 			console.log("importing " + flavor.name);
@@ -70,17 +70,19 @@ angular.module('myApp.view3', [])
 					});
 
 				$q.all([creamFile, xslFile]).then(function wrapUp(files) {
-					creamtable = xsltTransform.transformXml(files[0].data, files[1].data, null);
+					$scope.creamtable = xsltTransform.transformXml(files[0].data, files[1].data, null);
 					return true;
 				});
 			} else {
-				creamtable = $q.resolve(creamFile).then(function(result){
+				$q.resolve(creamFile).then(function(result){
 //					console.log(result.data);
-					console.log(x2js.xml_str2json(result.data));
+					// firefox throws a syntax error in the console about this - I tracked it down it's no big deal.
+					$scope.creamtable = x2js.xml_str2json(result.data);
+					console.log($scope.creamtable);
+					console.log($scope.creamtable.cream.category[0].group.gc)
 					return true;
 				});
-			}
-//			
+			}		
 		}
 
 		$scope.isActive = function (url) {
