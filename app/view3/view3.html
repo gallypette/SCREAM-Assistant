@@ -19,8 +19,8 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="em in atck.analysis.ems">
-				<td>{{em.name}}</td>
-				<td>{{em.desc}}</td>
+				<td>{{em.category}}</td>
+				<td>{{em.em}}</td>
 				<td><button type="button" class="btn btn-success" ng-click="selectEM(em)">Analyze</button></td>
 				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteEM(em)">Delete</button></td>
 			</tr>

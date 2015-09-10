@@ -11,7 +11,7 @@ angular.module('myApp.view3', [])
 					resolve: {
 						atck: function ($route, Stc, Atck, Analysis, Description) {
 							return Atck.find($route.current.params.id).then(function (atck) {
-								return Atck.loadRelations(atck.id, ['analysis', 'description']);
+								return Atck.loadRelations(atck.id, ['analysis', 'description', 'analysis.em']);
 							});
 						},
 						current: function ($route, Stc, Atck, Analysis, Description) {
@@ -21,7 +21,7 @@ angular.module('myApp.view3', [])
 							// First we need to get the Analysis's CREAM flavor
 							return $q.resolve(Atck.find($route.current.params.id)).
 								then(function (atck) {
-									return Atck.loadRelations(atck.id, ['analysis', 'description']);
+									return Atck.loadRelations(atck.id, ['analysis', 'description', 'analysis.em']);
 								}).
 								then(function (atck) {
 									return xsltTransform.importFlavor(atck.analysis.flavor);
@@ -36,7 +36,7 @@ angular.module('myApp.view3', [])
 					resolve: {
 						atck: function ($route, Stc, Atck, Analysis, Description) {
 							return Atck.findAll({current: 'true'}).then(function (atcks) {
-								return Atck.loadRelations(atcks[0].id, ['analysis', 'description']);
+								return Atck.loadRelations(atcks[0].id, ['analysis', 'description', 'analysis.em']);
 							});
 						},
 						current: function ($route, Stc, Atck, Analysis, Description) {
@@ -46,7 +46,7 @@ angular.module('myApp.view3', [])
 							// First we need to get the Analysis's CREAM flavor
 							return $q.resolve(Atck.findAll({current: 'true'})).
 								then(function (atcks) {
-									return Atck.loadRelations(atcks[0].id, ['analysis', 'description']);
+									return Atck.loadRelations(atcks[0].id, ['analysis', 'description', 'analysis.em']);
 								}).
 								then(function (atck) {
 									return xsltTransform.importFlavor(atck.analysis.flavor);
@@ -56,11 +56,12 @@ angular.module('myApp.view3', [])
 				});
 		}])
 
-	.controller('View3Ctrl', function ($sce, $scope, $route, $modal, $q, analysisMenu, Analysis, Atck, Description, screamFlavors, xsltTransform) {
+	.controller('View3Ctrl', function ($sce, $scope, $route, $modal, $q, analysisMenu, Analysis, Atck, Description, ErrorMode, screamFlavors, xsltTransform, _) {
 
 		console.log($route.current.locals.atck);
 		console.log($route.current.locals.atck.description);
 		console.log($route.current.locals.atck.analysis);
+		console.log($route.current.locals.atck.analysis.em);
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.atck = $route.current.locals.atck;
@@ -77,9 +78,9 @@ angular.module('myApp.view3', [])
 				then(function (success) {
 					console.log(success.id + ' updated with flavor' + flavor.name);
 					return xsltTransform.importFlavor(flavor);
-				}).then(function(result){// Now we import the flavor in the app
-					$scope.creamtable = result;
-				});
+				}).then(function (result) {// Now we import the flavor in the app
+				$scope.creamtable = result;
+			});
 		}
 
 		$scope.isActive = function (url) {
@@ -107,8 +108,15 @@ angular.module('myApp.view3', [])
 
 					// Injects the Error Mode into the analysis linked to the attack
 					$scope.addEMtoAnalysis = function () {
-						console.log('Addind Error Modes to analysis:' + $scope.atck.analysis.id);
+						console.log('Addind Selected Error Modes to Analysis:' + $scope.atck.analysis.id);
 						console.log($scope.model);
+						// We add each Error Mode to the Analysis
+						_.each($scope.model, function (value, key, list) {
+							ErrorMode.create({category: key, em: value, analysisId: $scope.atck.analysis.id}).
+								then(function (success) {
+									console.log('ErrorMode '+success.id+ ' injected.');
+								});
+						});
 						// Set the date and atckId before injecting
 //						$scope.model.date = new Date();
 //						$scope.model.atckId = id;
