@@ -119,7 +119,7 @@ angular.module('myApp', [
 				}
 			},
 			beforeDestroy: function (resource, data, cb, DSUtils) {
-				console.log('Slaying Stc' + data.id + ' and relatives.');
+				console.log('Slaying Stc ' + data.id + ' and relatives.');
 				return resource.loadRelations(data.id, ['atcks']).
 					then(function () {
 						if (_.isUndefined(data.atcks)) {
@@ -227,7 +227,7 @@ angular.module('myApp', [
 			},
 			// Before destroying the analysis , we take care of destroying the children
 			beforeDestroy: function (resource, data, cb) {
-				console.log('Slaying Analysis' + data.id + ' and relatives.');
+				console.log('Slaying Analysis ' + data.id + ' and relatives.');
 				return resource.loadRelations(data.id, ['em']).
 					then(function () {
 						if (_.isUndefined(data.ems)) {
@@ -235,7 +235,6 @@ angular.module('myApp', [
 						} else if (data.ems.length == 0){
 							return true;
 						} else {
-							console.log(data.ems);
 							var defer = $q.defer();
 							angular.forEach(data.ems, function (item) {
 								defer.resolve(ErrorMode.destroy(item.id));
