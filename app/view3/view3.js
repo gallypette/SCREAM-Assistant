@@ -127,7 +127,7 @@ angular.module('myApp.view3', [])
 						// We add each Error Mode to the Analysis
 						_.each($scope.model, function (value, key, list) {
 							// We update the categories that are updated and we create the missing ones.
-							ErrorMode.findAll({where: { category: {'==': key}}}, {cacheResponse: false}).then(function (em) {
+							ErrorMode.findAll({where: {category: {'==': key}}}, {cacheResponse: false}).then(function (em) {
 								console.log(em);
 								if (_.isEmpty(em)) {
 									ErrorMode.create({category: key, em: value, analysisId: $scope.atck.analysis.id}).
@@ -135,22 +135,23 @@ angular.module('myApp.view3', [])
 											console.log('ErrorMode ' + success.id + ' injected.');
 										});
 								} else {
-									ErrorMode.update(em[0].id, {em: value}).
-										then(function (success) {
-											console.log('ErrorMode ' + success.id + ' Updated.');
-										});
+									if (value == null) {
+										ErrorMode.destroy(em[0].id);
+									} else {
+										ErrorMode.update(em[0].id, {em: value}).
+											then(function (success) {
+												console.log('ErrorMode ' + success.id + ' Updated.');
+											});
+									}
 								}
 							})
 
 						});
-						// Set the date and atckId before injecting
-//						$scope.model.date = new Date();
-//						$scope.model.atckId = id;
-						// Inject
-//						return Description.create($scope.model).then(function (desc) {
-//							console.log(desc.id + ' injected.');
-//						});
 					};
+
+					$scope.clear = function (catName) {
+						$scope.model[catName] = null;
+					}
 
 					$scope.cancel = function () {
 						$modalInstance.dismiss('cancel');

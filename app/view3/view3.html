@@ -64,10 +64,11 @@
 										<td class="col-md-2"><b>{{sc.name}}</b></td>
 										<td class="col-md-9">{{sc.desc}}</td>
 										<td class="col-md-1"> <input type="radio" name={{cat.name}}
-		       value={{sc.name}} ng-model="model[cat.name]" /></td>
+		       value={{sc.name}} ng-model="model[cat.name]"/></td>
 									</tr>
 								</tbody>
 							</table>
+						<button class="btn .btn-default" type="button" ng-click="clear(cat.name)">Clear</button>
 						</td>
 					</tr>
 
