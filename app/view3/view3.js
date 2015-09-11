@@ -9,19 +9,19 @@ angular.module('myApp.view3', [])
 					templateUrl: 'view3/view3.html',
 					controller: 'View3Ctrl',
 					resolve: {
-						atck: function ($route, Stc, Atck, Analysis, Description) {
+						atck: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
 							return Atck.find($route.current.params.id).then(function (atck) {
-								return Atck.loadRelations(atck.id, ['analysis', 'description', 'analysis.em']);
+								return Atck.loadRelations(atck.id, ['analysis', 'description']);
 							});
 						},
 						current: function ($route, Stc, Atck, Analysis, Description) {
 							return Atck.findAll({current: 'true'}, {cacheResponse: false});
 						},
-						creamtable: function ($q, $route, Atck, Analysis, screamFlavors, xsltTransform) {
+						creamtable: function ($q, $route, Atck, Analysis, screamFlavors, xsltTransform, ErrorMode) {
 							// First we need to get the Analysis's CREAM flavor
 							return $q.resolve(Atck.find($route.current.params.id)).
 								then(function (atck) {
-									return Atck.loadRelations(atck.id, ['analysis', 'description', 'analysis.em']);
+									return Atck.loadRelations(atck.id, ['analysis', 'description']);
 								}).
 								then(function (atck) {
 									return xsltTransform.importFlavor(atck.analysis.flavor);
@@ -34,19 +34,19 @@ angular.module('myApp.view3', [])
 					templateUrl: 'view3/view3.html',
 					controller: 'View3Ctrl',
 					resolve: {
-						atck: function ($route, Stc, Atck, Analysis, Description) {
+						atck: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
 							return Atck.findAll({current: 'true'}).then(function (atcks) {
-								return Atck.loadRelations(atcks[0].id, ['analysis', 'description', 'analysis.em']);
+								return Atck.loadRelations(atcks[0].id, ['analysis', 'description']);
 							});
 						},
 						current: function ($route, Stc, Atck, Analysis, Description) {
 							return Atck.findAll({current: 'true'}, {cacheResponse: false});
 						},
-						creamtable: function ($q, Atck, Analysis, screamFlavors, xsltTransform) {
+						creamtable: function ($q, Atck, Analysis, screamFlavors, xsltTransform, ErrorMode) {
 							// First we need to get the Analysis's CREAM flavor
 							return $q.resolve(Atck.findAll({current: 'true'})).
 								then(function (atcks) {
-									return Atck.loadRelations(atcks[0].id, ['analysis', 'description', 'analysis.em']);
+									return Atck.loadRelations(atcks[0].id, ['analysis', 'description']);
 								}).
 								then(function (atck) {
 									return xsltTransform.importFlavor(atck.analysis.flavor);
@@ -61,12 +61,14 @@ angular.module('myApp.view3', [])
 		console.log($route.current.locals.atck);
 		console.log($route.current.locals.atck.description);
 		console.log($route.current.locals.atck.analysis);
-		console.log($route.current.locals.atck.analysis.em);
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.atck = $route.current.locals.atck;
 		$scope.flavors = screamFlavors;
-
+		// lazy loading of nested realtions does not work with localstorage
+		// so we resolve those here
+		$q.resolve(Analysis.loadRelations($scope.atck.analysis.id));
+		
 		$scope.creamtable = $route.current.locals.creamtable;
 
 		$scope.model = {};
@@ -114,7 +116,7 @@ angular.module('myApp.view3', [])
 						_.each($scope.model, function (value, key, list) {
 							ErrorMode.create({category: key, em: value, analysisId: $scope.atck.analysis.id}).
 								then(function (success) {
-									console.log('ErrorMode '+success.id+ ' injected.');
+									console.log('ErrorMode ' + success.id + ' injected.');
 								});
 						});
 						// Set the date and atckId before injecting
