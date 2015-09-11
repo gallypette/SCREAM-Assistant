@@ -14,8 +14,8 @@ angular.module('myApp.view3', [])
 								return Atck.loadRelations(atck.id, ['analysis', 'description']);
 							});
 						},
-						current: function ($route, Stc, Atck, Analysis, Description) {
-							return Atck.findAll({current: 'true'}, {cacheResponse: false});
+						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
+							return ErrorMode.findAll({current: 'true'}, {cacheResponse: false});
 						},
 						creamtable: function ($q, $route, Atck, Analysis, screamFlavors, xsltTransform) {
 							// First we need to get the Analysis's CREAM flavor
@@ -39,8 +39,8 @@ angular.module('myApp.view3', [])
 								return Atck.loadRelations(atcks[0].id, ['analysis', 'description']);
 							});
 						},
-						current: function ($route, Stc, Atck, Analysis, Description) {
-							return Atck.findAll({current: 'true'}, {cacheResponse: false});
+						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
+							return ErrorMode.findAll({current: 'true'}, {cacheResponse: false});
 						},
 						creamtable: function ($q, Atck, Analysis, screamFlavors, xsltTransform) {
 							// First we need to get the Analysis's CREAM flavor
@@ -64,6 +64,7 @@ angular.module('myApp.view3', [])
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.atck = $route.current.locals.atck;
+		$scope.current = $route.current.locals.current;
 		$scope.flavors = screamFlavors;
 		// lazy loading of nested realtions does not work with localstorage
 		// so we resolve those here
@@ -83,7 +84,29 @@ angular.module('myApp.view3', [])
 
 		$scope.creamtable = $route.current.locals.creamtable;
 
+		$scope.analyzeEM = function (em) {
+			var promises = [];
+			// We set this EM as current
+			_.each($scope.atck.analysis.ems, function (em) {
+				promises.push(ErrorMode.update(em.id, {current: 'false'}));
+			})
 
+			$q.all(promises).then(function () {
+				// We set the error mode as current
+				ErrorMode.update(em.id, {current: 'true'}).
+					then(function () {
+						// We update the view
+						ErrorMode.find(em.id).
+							then(function (current) {
+								console.log(current)
+								$scope.current = current;
+//							console.log($scope.current);
+								return true;
+							});
+					})
+			});
+
+		}
 
 		$scope.getFlavor = function (flavor) {
 			console.log("importing " + flavor.name);
@@ -162,32 +185,4 @@ angular.module('myApp.view3', [])
 				}
 			});
 		}
-
-		//Here we input the data we want to see in the tree
-		$scope.data = [
-			{
-				"name": "Wrong object",
-				"parent": "null",
-				"children": [
-					{
-						"name": "Level 2: A",
-						"parent": "Top Level",
-						"children": [
-							{
-								"name": "Son of A",
-								"parent": "Level 2: A"
-							},
-							{
-								"name": "Daughter of A",
-								"parent": "Level 2: A"
-							}
-						]
-					},
-					{
-						"name": "Level 2: B",
-						"parent": "Top Level"
-					}
-				]
-			}
-		];
 	});

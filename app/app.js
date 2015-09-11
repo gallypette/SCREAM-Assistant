@@ -38,7 +38,7 @@ angular.module('myApp', [
 		{url: '#/TMview1', text: 'TMview1'},
 		{url: '#/TMview2', text: 'TMview2'}
 	])
-	
+
 	.constant('screamFlavors', [
 //		{name: 'Cdcatalog test', file: "cdcatalog.xsl"},
 		{name: 'Basic CREAM tables', file: null}
@@ -124,7 +124,7 @@ angular.module('myApp', [
 					then(function () {
 						if (_.isUndefined(data.atcks)) {
 							return true;
-						} else if (data.atcks.length == 0){
+						} else if (data.atcks.length == 0) {
 							return true;
 						} else {
 							// The following code should work, but no luck :'(
@@ -169,13 +169,13 @@ angular.module('myApp', [
 				}
 			},
 			// Once we create an attack, we also create an default analysis linked to it.
-			afterCreate: function(resource, data, cb){
+			afterCreate: function (resource, data, cb) {
 				// We create and link an analysis at the same time
 				var analysis = {};
 				analysis.date = data.date;
 				analysis.flavor = screamFlavors[0];
 				analysis.atckId = data.id;
-				Analysis.create(analysis).then(function(){
+				Analysis.create(analysis).then(function () {
 					return cb(null, data);
 				});
 			},
@@ -232,14 +232,14 @@ angular.module('myApp', [
 					then(function () {
 						if (_.isUndefined(data.ems)) {
 							return true;
-						} else if (data.ems.length == 0){
+						} else if (data.ems.length == 0) {
 							return true;
 						} else {
 							var defer = $q.defer();
 							angular.forEach(data.ems, function (item) {
 								defer.resolve(ErrorMode.destroy(item.id));
 							});
-							return defer.promise;
+							return defer;
 						}
 					}).
 					then(function () {
@@ -259,6 +259,36 @@ angular.module('myApp', [
 						localKey: 'analysisId'
 					}
 				}
+			},
+			// Before creating an Error Mode, we alter the data block
+			// to add a data object that is the root element of a tree
+			beforeCreate: function (resource, data, cb) {
+				data.data = {
+					"name": data.em,
+					"parent": "null",
+					"children": [
+						{
+							"name": "Level 2: A",
+							"parent": "Top Level",
+							"children": [
+								{
+									"name": "Son of A",
+									"parent": "Level 2: A"
+								},
+								{
+									"name": "Daughter of A",
+									"parent": "Level 2: A"
+								}
+							]
+						},
+						{
+							"name": "Level 2: B",
+							"parent": "Top Level"
+						}
+					]
+				};
+
+				return cb(null, data);
 			}
 		});
 	})

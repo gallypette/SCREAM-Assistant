@@ -64,12 +64,6 @@ angular.module('myApp.view5', [])
 			atck.stcId = $scope.stc.id;
 			// Inject and clear the view
 			return Atck.create(atck).then(function () {
-				// We create and link an analysis at the same time
-				var analysis = {};
-				analysis.date = atck.date;
-				analysis.atckId = atck.id;
-				Analysis.create(analysis);
-				console.log(atck.name + ' injected.');
 				atck.name = '';
 				atck.desc = '';
 				atck.id = null;
