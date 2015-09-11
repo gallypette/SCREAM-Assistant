@@ -127,6 +127,10 @@ angular.module('myApp.view3', [])
 			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
 		}
 
+		$scope.updateView = function (emtree) {
+			$scope.update();
+		};
+
 		// Opens a modal to select an Error Mode to create
 		$scope.addEM = function () {
 			var modalInstance = $modal.open({

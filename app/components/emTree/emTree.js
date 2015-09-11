@@ -10,6 +10,69 @@ angular.module('myApp.emTree', [])
 					label: '@',
 					onClick: '&'
 				},
+				// The controller is used to expose an API to the other components
+				// here we want to provide an update function
+				controller: function ($scope, $element) {
+					$scope.update = function () {
+						
+						root = scope.data.data;
+						console.log(root);
+
+						// Remove previous nodes.
+						svg.selectAll('*').remove();
+
+						// Compute the new tree layout.
+						var nodes = tree.nodes(root).reverse(),
+							links = tree.links(nodes);
+
+						// Normalize for fixed-depth.
+						nodes.forEach(function (d) {
+							d.y = d.depth * 180;
+						});
+
+						// Declare the nodes…
+						var node = svg.selectAll("g.node")
+							.data(nodes, function (d) {
+								return d.id || (d.id = ++i);
+							});
+
+						// Enter the nodes.
+						var nodeEnter = node.enter().append("g")
+							.attr("class", "node")
+							.attr("transform", function (d) {
+								return "translate(" + d.y + "," + d.x + ")";
+							});
+
+						nodeEnter.append("circle")
+							.attr("r", 10)
+							.style("fill", "#fff");
+
+						nodeEnter.append("text")
+							.attr("x", function (d) {
+								return d.children || d._children ? -13 : 13;
+							})
+							.attr("dy", ".35em")
+							.attr("text-anchor", function (d) {
+								return d.children || d._children ? "end" : "start";
+							})
+							.text(function (d) {
+								return d.name;
+							})
+							.style("fill-opacity", 1);
+
+						// Declare the links…
+						var link = svg.selectAll("path.link")
+							.data(links, function (d) {
+								return d.target.id;
+							});
+
+						// Enter the links.
+						link.enter().insert("path", "g")
+							.attr("class", "link")
+							.attr("d", diagonal);
+
+					}
+				},
 				link: function (scope, element, attrs) {
 
 					d3Service.d3().then(function (d3) {
@@ -68,94 +131,7 @@ angular.module('myApp.emTree', [])
 								return [d.y, d.x];
 							});
 
-						var root = scope.data.data;
-
-//						var root = {
-//								"name": "Toto",
-//								"parent": "null",
-//								"children": [
-//									{
-//										"name": "Level 2: A",
-//										"parent": "Top Level",
-//										"children": [
-//											{
-//												"name": "Son of A",
-//												"parent": "Level 2: A"
-//											},
-//											{
-//												"name": "Daughter of A",
-//												"parent": "Level 2: A"
-//											}
-//										]
-//									},
-//									{
-//										"name": "Level 2: B",
-//										"parent": "Top Level"
-//									}
-//								]
-//							};
-							
-
-
-						update();
-
-						function update() {
-							
-							// Remove previous nodes.
-							svg.selectAll('*').remove();
-
-							// Compute the new tree layout.
-							var nodes = tree.nodes(root).reverse(),
-								links = tree.links(nodes);
-
-							// Normalize for fixed-depth.
-							nodes.forEach(function (d) {
-								d.y = d.depth * 180;
-							});
-
-							// Declare the nodes…
-							var node = svg.selectAll("g.node")
-								.data(nodes, function (d) {
-									return d.id || (d.id = ++i);
-								});
-
-							// Enter the nodes.
-							var nodeEnter = node.enter().append("g")
-								.attr("class", "node")
-								.attr("transform", function (d) {
-									return "translate(" + d.y + "," + d.x + ")";
-								});
-
-							nodeEnter.append("circle")
-								.attr("r", 10)
-								.style("fill", "#fff");
-
-							nodeEnter.append("text")
-								.attr("x", function (d) {
-									return d.children || d._children ? -13 : 13;
-								})
-								.attr("dy", ".35em")
-								.attr("text-anchor", function (d) {
-									return d.children || d._children ? "end" : "start";
-								})
-								.text(function (d) {
-									return d.name;
-								})
-								.style("fill-opacity", 1);
-
-							// Declare the links…
-							var link = svg.selectAll("path.link")
-								.data(links, function (d) {
-									return d.target.id;
-								});
-
-							// Enter the links.
-							link.enter().insert("path", "g")
-								.attr("class", "link")
-								.attr("d", diagonal);
-
-						}
-
+						var root = "";
 					});
 				}};
 		}]);
