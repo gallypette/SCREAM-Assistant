@@ -136,7 +136,10 @@ angular.module('myApp.view3', [])
 										});
 								} else {
 									if (value == null) {
-										ErrorMode.destroy(em[0].id);
+										ErrorMode.destroy(em[0].id).
+											then(function (success) {
+												console.log('ErrorMode Destroyed.');
+											});
 									} else {
 										ErrorMode.update(em[0].id, {em: value}).
 											then(function (success) {
