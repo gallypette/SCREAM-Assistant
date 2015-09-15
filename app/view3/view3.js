@@ -15,7 +15,11 @@ angular.module('myApp.view3', [])
 							});
 						},
 						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
-							return ErrorMode.findAll({current: 'true'}, {cacheResponse: false});
+							return Atck.find($route.current.params.id).then(function (atck) {
+								return Atck.loadRelations(atck.id, ['analysis']).then(function(atck){
+									return ErrorMode.findAll({current: 'true', analysisId: atck.analysis.id}, {cacheResponse: false});
+								});
+							});
 						},
 						creamtable: function ($q, $route, Atck, Analysis, screamFlavors, xsltTransform) {
 							// First we need to get the Analysis's CREAM flavor
@@ -40,7 +44,11 @@ angular.module('myApp.view3', [])
 							});
 						},
 						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
-							return ErrorMode.findAll({current: 'true'}, {cacheResponse: false});
+							return Atck.findAll({current: 'true'}).then(function (atck) {
+								return Atck.loadRelations(atck[0].id, ['analysis']).then(function(atck){
+									return ErrorMode.findAll({current: 'true', analysisId: atck.analysis.id}, {cacheResponse: false});
+								});
+							});
 						},
 						creamtable: function ($q, Atck, Analysis, screamFlavors, xsltTransform) {
 							// First we need to get the Analysis's CREAM flavor
@@ -98,9 +106,10 @@ angular.module('myApp.view3', [])
 						// We update the view
 						ErrorMode.find(em.id).
 							then(function (current) {
-								console.log(current)
+//								console.log(current)
 								$scope.current = current;
-//							console.log($scope.current);
+							console.log($scope.current);
+								// Now we try to update the TreeView
 								return true;
 							});
 					})
@@ -126,10 +135,6 @@ angular.module('myApp.view3', [])
 		$scope.isActiveM = function (url) {
 			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
 		}
-
-		$scope.updateView = function (emtree) {
-			$scope.update();
-		};
 
 		// Opens a modal to select an Error Mode to create
 		$scope.addEM = function () {
