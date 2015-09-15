@@ -96,7 +96,20 @@ angular.module('myApp.emTree', [])
 									return d.children || d._children ? "end" : "start";
 								})
 								.text(function (d) {
-									return d.name;
+									return d.category;
+								})
+								.style("fill-opacity", 1);
+							
+							nodeEnter.append("text")
+								.attr("x", function (d) {
+									return d.children || d._children ? -13 : 13;
+								})
+								.attr("dy", "1.55em")
+								.attr("text-anchor", function (d) {
+									return d.children || d._children ? "end" : "start";
+								})
+								.text(function (d) {
+									return d.em;
 								})
 								.style("fill-opacity", 1);
 							
