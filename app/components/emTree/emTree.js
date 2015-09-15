@@ -5,121 +5,40 @@ angular.module('myApp.emTree', [])
 	.directive('errorModeTree', ['$window', 'd3Service', function ($window, d3Service) {
 			return {
 				restrict: 'A',
-				scope: {
-					data: '=',
-					label: '@',
-					onClick: '&'
-				},
-				// The controller is used to expose an API to the other components
-				// here we want to provide an update function
-				controller: function ($scope, $element) {
-					$scope.update = function () {
-						
-						root = scope.data.data;
-						console.log(root);
-
-						// Remove previous nodes.
-						svg.selectAll('*').remove();
-
-						// Compute the new tree layout.
-						var nodes = tree.nodes(root).reverse(),
-							links = tree.links(nodes);
-
-						// Normalize for fixed-depth.
-						nodes.forEach(function (d) {
-							d.y = d.depth * 180;
-						});
-
-						// Declare the nodes…
-						var node = svg.selectAll("g.node")
-							.data(nodes, function (d) {
-								return d.id || (d.id = ++i);
-							});
-
-						// Enter the nodes.
-						var nodeEnter = node.enter().append("g")
-							.attr("class", "node")
-							.attr("transform", function (d) {
-								return "translate(" + d.y + "," + d.x + ")";
-							});
-
-						nodeEnter.append("circle")
-							.attr("r", 10)
-							.style("fill", "#fff");
-
-						nodeEnter.append("text")
-							.attr("x", function (d) {
-								return d.children || d._children ? -13 : 13;
-							})
-							.attr("dy", ".35em")
-							.attr("text-anchor", function (d) {
-								return d.children || d._children ? "end" : "start";
-							})
-							.text(function (d) {
-								return d.name;
-							})
-							.style("fill-opacity", 1);
-
-						// Declare the links…
-						var link = svg.selectAll("path.link")
-							.data(links, function (d) {
-								return d.target.id;
-							});
-
-						// Enter the links.
-						link.enter().insert("path", "g")
-							.attr("class", "link")
-							.attr("d", diagonal);
-
-					}
-				},
+				// I share the scope as I don't plan to have several trees on the same page.
+				scope: false,
 				link: function (scope, element, attrs) {
-
 					d3Service.d3().then(function (d3) {
-						var svg = d3.select(element[0])
-							.append('svg')
-							.style('width', '100%');
-
-						var margin = {top: 20, right: 120, bottom: 20, left: 120},
+						
+						var margin = {top: 0, right: 120, bottom: 20, left: 120},
 						width = 960 - margin.right - margin.left,
 							height = 500 - margin.top - margin.bottom;
 
 						var svg = d3.select(element[0]).append("svg")
 							.attr("width", width + margin.right + margin.left)
 							.attr("height", height + margin.top + margin.bottom)
+							.style('width', '100%')
 							.append("g")
 							.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+						
 						// Browser onresize event
 						window.onresize = function () {
 							scope.$apply();
 						};
+						
 						// Watch for resize event
 //						scope.$watch(function () {
 //							return angular.element($window)[0].innerWidth;
 //						}, function () {
-//							root = scope.data;
-//							update();
+//							update(scope.current.data);
 //						});
-						// Watch for change in the data
-						// 
-						// This is the wrong way to do it, recusivity hell.
-						// 
-//						scope.$watch('data', function (newData) {
-//							console.log(root);
-//							console.log(scope.data.data);
-//							root = scope.data.data;
-//							update();
-//						}, true);
-
-						// Our d3 code
-//                            scope.render = function (data, svg) {
-
-						// Remove all previous items before rendering 
-//                                svg.selectAll('*').remove();
-
-						// If we don't pass any data, return out of the element
-//                                if (!data)
-//                                    return;
+						// Watch for change of current Error Mode
+						scope.$watch('current.id', function (newData, oldData) {
+							console.log(oldData);
+							console.log(newData);
+							root = scope.current.data;
+							update(root);
+						}, true);
 
 						var i = 0;
 
@@ -131,7 +50,69 @@ angular.module('myApp.emTree', [])
 								return [d.y, d.x];
 							});
 
-						var root = "";
+						var root = scope.current.data;
+
+						update(root);
+
+						function update(source) {
+							
+							console.log("Updating the tree.");
+							
+							// Remove all previous items before rendering 
+							svg.selectAll('*').remove();
+
+							// Compute the new tree layout.
+							var nodes = tree.nodes(root).reverse(),
+								links = tree.links(nodes);
+
+							// Normalize for fixed-depth.
+							nodes.forEach(function (d) {
+								d.y = d.depth * 180;
+							});
+
+							// Declare the nodes…
+							var node = svg.selectAll("g.node")
+								.data(nodes, function (d) {
+									return d.id || (d.id = ++i);
+								});
+
+							// Enter the nodes.
+							var nodeEnter = node.enter().append("g")
+								.attr("class", "node")
+								.attr("transform", function (d) {
+									return "translate(" + d.y + "," + d.x + ")";
+								});
+
+							nodeEnter.append("circle")
+								.attr("r", 10)
+								.style("fill", "#fff");
+
+							nodeEnter.append("text")
+								.attr("x", function (d) {
+									return d.children || d._children ? -13 : 13;
+								})
+								.attr("dy", ".35em")
+								.attr("text-anchor", function (d) {
+									return d.children || d._children ? "end" : "start";
+								})
+								.text(function (d) {
+									return d.name;
+								})
+								.style("fill-opacity", 1);
+
+							// Declare the links…
+							var link = svg.selectAll("path.link")
+								.data(links, function (d) {
+									return d.target.id;
+								});
+
+							// Enter the links.
+							link.enter().insert("path", "g")
+								.attr("class", "link")
+								.attr("d", diagonal);
+
+						}
+
 					});
 				}};
 		}]);

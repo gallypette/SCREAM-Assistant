@@ -72,7 +72,7 @@ angular.module('myApp.view3', [])
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.atck = $route.current.locals.atck;
-		$scope.current = $route.current.locals.current;
+		$scope.current = $route.current.locals.current[0];
 		$scope.flavors = screamFlavors;
 		// lazy loading of nested realtions does not work with localstorage
 		// so we resolve those here
@@ -108,7 +108,7 @@ angular.module('myApp.view3', [])
 							then(function (current) {
 //								console.log(current)
 								$scope.current = current;
-							console.log($scope.current);
+//							console.log($scope.current);
 								// Now we try to update the TreeView
 								return true;
 							});
