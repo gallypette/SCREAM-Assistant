@@ -264,7 +264,7 @@ angular.module('myApp', [
 			// to add a data object that is the root element of a tree
 			beforeCreate: function (resource, data, cb) {
 				data.data = {
-					"name": data.em,
+					"name": data.category+' : '+data.em,
 					"parent": "null",
 					"children": [
 						{

@@ -99,6 +99,9 @@ angular.module('myApp.emTree', [])
 									return d.name;
 								})
 								.style("fill-opacity", 1);
+							
+							// Set the onClick
+							nodeEnter.on("click", function(d, i){return scope.onClick({item: d});})
 
 							// Declare the links…
 							var link = svg.selectAll("path.link")

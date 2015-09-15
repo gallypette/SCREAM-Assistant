@@ -16,7 +16,7 @@ angular.module('myApp.view3', [])
 						},
 						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
 							return Atck.find($route.current.params.id).then(function (atck) {
-								return Atck.loadRelations(atck.id, ['analysis']).then(function(atck){
+								return Atck.loadRelations(atck.id, ['analysis']).then(function (atck) {
 									return ErrorMode.findAll({current: 'true', analysisId: atck.analysis.id}, {cacheResponse: false});
 								});
 							});
@@ -45,7 +45,7 @@ angular.module('myApp.view3', [])
 						},
 						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
 							return Atck.findAll({current: 'true'}).then(function (atck) {
-								return Atck.loadRelations(atck[0].id, ['analysis']).then(function(atck){
+								return Atck.loadRelations(atck[0].id, ['analysis']).then(function (atck) {
 									return ErrorMode.findAll({current: 'true', analysisId: atck.analysis.id}, {cacheResponse: false});
 								});
 							});
@@ -135,6 +135,10 @@ angular.module('myApp.view3', [])
 		$scope.isActiveM = function (url) {
 			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
 		}
+		
+		$scope.onClick = function(element){
+			console.log(element);
+		};
 
 		// Opens a modal to select an Error Mode to create
 		$scope.addEM = function () {
