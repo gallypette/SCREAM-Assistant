@@ -266,6 +266,8 @@ angular.module('myApp', [
 				data.data = {
 					"category": data.category,
 					"em": data.em,
+					"go": "true",
+					"stop": "false",
 					"icon": "icons/clanbomber.png",
 					"children": [
 						{
@@ -349,7 +351,7 @@ angular.module('myApp', [
 										{
 											"category": "SA",
 											"em": "Competing task",
-											"go": "false",
+											"go": "true",
 											"stop": "false"
 										}
 									]
@@ -439,7 +441,7 @@ angular.module('myApp', [
 								{
 									"category": "GA",
 									"em": "Mislabelling",
-									"go": "true",
+									"go": "false",
 									"stop": "false",
 									"children": []
 								}

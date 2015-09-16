@@ -9,10 +9,10 @@ angular.module('myApp.emTree', [])
 				scope: false,
 				link: function (scope, element, attrs) {
 					d3Service.d3().then(function (d3) {
-						
+
 						var margin = {top: 0, right: 120, bottom: 20, left: 120},
 						width = 960 - margin.right - margin.left,
-							height = 500 - margin.top - margin.bottom;
+							height = 1000 - margin.top - margin.bottom;
 
 						var svg = d3.select(element[0]).append("svg")
 							.attr("width", width + margin.right + margin.left)
@@ -20,12 +20,12 @@ angular.module('myApp.emTree', [])
 							.style('width', '100%')
 							.append("g")
 							.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-						
+
 						// Browser onresize event
 						window.onresize = function () {
 							scope.$apply();
 						};
-						
+
 						// Watch for resize event
 //						scope.$watch(function () {
 //							return angular.element($window)[0].innerWidth;
@@ -55,9 +55,9 @@ angular.module('myApp.emTree', [])
 						update(root);
 
 						function update(source) {
-							
+
 							console.log("Updating the tree.");
-							
+
 							// Remove all previous items before rendering 
 							svg.selectAll('*').remove();
 
@@ -66,6 +66,7 @@ angular.module('myApp.emTree', [])
 								links = tree.links(nodes);
 
 							// Normalize for fixed-depth.
+							// Décalage horizontal
 							nodes.forEach(function (d) {
 								d.y = d.depth * 180;
 							});
@@ -85,13 +86,24 @@ angular.module('myApp.emTree', [])
 
 							nodeEnter.append("circle")
 								.attr("r", 10)
-								.style("fill", "#fff");
+								.style("fill", function (d) {
+									return d.go == "true" ? "#A4C400" : "#E51400";
+								});
+
+							nodeEnter.append("image")
+								.attr("xlink:href", function (d) {
+									return d.stop == "true" ? "icons/stop-sign.png" : "icons/Mail.png";
+								})
+								.attr("x", "12px")
+								.attr("y", "-8px")
+								.attr("width", "16px")
+								.attr("height", "16px");
 
 							nodeEnter.append("text")
 								.attr("x", function (d) {
-									return d.children || d._children ? -13 : 13;
+									return d.children || d._children ? -13 : 36;
 								})
-								.attr("dy", ".35em")
+								.attr("dy", "0em")
 								.attr("text-anchor", function (d) {
 									return d.children || d._children ? "end" : "start";
 								})
@@ -99,12 +111,12 @@ angular.module('myApp.emTree', [])
 									return d.category;
 								})
 								.style("fill-opacity", 1);
-							
+
 							nodeEnter.append("text")
 								.attr("x", function (d) {
-									return d.children || d._children ? -13 : 13;
+									return d.children || d._children ? -13 : 36;
 								})
-								.attr("dy", "1.55em")
+								.attr("dy", "1.25em")
 								.attr("text-anchor", function (d) {
 									return d.children || d._children ? "end" : "start";
 								})
@@ -112,9 +124,11 @@ angular.module('myApp.emTree', [])
 									return d.em;
 								})
 								.style("fill-opacity", 1);
-							
+
 							// Set the onClick
-							nodeEnter.on("click", function(d, i){return scope.onClick({item: d});})
+							nodeEnter.on("click", function (d, i) {
+								return scope.onClick({item: d});
+							})
 
 							// Declare the links…
 							var link = svg.selectAll("path.link")
