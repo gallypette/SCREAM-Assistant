@@ -266,8 +266,186 @@ angular.module('myApp', [
 				data.data = {
 					"category": data.category,
 					"em": data.em,
-					"parent": "null",
-					"children": []
+					"icon": "icons/clanbomber.png",
+					"children": [
+						{
+							"category": "SA",
+							"em": "Ambiguous label",
+							"go": "false",
+							"stop": "false",
+						},
+						{
+							"category": "SA",
+							"em": "Incorrect label",
+							"go": "false",
+							"stop": "false",
+						},
+						{
+							"category": "GA",
+							"em": "Wrong Identification",
+							"go": "true",
+							"stop": "false",
+							"children": [
+								{
+									"category": "SA",
+									"em": "Erroneous Information",
+									"go": "true",
+									"stop": "true"
+								},
+								{
+									"category": "SA",
+									"em": "Ambiguous symbol set",
+									"go": "true",
+									"stop": "false"
+								},
+								{
+									"category": "SA",
+									"em": "Ambiguous signals",
+									"go": "true",
+									"stop": "false"
+								},
+								{
+									"category": "SA",
+									"em": "Habit, Expectancies",
+									"go": "true",
+									"stop": "false"
+								},
+								{
+									"category": "SA",
+									"em": "Information Overload",
+									"go": "false",
+									"stop": "false"
+								},
+								{
+									"category": "GA",
+									"em": "Distraction",
+									"go": "true",
+									"stop": "false",
+									"children": [
+										{
+											"category": "SA",
+											"em": "Boss / Colleagues",
+											"go": "false",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Comfort call",
+											"go": "false",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Commotion",
+											"go": "false",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Telephone",
+											"go": "false",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Competing task",
+											"go": "false",
+											"stop": "false"
+										}
+									]
+								},
+								{
+									"category": "GA",
+									"em": "Missing Information",
+									"go": "true",
+									"stop": "false",
+									"children": [
+										{
+											"category": "SA",
+											"em": "Hidden Information",
+											"go": "true",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Presentation failure",
+											"go": "true",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Incorrect language",
+											"go": "false",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Noise",
+											"go": "false",
+											"stop": "false"
+										}
+									]
+								},
+								{
+									"category": "GA",
+									"em": "Faulty Diagnosis",
+									"go": "true",
+									"stop": "false",
+									"children": [
+										{
+											"category": "SA",
+											"em": "Confusing Symptoms",
+											"go": "false",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Error in mental model",
+											"go": "true",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Misleading symptoms",
+											"go": "false",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Mislearning",
+											"go": "true",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Multiple disturbances",
+											"go": "false",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "New situation",
+											"go": "false",
+											"stop": "false"
+										},
+										{
+											"category": "SA",
+											"em": "Erroneous analogy",
+											"go": "false",
+											"stop": "false"
+										}
+									]
+								},
+								{
+									"category": "GA",
+									"em": "Mislabelling",
+									"go": "true",
+									"stop": "false",
+									"children": []
+								}
+							]
+						}
+					]
 				};
 
 				return cb(null, data);
