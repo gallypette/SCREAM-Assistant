@@ -87,7 +87,13 @@ angular.module('myApp.emTree', [])
 							nodeEnter.append("circle")
 								.attr("r", 10)
 								.style("fill", function (d) {
-									return d.go == "true" ? "#A4C400" : "#E51400";
+									// Collapsed= darker colors
+									// & Green= d.do == "true"
+									if(d.go == "true"){
+										return d._children ? "#017D09" : "#00D80E";								
+									}else{
+										return d._children ? "#E51400" : "#E51400";			
+									}
 								});
 
 							nodeEnter.append("image")
