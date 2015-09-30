@@ -198,17 +198,6 @@ angular.module('myApp.emTree', [])
 								d.x0 = d.x;
 								d.y0 = d.y;
 							});
-
-							// Declare the links…
-//							var link = svg.selectAll("path.link")
-//								.data(links, function (d) {
-//									return d.target.id;
-//								});
-
-							// Enter the links.
-//							link.enter().insert("path", "g")
-//								.attr("class", "link")
-//								.attr("d", diagonal);
 						}
 
 						// Toggle children on click.
