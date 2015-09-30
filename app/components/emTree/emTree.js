@@ -127,6 +127,15 @@ angular.module('myApp.emTree', [])
 
 							// Set the onClick
 							nodeEnter.on("click", function (d, i) {
+								// Toggle Collapse state of the node
+								if (d.children) {
+									d._children = d.children;
+									d.children = null;
+								} else {
+									d.children = d._children;
+									d._children = null;
+								}
+								update(d);
 								return scope.onClick({item: d});
 							})
 
