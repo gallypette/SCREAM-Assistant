@@ -14,6 +14,8 @@ angular.module('myApp.emTree', [])
 						width = 960 - margin.right - margin.left,
 							height = 1000 - margin.top - margin.bottom;
 
+						var duration = 750;
+
 						var svg = d3.select(element[0]).append("svg")
 							.attr("width", width + margin.right + margin.left)
 							.attr("height", height + margin.top + margin.bottom)
@@ -56,10 +58,8 @@ angular.module('myApp.emTree', [])
 
 						function update(source) {
 
-							console.log("Updating the tree.");
-
-							// Remove all previous items before rendering 
-							svg.selectAll('*').remove();
+							console.log("Updating the tree:");
+							console.log(source);
 
 							// Compute the new tree layout.
 							var nodes = tree.nodes(root).reverse(),
@@ -80,19 +80,23 @@ angular.module('myApp.emTree', [])
 							// Enter the nodes.
 							var nodeEnter = node.enter().append("g")
 								.attr("class", "node")
+//								.attr("transform", function (d) {
+//									return "translate(" + d.y + "," + d.x + ")";
+//								});
 								.attr("transform", function (d) {
-									return "translate(" + d.y + "," + d.x + ")";
-								});
+									return "translate(" + source.y0 + "," + source.x0 + ")";
+								})
+								.on("click", click);
 
 							nodeEnter.append("circle")
 								.attr("r", 10)
 								.style("fill", function (d) {
 									// Collapsed= darker colors
 									// & Green= d.do == "true"
-									if(d.go == "true"){
-										return d._children ? "#017D09" : "#00D80E";								
-									}else{
-										return d._children ? "#E51400" : "#E51400";			
+									if (d.go == "true") {
+										return d._children ? "#017D09" : "#00D80E";
+									} else {
+										return d._children ? "#E51400" : "#E51400";
 									}
 								});
 
@@ -131,31 +135,93 @@ angular.module('myApp.emTree', [])
 								})
 								.style("fill-opacity", 1);
 
-							// Set the onClick
-							nodeEnter.on("click", function (d, i) {
-								// Toggle Collapse state of the node
-								if (d.children) {
-									d._children = d.children;
-									d.children = null;
-								} else {
-									d.children = d._children;
-									d._children = null;
-								}
-								update(d);
-								return scope.onClick({item: d});
-							})
+							// Transition nodes to their new position.
+							var nodeUpdate = node.transition()
+								.duration(duration)
+								.attr("transform", function (d) {
+									return "translate(" + d.y + "," + d.x + ")";
+								});
 
-							// Declare the links…
+							nodeUpdate.select("circle")
+								.attr("r", 10)
+								.style("fill", function (d) {
+									if (d.go == "true") {
+										return d._children ? "#017D09" : "#00D80E";
+									} else {
+										return d._children ? "#E51400" : "#E51400";
+									}
+								});
+							nodeUpdate.select("text")
+								.style("fill-opacity", 1);
+
+							// Transition exiting nodes to the parent's new position.
+							var nodeExit = node.exit().transition()
+								.duration(duration)
+								.attr("transform", function (d) {
+									return "translate(" + source.y + "," + source.x + ")";
+								})
+								.remove();
+							nodeExit.select("circle")
+								.attr("r", 1e-6);
+							nodeExit.select("text")
+								.style("fill-opacity", 1e-6);
+							// Update the links…
 							var link = svg.selectAll("path.link")
 								.data(links, function (d) {
 									return d.target.id;
 								});
 
-							// Enter the links.
+							// Enter any new links at the parent's previous position.
 							link.enter().insert("path", "g")
 								.attr("class", "link")
+								.attr("d", function (d) {
+									var o = {x: source.x0, y: source.y0};
+									return diagonal({source: o, target: o});
+								});
+
+							// Transition links to their new position.
+							link.transition()
+								.duration(duration)
 								.attr("d", diagonal);
 
+							// Transition exiting nodes to the parent's new position.
+							link.exit().transition()
+								.duration(duration)
+								.attr("d", function (d) {
+									var o = {x: source.x, y: source.y};
+									return diagonal({source: o, target: o});
+								})
+								.remove();
+
+							// Stash the old positions for transition.
+							nodes.forEach(function (d) {
+								d.x0 = d.x;
+								d.y0 = d.y;
+							});
+
+							// Declare the links…
+//							var link = svg.selectAll("path.link")
+//								.data(links, function (d) {
+//									return d.target.id;
+//								});
+
+							// Enter the links.
+//							link.enter().insert("path", "g")
+//								.attr("class", "link")
+//								.attr("d", diagonal);
+						}
+
+						// Toggle children on click.
+						function click(d) {
+							if (d.children) {
+								d._children = d.children;
+								d.children = null;
+							} else {
+								d.children = d._children;
+								d._children = null;
+							}
+							update(d);
+							return scope.onClick({item: d});
 						}
 
 					});
