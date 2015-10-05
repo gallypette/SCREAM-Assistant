@@ -91,13 +91,7 @@ angular.module('myApp.emTree', [])
 							nodeEnter.append("circle")
 								.attr("r", 10)
 								.style("fill", function (d) {
-									// Collapsed= darker colors
-									// & Green= d.do == "true"
-									if (d.go == "true") {
-										return d._children ? "#017D09" : "#00D80E";
-									} else {
-										return d._children ? "#E51400" : "#E51400";
-									}
+									return (d.go == "true") ? "green" : "red";
 								});
 
 							nodeEnter.append("image")
@@ -141,15 +135,10 @@ angular.module('myApp.emTree', [])
 								.attr("transform", function (d) {
 									return "translate(" + d.y + "," + d.x + ")";
 								});
-
 							nodeUpdate.select("circle")
 								.attr("r", 10)
 								.style("fill", function (d) {
-									if (d.go == "true") {
-										return d._children ? "#017D09" : "#00D80E";
-									} else {
-										return d._children ? "#E51400" : "#E51400";
-									}
+									return (d.go == "true") ? "green" : "red";
 								});
 							nodeUpdate.select("text")
 								.style("fill-opacity", 1);
@@ -202,17 +191,20 @@ angular.module('myApp.emTree', [])
 
 						// Toggle children on click.
 						function click(d) {
-							if (d.children) {
+							if (d.children) { // Opened
+								d.go = (d.go == "true") ? "false" : "true";
+								
 								d._children = d.children;
 								d.children = null;
-							} else {
+							} else { // Closed or SA
+								d.go = (d.go == "true") ? "false" : "true";
 								d.children = d._children;
 								d._children = null;
 							}
+							scope.updateEMDb();
 							update(d);
 							return scope.onClick({item: d});
 						}
-
 					});
 				}};
 		}]);

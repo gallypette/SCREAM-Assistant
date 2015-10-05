@@ -135,11 +135,16 @@ angular.module('myApp.view3', [])
 		$scope.isActiveM = function (url) {
 			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
 		}
-		
-		$scope.onClick = function(element){
-			console.log(element);
+
+		$scope.onClick = function (element) {
+//			console.log(element);
 		};
 
+		// Set the DB to the current emTree's state.
+		$scope.updateEMDb = function () {
+			ErrorMode.update($scope.current.id, {data: $scope.current.data})
+		};
+		
 		// Opens a modal to select an Error Mode to create
 		$scope.addEM = function () {
 			var modalInstance = $modal.open({
