@@ -197,6 +197,7 @@ angular.module('myApp.emTree', [])
 								d._children = d.children;
 								d.children = null;
 							} else { // Closed or SA
+								console.log(scope.digAntecedent(d));
 								d.go = (d.go == "true") ? "false" : "true";
 								d.children = d._children;
 								d._children = null;

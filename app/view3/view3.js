@@ -144,7 +144,62 @@ angular.module('myApp.view3', [])
 		$scope.updateEMDb = function () {
 			ErrorMode.update($scope.current.id, {data: $scope.current.data})
 		};
-		
+
+		// Functions that find the antecedents for the next depth
+		$scope.digAntecedent = function (d) {
+			console.log(d);
+			var antecedents = [];
+			// We investigatin the root
+			if (d.depth == 0) {
+				_.each($scope.creamtable.cream.category[0].group.gc, function (value, key, list) {
+					_.each(value.sc, function (vsc, ksc, lsc) {
+						if (vsc.name === d.em) {
+							antecedents.push(value);
+						}
+					});
+				});
+				// We investigate a node
+			}
+//			} else {
+//				console.log($scope.creamtable.cream.category[0].group.gc);
+//				// We iterate through all the groups of error modes
+//				_.each($scope.creamtable.cream.category[0].group.gc, function (value, key, list) {
+//					console.log(value);
+////				'Wrong object'
+//					// Search into the GA
+//					_.each(value.ga, function (vga, kga, lga) {
+//						if (value.name === 'Wrong object') {
+//
+//						}
+//					});
+//					// Search into the SA
+//					_.each(value.ga, function (vsa, ksa, lsa) {
+//
+//					});
+//				});
+//			}
+			// Once the lasso done, we populate the current tree
+			if (_.isUndefined(d._children)) {
+				d._children = [];
+				_.each(antecedents[0].sa, function (value, key, list) {
+					d._children.push({
+						"category": "SA",
+						"em": value.name,
+						"go": "false",
+						"stop": "false"});
+				});
+				_.each(antecedents[0].ga, function (value, key, list) {
+					d._children.push({
+						"category": "GA",
+						"em": value.name,
+						"go": "false",
+						"stop": "false"});
+				});
+			}
+
+			return antecedents;
+		}
+
 		// Opens a modal to select an Error Mode to create
 		$scope.addEM = function () {
 			var modalInstance = $modal.open({
