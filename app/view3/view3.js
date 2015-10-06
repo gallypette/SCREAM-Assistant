@@ -158,17 +158,45 @@ angular.module('myApp.view3', [])
 			}
 			return path;
 		}
+		
+		// Function that search for the next children to follow in the path
+		var popPath = function (ga, target){
+			console.log(ga);
+			console.log(target);
+			var result = {};
+			_.each(ga.ga, function (value, key, list) {
+				if(value.name == target.em){
+					result = value;
+				}
+			});
+			_.each(ga.sa, function (value, key, list) {
+				if(value.name == target.em){
+					result = value;
+				}
+			});
+			return result;
+		}
 
 		var expandGA = function (d, path) {
-			// We set pointer to the root of the tree
-			var pointer = path[0];
+			var pointer = {};
+			// First, we select the error mode
+			_.each($scope.creamtable.cream.category[0].group.gc, function (value, key, list) {
+//				console.log(value);
+//				console.log(path[0])
+				if(value.name == path[0].category){
+					pointer = value;
+				}
+			});
+			// Remove the root from the path
 			path = _.rest(path);
 			// Then we follow the path to the target node
-			_.each(path, function (element, index, list) {
-				_.each($scope.creamtable, function(){
-					
-				})
+			_.each(path, function (value, key, list) {
+				pointer = popPath(pointer, element);
+				console.log(pointer);
 			});
+			// Now that pointer points to the last parents, we search for d
+			return popPath(pointer, new Array({"category": d.category, "em": d.em}));
+			
 			// We follow the path from top to bottom to the GA
 //				_.each($scope.creamtable.cream.category[0].group.gc, function (value, key, list) {
 //					console.log(value);
@@ -183,6 +211,7 @@ angular.module('myApp.view3', [])
 //
 //					});
 //				});
+//			return antecedents;
 		}
 
 		// Functions that find the antecedents for the next depth
@@ -204,13 +233,15 @@ angular.module('myApp.view3', [])
 				// We follow the path of the current node through .parent
 				if (d.parent.depth == 0) { // We already hit the root W00t
 					// Function that gets the content of a node
-					antecedents = expandGA(d, new Array({"category": d.parent.category, "em": d.parent.em}));
+					antecedents.push(expandGA(d, new Array({"category": d.parent.category, "em": d.parent.em})));
 				} else {
 					console.log(getPath(d));
 					antecedents = expandGA(d);
 				}
 
 			}
+			console.log('antecedents[0]');
+			console.log(antecedents[0]);
 			// Once the lasso done, we populate the current tree
 			if (_.isUndefined(d._children)) {
 				d._children = [];
