@@ -145,6 +145,46 @@ angular.module('myApp.view3', [])
 			ErrorMode.update($scope.current.id, {data: $scope.current.data})
 		};
 
+		// Builds the path of a node
+		var getPath = function (d) {
+			var path = [];
+			for (i = d.depth; i != 0; i--) {
+				console.log(d);
+				path[d.depth] = {
+					"category": d.category,
+					"em": d.em
+				};
+				d = d.parent;
+			}
+			return path;
+		}
+
+		var expandGA = function (d, path) {
+			// We set pointer to the root of the tree
+			var pointer = path[0];
+			path = _.rest(path);
+			// Then we follow the path to the target node
+			_.each(path, function (element, index, list) {
+				_.each($scope.creamtable, function(){
+					
+				})
+			});
+			// We follow the path from top to bottom to the GA
+//				_.each($scope.creamtable.cream.category[0].group.gc, function (value, key, list) {
+//					console.log(value);
+			// Search into the GA
+//					_.each(value.ga, function (vga, kga, lga) {
+//						if (value.name === 'Wrong object') {
+//
+//						}
+//					});
+			// Search into the SA
+//					_.each(value.ga, function (vsa, ksa, lsa) {
+//
+//					});
+//				});
+		}
+
 		// Functions that find the antecedents for the next depth
 		$scope.digAntecedent = function (d) {
 			console.log(d);
@@ -158,26 +198,19 @@ angular.module('myApp.view3', [])
 						}
 					});
 				});
-				// We investigate a node
+			} else if (d.category == 'SA') { // SA do not have children
+				return antecedents = [];
+			} else { // We investigate a GA
+				// We follow the path of the current node through .parent
+				if (d.parent.depth == 0) { // We already hit the root W00t
+					// Function that gets the content of a node
+					antecedents = expandGA(d, new Array({"category": d.parent.category, "em": d.parent.em}));
+				} else {
+					console.log(getPath(d));
+					antecedents = expandGA(d);
+				}
+
 			}
-//			} else {
-//				console.log($scope.creamtable.cream.category[0].group.gc);
-//				// We iterate through all the groups of error modes
-//				_.each($scope.creamtable.cream.category[0].group.gc, function (value, key, list) {
-//					console.log(value);
-////				'Wrong object'
-//					// Search into the GA
-//					_.each(value.ga, function (vga, kga, lga) {
-//						if (value.name === 'Wrong object') {
-//
-//						}
-//					});
-//					// Search into the SA
-//					_.each(value.ga, function (vsa, ksa, lsa) {
-//
-//					});
-//				});
-//			}
 			// Once the lasso done, we populate the current tree
 			if (_.isUndefined(d._children)) {
 				d._children = [];
