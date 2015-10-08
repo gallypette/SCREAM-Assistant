@@ -153,13 +153,11 @@ angular.module('myApp.view3', [])
 					// lone elements are not into an array but are an object in CREAM.xml
 					if (_.isArray(value.gc)) {
 						_.each(value.gc, function (vgc, kgc, lgc) {
-						console.log(vgc.name);
 							if (vgc.name === d.em) {
 								pointer = vgc;
 							}
 						});
 					} else if (_.isObject(value.gc)) {
-						console.log(value.gc.name);
 						if (value.gc.name === d.em) {
 							pointer = value.gc;
 						}
@@ -190,24 +188,39 @@ angular.module('myApp.view3', [])
 			}
 			console.log(pointer);
 			// Once pointer point on the right node in CREAM's tree, we populate the tree
-			if (_.isUndefined(d._children)) {
-				d._children = [];
+			var children = [];
+			// lone elements are not into an array but are an object in CREAM.xml
+			if (_.isArray(pointer.sa)) {
 				_.each(pointer.sa, function (value, key, list) {
-					d._children.push({
+					children.push({
 						"category": "SA",
 						"em": value.name,
 						"go": "false",
 						"stop": "false"});
 				});
+			} else if (_.isObject(pointer.sa) && (pointer.sa.name != 'none defined')) {
+				children.push({
+					"category": "SA",
+					"em": pointer.sa.name,
+					"go": "false",
+					"stop": "false"});
+			}
+			if (_.isArray(pointer.ga)) {
 				_.each(pointer.ga, function (value, key, list) {
-					d._children.push({
+					children.push({
 						"category": "GA",
 						"em": value.name,
 						"go": "false",
 						"stop": "false"});
 				});
+			} else if (_.isObject(pointer.ga) && (pointer.sa.name != 'none defined')) {
+				children.push({
+					"category": "GA",
+					"em": pointer.ga.name,
+					"go": "false",
+					"stop": "false"});
 			}
-			return true;
+			return children;
 		}
 
 		// Opens a modal to select an Error Mode to create

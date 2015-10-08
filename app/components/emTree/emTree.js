@@ -196,10 +196,10 @@ angular.module('myApp.emTree', [])
 								
 								d._children = d.children;
 								d.children = null;
-							} else { // Closed or SA
-								console.log(scope.digAntecedent(d));
+							} else { // Closed or SA								
 								d.go = (d.go == "true") ? "false" : "true";
-								d.children = d._children;
+								d.children = scope.digAntecedent(d);
+								console.log(d.children);
 								d._children = null;
 							}
 							scope.updateEMDb();
