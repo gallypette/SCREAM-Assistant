@@ -180,11 +180,7 @@ angular.module('myApp.view3', [])
 						}
 					});
 				});
-			} else if (d.category == 'SA') { // SA do not have children
-				// But we need to set the stoprule for this branch
-				d.stop = "true";
-				return true;
-			} else { // We investigate a GA
+			} else if (d.category == 'GA') {
 				pointer = findGA(d);
 			}
 			// Once pointer point on the right node in CREAM's tree, we populate the tree
@@ -232,14 +228,14 @@ angular.module('myApp.view3', [])
 			// One sibling of the parent is SR ON
 			var stoprule = "false";
 			if (d.depth > 1) {
-				_.each(d.parent, function (value, key, list) {
+				_.each(d.parent.children, function (value, key, list) {
 					if (value.stop == "true") {
 						stoprule = "true";
 					}
 				});
 			}
 			if (d.depth > 2) {
-				_.each(d.parent.parent, function (value, key, list) {
+				_.each(d.parent.parent.children, function (value, key, list) {
 					if (value.stop == "true") {
 						stoprule = "true";
 					}
@@ -259,11 +255,28 @@ angular.module('myApp.view3', [])
 			} else { // Closed or SA								
 				// First we check the state of the stop rule
 				if (stopState(d) == "false") {
-					d.go = "true";
-					d.children = digAntecedent(d);
-					d._children = null;
+					if (d.category == "SA") { // Toggling SA 
+						if (d.go == "true") {
+							d.go = "false";
+							d.stop = "false";
+						} else {
+							d.go = "true";
+							d.stop = "true";
+						}
+						d.go = (d.go == "true") ? "false" : "true";
+					} else { // Opening closed GA
+						d.go = "true";
+						d.children = digAntecedent(d);
+						d._children = null;
+					}
 				} else {
-					d.go = "true";
+					if (d.go == "true") {
+						d.go = "false";
+						d.stop = "false";
+					} else {
+						d.go = "true";
+						d.stop = "false";
+					}
 				}
 			}
 			updateEMDb();
