@@ -224,15 +224,28 @@ angular.module('myApp.view3', [])
 			console.log(children);
 			return children;
 		};
-		
+
 		// Function that check the state of the stop rule for a node
-		var stopState = function (d){
+		var stopState = function (d) {
 			// The stop rule is ON for a node if:
 			// One sibling node is SR ON
 			// One sibling of the parent is SR ON
-
-
-			return "false";
+			var stoprule = "false";
+			if (d.depth > 1) {
+				_.each(d.parent, function (value, key, list) {
+					if (value.stop == "true") {
+						stoprule = "true";
+					}
+				});
+			}
+			if (d.depth > 2) {
+				_.each(d.parent.parent, function (value, key, list) {
+					if (value.stop == "true") {
+						stoprule = "true";
+					}
+				});
+			}
+			return stoprule;
 		};
 
 		// Function that implements the stop rule
@@ -249,9 +262,8 @@ angular.module('myApp.view3', [])
 					d.go = "true";
 					d.children = digAntecedent(d);
 					d._children = null;
-				} else { 
-				
-
+				} else {
+					d.go = "true";
 				}
 			}
 			updateEMDb();
