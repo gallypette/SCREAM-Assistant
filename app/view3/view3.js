@@ -198,7 +198,7 @@ angular.module('myApp.view3', [])
 						"go": "false",
 						"stop": "false"});
 				});
-			} else if (_.isObject(pointer.sa) && (pointer.sa.name != 'none defined')) {
+			} else if (_.isObject(pointer.sa) && (pointer.sa.name != 'None defined')) {
 				children.push({
 					"category": "SA",
 					"em": pointer.sa.name,
@@ -213,7 +213,7 @@ angular.module('myApp.view3', [])
 						"go": "false",
 						"stop": "false"});
 				});
-			} else if (_.isObject(pointer.ga) && (pointer.sa.name != 'none defined')) {
+			} else if (_.isObject(pointer.ga) && (pointer.sa.name != 'None defined')) {
 				children.push({
 					"category": "GA",
 					"em": pointer.ga.name,
