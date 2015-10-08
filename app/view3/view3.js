@@ -145,114 +145,61 @@ angular.module('myApp.view3', [])
 			ErrorMode.update($scope.current.id, {data: $scope.current.data})
 		};
 
-		// Builds the path of a node
-		var getPath = function (d) {
-			var path = [];
-			for (i = d.depth; i != 0; i--) {
-				console.log(d);
-				path[d.depth] = {
-					"category": d.category,
-					"em": d.em
-				};
-				d = d.parent;
-			}
-			return path;
-		}
-		
-		// Function that search for the next children to follow in the path
-		var popPath = function (ga, target){
-			console.log(ga);
-			console.log(target);
-			var result = {};
-			_.each(ga.ga, function (value, key, list) {
-				if(value.name == target.em){
-					result = value;
-				}
-			});
-			_.each(ga.sa, function (value, key, list) {
-				if(value.name == target.em){
-					result = value;
-				}
-			});
-			return result;
-		}
-
-		var expandGA = function (d, path) {
+		var findGA = function (d) {
+			// We go through categories 1-3
 			var pointer = {};
-			// First, we select the error mode
-			_.each($scope.creamtable.cream.category[0].group.gc, function (value, key, list) {
-//				console.log(value);
-//				console.log(path[0])
-				if(value.name == path[0].category){
-					pointer = value;
-				}
-			});
-			// Remove the root from the path
-			path = _.rest(path);
-			// Then we follow the path to the target node
-			_.each(path, function (value, key, list) {
-				pointer = popPath(pointer, element);
-				console.log(pointer);
-			});
-			// Now that pointer points to the last parents, we search for d
-			return popPath(pointer, new Array({"category": d.category, "em": d.em}));
-			
-			// We follow the path from top to bottom to the GA
-//				_.each($scope.creamtable.cream.category[0].group.gc, function (value, key, list) {
-//					console.log(value);
-			// Search into the GA
-//					_.each(value.ga, function (vga, kga, lga) {
-//						if (value.name === 'Wrong object') {
-//
-//						}
-//					});
-			// Search into the SA
-//					_.each(value.ga, function (vsa, ksa, lsa) {
-//
-//					});
-//				});
-//			return antecedents;
-		}
+			for (var i = 1; i < 4; i++) {
+				_.each($scope.creamtable.cream.category[i].group, function (value, key, list) {
+					// lone elements are not into an array but are an object in CREAM.xml
+					if (_.isArray(value.gc)) {
+						_.each(value.gc, function (vgc, kgc, lgc) {
+						console.log(vgc.name);
+							if (vgc.name === d.em) {
+								pointer = vgc;
+							}
+						});
+					} else if (_.isObject(value.gc)) {
+						console.log(value.gc.name);
+						if (value.gc.name === d.em) {
+							pointer = value.gc;
+						}
+					}
+				});
+			}
+			return pointer;
+		};
 
 		// Functions that find the antecedents for the next depth
 		$scope.digAntecedent = function (d) {
 			console.log(d);
-			var antecedents = [];
-			// We investigatin the root
+			var pointer = {};
+			// We investigate the root by parsing category0
 			if (d.depth == 0) {
 				_.each($scope.creamtable.cream.category[0].group.gc, function (value, key, list) {
 					_.each(value.sc, function (vsc, ksc, lsc) {
 						if (vsc.name === d.em) {
-							antecedents.push(value);
+							pointer = value;
 						}
 					});
 				});
-			} else if (d.category == 'SA') { // SA do not have children
-				return antecedents = [];
-			} else { // We investigate a GA
-				// We follow the path of the current node through .parent
-				if (d.parent.depth == 0) { // We already hit the root W00t
-					// Function that gets the content of a node
-					antecedents.push(expandGA(d, new Array({"category": d.parent.category, "em": d.parent.em})));
-				} else {
-					console.log(getPath(d));
-					antecedents = expandGA(d);
-				}
 
+			} else if (d.category == 'SA') { // SA do not have children
+				return true;
+			} else { // We investigate a GA
+				pointer = findGA(d);
 			}
-			console.log('antecedents[0]');
-			console.log(antecedents[0]);
-			// Once the lasso done, we populate the current tree
+			console.log(pointer);
+			// Once pointer point on the right node in CREAM's tree, we populate the tree
 			if (_.isUndefined(d._children)) {
 				d._children = [];
-				_.each(antecedents[0].sa, function (value, key, list) {
+				_.each(pointer.sa, function (value, key, list) {
 					d._children.push({
 						"category": "SA",
 						"em": value.name,
 						"go": "false",
 						"stop": "false"});
 				});
-				_.each(antecedents[0].ga, function (value, key, list) {
+				_.each(pointer.ga, function (value, key, list) {
 					d._children.push({
 						"category": "GA",
 						"em": value.name,
@@ -260,8 +207,7 @@ angular.module('myApp.view3', [])
 						"stop": "false"});
 				});
 			}
-
-			return antecedents;
+			return true;
 		}
 
 		// Opens a modal to select an Error Mode to create
