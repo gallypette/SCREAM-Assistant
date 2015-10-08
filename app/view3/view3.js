@@ -180,13 +180,11 @@ angular.module('myApp.view3', [])
 						}
 					});
 				});
-
 			} else if (d.category == 'SA') { // SA do not have children
 				return true;
 			} else { // We investigate a GA
 				pointer = findGA(d);
 			}
-			console.log(pointer);
 			// Once pointer point on the right node in CREAM's tree, we populate the tree
 			var children = [];
 			// lone elements are not into an array but are an object in CREAM.xml
@@ -220,6 +218,8 @@ angular.module('myApp.view3', [])
 					"go": "false",
 					"stop": "false"});
 			}
+			console.log(pointer);
+			console.log(children);
 			return children;
 		}
 

@@ -60,11 +60,12 @@ angular.module('myApp.emTree', [])
 
 							console.log("Updating the tree:");
 							console.log(source);
+							console.log(root);
 
 							// Compute the new tree layout.
-							var nodes = tree.nodes(root).reverse(),
+							var nodes = tree.nodes(root),
 								links = tree.links(nodes);
-
+console.log(nodes);
 							// Normalize for fixed-depth.
 							// Décalage horizontal
 							nodes.forEach(function (d) {
@@ -80,9 +81,6 @@ angular.module('myApp.emTree', [])
 							// Enter the nodes.
 							var nodeEnter = node.enter().append("g")
 								.attr("class", "node")
-//								.attr("transform", function (d) {
-//									return "translate(" + d.y + "," + d.x + ")";
-//								});
 								.attr("transform", function (d) {
 									return "translate(" + source.y0 + "," + source.x0 + ")";
 								})
@@ -193,18 +191,18 @@ angular.module('myApp.emTree', [])
 						function click(d) {
 							if (d.children) { // Opened
 								d.go = (d.go == "true") ? "false" : "true";
-								
-								d._children = d.children;
+								// I don't keep track of previous computations
+								// because ids get messed up when manipulating the data
+								d._children = null;
 								d.children = null;
 							} else { // Closed or SA								
 								d.go = (d.go == "true") ? "false" : "true";
-								d.children = scope.digAntecedent(d);
-								console.log(d.children);
+								d.children = scope.digAntecedent(d);	
 								d._children = null;
 							}
-							scope.updateEMDb();
 							update(d);
-							return scope.onClick({item: d});
+							scope.updateEMDb();							
+							return true;
 						}
 					});
 				}};
