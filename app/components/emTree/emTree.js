@@ -58,14 +58,14 @@ angular.module('myApp.emTree', [])
 
 						function update(source) {
 
-							console.log("Updating the tree:");
-							console.log(source);
-							console.log(root);
+							console.log("Updating the tree.");
+//							console.log(source);
+//							console.log(root);
 
 							// Compute the new tree layout.
 							var nodes = tree.nodes(root),
 								links = tree.links(nodes);
-console.log(nodes);
+							console.log(nodes);
 							// Normalize for fixed-depth.
 							// Décalage horizontal
 							nodes.forEach(function (d) {
@@ -189,19 +189,10 @@ console.log(nodes);
 
 						// Toggle children on click.
 						function click(d) {
-							if (d.children) { // Opened
-								d.go = (d.go == "true") ? "false" : "true";
-								// I don't keep track of previous computations
-								// because ids get messed up when manipulating the data
-								d._children = null;
-								d.children = null;
-							} else { // Closed or SA								
-								d.go = (d.go == "true") ? "false" : "true";
-								d.children = scope.digAntecedent(d);	
-								d._children = null;
-							}
-							update(d);
-							scope.updateEMDb();							
+							// Run the SCREAM engine
+							var nodeState = scope.toggleAntecedent(d);
+							// Update the tree
+							update(nodeState);
 							return true;
 						}
 					});

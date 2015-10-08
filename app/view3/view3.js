@@ -141,7 +141,7 @@ angular.module('myApp.view3', [])
 		};
 
 		// Set the DB to the current emTree's state.
-		$scope.updateEMDb = function () {
+		var updateEMDb = function () {
 			ErrorMode.update($scope.current.id, {data: $scope.current.data})
 		};
 
@@ -168,7 +168,7 @@ angular.module('myApp.view3', [])
 		};
 
 		// Functions that find the antecedents for the next depth
-		$scope.digAntecedent = function (d) {
+		var digAntecedent = function (d) {
 			console.log(d);
 			var pointer = {};
 			// We investigate the root by parsing category0
@@ -181,6 +181,8 @@ angular.module('myApp.view3', [])
 					});
 				});
 			} else if (d.category == 'SA') { // SA do not have children
+				// But we need to set the stoprule for this branch
+				d.stop = "true";
 				return true;
 			} else { // We investigate a GA
 				pointer = findGA(d);
@@ -221,6 +223,39 @@ angular.module('myApp.view3', [])
 			console.log(pointer);
 			console.log(children);
 			return children;
+		};
+		
+		// Function that check the state of the stop rule for a node
+		var stopState = function (d){
+			// The stop rule is ON for a node if:
+			// One sibling node is SR ON
+			// One sibling of the parent is SR ON
+
+
+			return "false";
+		};
+
+		// Function that implements the stop rule
+		$scope.toggleAntecedent = function (d) {
+			if (d.children) { // Opened
+				d.go = "false";
+				// I don't keep track of previous computations
+				// because ids get messed up when manipulating the data
+				d._children = null;
+				d.children = null;
+			} else { // Closed or SA								
+				// First we check the state of the stop rule
+				if (stopState(d) == "false") {
+					d.go = "true";
+					d.children = digAntecedent(d);
+					d._children = null;
+				} else { 
+				
+
+				}
+			}
+			updateEMDb();
+			return d;
 		}
 
 		// Opens a modal to select an Error Mode to create
