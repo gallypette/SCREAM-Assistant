@@ -38,8 +38,7 @@ angular.module('myApp.emTree', [])
 						scope.$watch('current.id', function (newData, oldData) {
 							if (oldData != newData)
 							{
-								root = scope.current.data;
-								update(root);
+								update(scope.current.data);
 							}
 						}, true);
 
@@ -53,9 +52,7 @@ angular.module('myApp.emTree', [])
 								return [d.y, d.x];
 							});
 
-						var root = scope.current.data;
-
-						update(root);
+						update(scope.current.data);
 
 						function update(source) {
 
@@ -64,7 +61,7 @@ angular.module('myApp.emTree', [])
 //							console.log(root);
 
 							// Compute the new tree layout.
-							var nodes = tree.nodes(root),
+							var nodes = tree.nodes(scope.current.data),
 								links = tree.links(nodes);
 							// Normalize for fixed-depth.
 							// Décalage horizontal
