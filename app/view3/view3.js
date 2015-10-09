@@ -226,9 +226,9 @@ angular.module('myApp.view3', [])
 				_.each(d.parent.children, function (value, key, list) {
 					if (value.stop == "true") {
 						stoprule = "true";
+						console.log("One sibling is stopped");
 					}
 				});
-				console.log("One sibling is stopped");
 			}
 			return stoprule;
 		};
@@ -240,9 +240,9 @@ angular.module('myApp.view3', [])
 				_.each(d.parent.parent.children, function (value, key, list) {
 					if (value.stop == "true") {
 						stoprule = "true";
+						console.log("One parent's sibling is stopped");
 					}
 				});
-				console.log("One parent's sibling is stopped");
 			}
 			return stoprule;
 		};
@@ -262,13 +262,13 @@ angular.module('myApp.view3', [])
 		}
 
 		// Recursive tree traversal and update
-		var traverseMatch = function (path, d, tree, trail) {
+		var traverseMatch = function (path, d, tree) {
+			var trail = "";
 			_.each(tree.children, function (value, key, list) {
 				if (value.em == path[0].em) {
+					trail = "children[" + key + "]";
 					if (path.length > 1) {
-						trail += '.' + traverseMatch(_.rest(path), d, value, key);
-					} else { // We found our node, we do the update
-						value = d;
+						trail += '.' + traverseMatch(_.rest(path), d, value);
 					}
 				}
 			});
@@ -276,10 +276,16 @@ angular.module('myApp.view3', [])
 		}
 
 		var setToValue = function (obj, value, path) {
-			path = path.split('.');
-			for (var i = 0; i < path.length - 1; i++)
-				obj = obj[path[i]];
-			obj[path[i]] = value;
+			console.log(path);
+			// I to tell i start to get pissed...
+			eval("$scope.current.data." + path + "= value");
+			// There must be a way to avoid the dynamic interpretation evil:
+//			function resolve(root, link) {
+//				return (new Function('root', 'return root.' + link + ';'))(root);
+//			}
+//			var value = resolve(tree, path.to.link);
+			// To be tested
+
 		}
 
 		// Function that ensures that d is updated in root
@@ -290,11 +296,9 @@ angular.module('myApp.view3', [])
 			var trail = '';
 			// Then a tree traversal to check the value of the node
 			if (path.length > 0) {
-				trail = traverseMatch(path, d, $scope.current.data, trail);
+				trail = traverseMatch(path, d, $scope.current.data);
 			}
-			console.log(trail);
 			setToValue($scope.current.data, d, trail);
-			console.log($scope.current.data);
 		}
 
 
@@ -355,7 +359,9 @@ angular.module('myApp.view3', [])
 			}
 			updateEMDb();
 			// Before returning d for the display, we ensure that root is updated accordingly
-			matchRoot(d);
+			if (d.depth > 0) {
+				matchRoot(d);
+			}
 			return d;
 		}
 
