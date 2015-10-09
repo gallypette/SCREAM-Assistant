@@ -248,6 +248,56 @@ angular.module('myApp.view3', [])
 		};
 
 
+		// Builds the path of a node
+		var getPath = function (d) {
+			var path = [];
+			for (var i = d.depth; i != 0; i--) {
+				path[d.depth] = {
+					"category": d.category,
+					"em": d.em
+				};
+				d = d.parent;
+			}
+			return path;
+		}
+
+		// Recursive tree traversal and update
+		var traverseMatch = function (path, d, tree, trail) {
+			_.each(tree.children, function (value, key, list) {
+				if (value.em == path[0].em) {
+					if (path.length > 1) {
+						trail += '.' + traverseMatch(_.rest(path), d, value, key);
+					} else { // We found our node, we do the update
+						value = d;
+					}
+				}
+			});
+			return trail;
+		}
+
+		var setToValue = function (obj, value, path) {
+			path = path.split('.');
+			for (var i = 0; i < path.length - 1; i++)
+				obj = obj[path[i]];
+			obj[path[i]] = value;
+		}
+
+		// Function that ensures that d is updated in root
+		var matchRoot = function (d) {
+			// First we do a reverse tree traversal to find where this node is
+			var path = getPath(d);
+			path = _.rest(path);
+			var trail = '';
+			// Then a tree traversal to check the value of the node
+			if (path.length > 0) {
+				trail = traverseMatch(path, d, $scope.current.data, trail);
+			}
+			console.log(trail);
+			setToValue($scope.current.data, d, trail);
+			console.log($scope.current.data);
+		}
+
+
 		// Function that implements the stop rule
 		$scope.toggleAntecedent = function (d) {
 			if (d.children) { // Opened
@@ -304,6 +354,8 @@ angular.module('myApp.view3', [])
 				}
 			}
 			updateEMDb();
+			// Before returning d for the display, we ensure that root is updated accordingly
+			matchRoot(d);
 			return d;
 		}
 

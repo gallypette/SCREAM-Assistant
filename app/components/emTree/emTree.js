@@ -60,7 +60,7 @@ angular.module('myApp.emTree', [])
 						function update(source) {
 
 							console.log("Updating the tree.");
-							console.log(source);
+//							console.log(source);
 //							console.log(root);
 
 							// Compute the new tree layout.
