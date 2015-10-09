@@ -36,10 +36,11 @@ angular.module('myApp.emTree', [])
 //						});
 						// Watch for change of current Error Mode
 						scope.$watch('current.id', function (newData, oldData) {
-							console.log(oldData);
-							console.log(newData);
-							root = scope.current.data;
-							update(root);
+							if (oldData != newData)
+							{
+								root = scope.current.data;
+								update(root);
+							}
 						}, true);
 
 						var i = 0;
@@ -59,13 +60,12 @@ angular.module('myApp.emTree', [])
 						function update(source) {
 
 							console.log("Updating the tree.");
-//							console.log(source);
+							console.log(source);
 //							console.log(root);
 
 							// Compute the new tree layout.
 							var nodes = tree.nodes(root),
 								links = tree.links(nodes);
-							console.log(nodes);
 							// Normalize for fixed-depth.
 							// Décalage horizontal
 							nodes.forEach(function (d) {
@@ -190,9 +190,10 @@ angular.module('myApp.emTree', [])
 						// Toggle children on click.
 						function click(d) {
 							// Run the SCREAM engine
-							var nodeState = scope.toggleAntecedent(d);
+							d = scope.toggleAntecedent(d);
+							console.log(d);
 							// Update the tree
-							update(nodeState);
+							update(d);
 							return true;
 						}
 					});

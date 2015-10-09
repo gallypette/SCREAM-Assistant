@@ -216,33 +216,37 @@ angular.module('myApp.view3', [])
 					"go": "false",
 					"stop": "false"});
 			}
-			console.log(pointer);
-			console.log(children);
 			return children;
 		};
 
-		// Function that check the state of the stop rule for a node
-		var stopState = function (d) {
-			// The stop rule is ON for a node if:
-			// One sibling node is SR ON
-			// One sibling of the parent is SR ON
+		// Function that check the state of the stop rule on a node's siblings 
+		var stopStateN = function (d) {
 			var stoprule = "false";
-			if (d.depth > 1) {
+			if (d.depth > 0) {
 				_.each(d.parent.children, function (value, key, list) {
 					if (value.stop == "true") {
 						stoprule = "true";
 					}
 				});
+				console.log("One sibling is stopped");
 			}
-			if (d.depth > 2) {
+			return stoprule;
+		};
+
+		// Function that check the state of the stop rule on a node's siblings 
+		var stopStateN1 = function (d) {
+			var stoprule = "false";
+			if (d.depth > 1) {
 				_.each(d.parent.parent.children, function (value, key, list) {
 					if (value.stop == "true") {
 						stoprule = "true";
 					}
 				});
+				console.log("One parent's sibling is stopped");
 			}
 			return stoprule;
 		};
+
 
 		// Function that implements the stop rule
 		$scope.toggleAntecedent = function (d) {
@@ -254,7 +258,7 @@ angular.module('myApp.view3', [])
 				d.children = null;
 			} else { // Closed or SA								
 				// First we check the state of the stop rule
-				if (stopState(d) == "false") {
+				if (stopStateN(d) == "false" && stopStateN1(d) == "false") { // OFF
 					if (d.category == "SA") { // Toggling SA 
 						if (d.go == "true") {
 							d.go = "false";
@@ -263,19 +267,39 @@ angular.module('myApp.view3', [])
 							d.go = "true";
 							d.stop = "true";
 						}
-						d.go = (d.go == "true") ? "false" : "true";
 					} else { // Opening closed GA
 						d.go = "true";
+						console.log("Opening Closed GA");
 						d.children = digAntecedent(d);
 						d._children = null;
 					}
-				} else {
-					if (d.go == "true") {
-						d.go = "false";
-						d.stop = "false";
-					} else {
-						d.go = "true";
-						d.stop = "false";
+				} else if (stopStateN(d) == "false" && stopStateN1(d) == "true") { // ON at N-1
+					if (d.go == "true") { // Was ON
+						d.go = "false"; // Becomes OFF
+						d.stop = "false"; // Already stopped
+					} else { // Was OFF
+						d.go = "true"; // Becomes ON
+						d.stop = "false"; // Already stopped
+					}
+					if (d.category == "GA") {
+						d.go = "true"; // Becomes ON
+						console.log("Opening of GA prevented by the stop rule");
+						d.children = null;
+						d._children = null;
+					}
+				} else if (stopStateN(d) == "true" && stopStateN1(d) == "false") { // ON at N
+					if (d.go == "true") { // Was ON
+						d.go = "false"; // Becomes OFF
+						d.stop = "false"; // Already stopped
+					} else { // Was OFF
+						d.go = "true"; // Becomes ON
+						d.stop = "false"; // Already stopped
+					}
+					if (d.category == "GA") { // One sibling is stopped, we can open the GA
+						d.go = "true"; // Becomes ON
+						console.log("Opening of GA prevented by the stop rule");
+						d.children = digAntecedent(d);
+						d._children = null;
 					}
 				}
 			}
