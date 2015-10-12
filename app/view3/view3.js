@@ -351,7 +351,7 @@ angular.module('myApp.view3', [])
 					}
 					if (d.category == "GA") { // One sibling is stopped, we can open the GA
 						d.go = "true"; // Becomes ON
-						console.log("Opening of GA prevented by the stop rule");
+						console.log("Last depth of GA opening.");
 						d.children = digAntecedent(d);
 						d._children = null;
 					}
