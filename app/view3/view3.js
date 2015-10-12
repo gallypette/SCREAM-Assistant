@@ -314,7 +314,7 @@ angular.module('myApp.view3', [])
 			// We need to check if some GA needs to be closed.
 			var tocheck = d.parent.children.filter(isGA);
 			var toclose = tocheck.reduce(getOpenedGA, []);
-			_.each(toclose , function (value, key, list) {
+			_.each(toclose, function (value, key, list) {
 				// the node is closed, but is still present in the analysis
 				value.children = null;
 				value._children = null;
@@ -403,28 +403,35 @@ angular.module('myApp.view3', [])
 						d._children = null;
 					}
 				} else if (stopStateN(d) == "false" && stopStateN1(d) == "true") { // ON at N-1
-					if (d.go == "true") { // Was ON
-						d.go = "false"; // Becomes OFF
-						removeStopRule(d);
-					} else { // Was OFF
-						d.go = "true"; // Becomes ON
-						removeStopRule(d);
-					}
-					if (d.category == "GA") {
-						d.go = "true"; // Becomes ON
-						console.log("Opening of GA prevented by the stop rule");
-						d.children = null;
-						d._children = null;
+					if (d.category === 'SA') {
+						if (d.go == "true") { // Was ON
+							d.go = "false"; // Becomes OFF
+							removeStopRule(d);
+						} else { // Was OFF
+							d.go = "true"; // Becomes ON
+							removeStopRule(d);
+						}
+					} else if (d.category == "GA") { // The GA can be closed because of SR ON
+						if (d.go === 'false') {
+							d.go = "true"; // Becomes ON
+							console.log("Opening of GA prevented by the stop rule");
+							d.children = null;
+							d._children = null;
+						} else {
+							console.log("Removing  a closed GA from the selection");
+							d.go = "false"; // Becomes OFF
+						}
 					}
 				} else if (stopStateN(d) == "true" && stopStateN1(d) == "false") { // ON at N
-					if (d.go == "true") { // Was ON
-						d.go = "false"; // Becomes OFF
-						removeStopRule(d);
-					} else { // Was OFF
-						d.go = "true"; // Becomes ON
-						removeStopRule(d);
-					}
-					if (d.category == "GA") { // One sibling is stopped, we can open the GA
+					if (d.category === 'SA') {
+						if (d.go == "true") { // Was ON
+							d.go = "false"; // Becomes OFF
+							removeStopRule(d);
+						} else { // Was OFF
+							d.go = "true"; // Becomes ON
+							removeStopRule(d);
+						}
+					} else if (d.category == "GA") { // One sibling is stopped, we can open the GA
 						d.go = "true"; // Becomes ON
 						console.log("Last depth of GA opening.");
 						d.children = digAntecedent(d);
