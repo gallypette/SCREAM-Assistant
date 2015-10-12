@@ -247,7 +247,7 @@ angular.module('myApp.view3', [])
 			return stoprule;
 		};
 
-		// Function that adds to an array its children GA that are constrained by a SR
+		// Function that adds to an array node's children GA that are constrained by a SR
 		var getConstrainedGA = function (toexpand, d) {
 			if (!_.isUndefined(d.children)) {
 				return _.union(toexpand, d.children.filter(isConstrainedGA));
@@ -256,10 +256,23 @@ angular.module('myApp.view3', [])
 			}
 		}
 
+		// Function that adds to an array node's children GA that are currently opened
+		var getOpenedGA = function (toclose, d) {
+			if (!_.isUndefined(d.children)) {
+				return _.union(toclose, d.children.filter(isOpened));
+			} else {
+				return toclose;
+			}
+		}
+
+		// Functions that return true if the node is opened
+		var isOpened = function (d) {
+			return !(d.children === null || _.isUndefined(d.children))
+		}
 
 		// Function that returns true if a GA node is constrained by a stop rule
 		var isConstrainedGA = function (d) {
-			return (d.go === 'true' && (d.children === null || _.isUndefined(d.children)));
+			return (d.go === 'true' && !isOpened(d));
 		}
 
 		// Function that returns true if the node is GA
@@ -279,12 +292,36 @@ angular.module('myApp.view3', [])
 			d.stop = "false";
 		}
 
+		// Function tha recursively find the SA nodes with stop rule engaged
+		var findSR = function (tounstop, d) {
+			if (d.category === 'GA' && isOpened(d)) {
+				return _.union(tounstop, d.children.reduce(findSR, tounstop));
+			} else if (d.category === 'SA' && d.stop === 'true') {
+				return tounstop.push(d);
+			} else {
+				return tounstop;
+			}
+		}
+
 		// Function that updates the RCA state when a stop rule is added
-		var addStopRule = function () {
+		var addStopRule = function (d) {
 			// We need to check if there was already a stop rule engaged
 			// in n+* depth. Then remove it before adding this one.
+			var tounstop = d.parent.children.reduce(findSR, []);
+			_.each(tounstop, function (value, key, list) {
+				removeStopRule(value);
+			});
 			// We need to check if some GA needs to be closed.
+			var tocheck = d.parent.children.filter(isGA);
+			var toclose = tocheck.reduce(getOpenedGA, []);
+			_.each(toclose , function (value, key, list) {
+				// the node is closed, but is still present in the analysis
+				value.children = null;
+				value._children = null;
+				value.go = 'true';
+			});
 
+			d.stop = 'true';
 		}
 
 		// Builds the path of a node
@@ -357,7 +394,7 @@ angular.module('myApp.view3', [])
 							removeStopRule(d);
 						} else {
 							d.go = "true";
-							d.stop = "true";
+							addStopRule(d);
 						}
 					} else { // Opening closed GA
 						d.go = "true";
@@ -368,10 +405,10 @@ angular.module('myApp.view3', [])
 				} else if (stopStateN(d) == "false" && stopStateN1(d) == "true") { // ON at N-1
 					if (d.go == "true") { // Was ON
 						d.go = "false"; // Becomes OFF
-						d.stop = "false"; // Already stopped
+						removeStopRule(d);
 					} else { // Was OFF
 						d.go = "true"; // Becomes ON
-						d.stop = "false"; // Already stopped
+						removeStopRule(d);
 					}
 					if (d.category == "GA") {
 						d.go = "true"; // Becomes ON
@@ -382,10 +419,10 @@ angular.module('myApp.view3', [])
 				} else if (stopStateN(d) == "true" && stopStateN1(d) == "false") { // ON at N
 					if (d.go == "true") { // Was ON
 						d.go = "false"; // Becomes OFF
-						d.stop = "false"; // Already stopped
+						removeStopRule(d);
 					} else { // Was OFF
 						d.go = "true"; // Becomes ON
-						d.stop = "false"; // Already stopped
+						removeStopRule(d);
 					}
 					if (d.category == "GA") { // One sibling is stopped, we can open the GA
 						d.go = "true"; // Becomes ON
