@@ -224,7 +224,7 @@ angular.module('myApp.view3', [])
 			var stoprule = "false";
 			if (d.depth > 0) {
 				_.each(d.parent.children, function (value, key, list) {
-					if (value.stop == "true") {
+					if (value.stop == "true" && value.em != d.em) {
 						stoprule = "true";
 						console.log("One sibling is stopped");
 					}
@@ -247,6 +247,46 @@ angular.module('myApp.view3', [])
 			return stoprule;
 		};
 
+		// Function that returns true if a GA node is constrained by a stop rule
+		var hasConstrainedGA = function (d) {
+			if (!_.isUndefined(d.children)) {
+				return d.children.filter(isConstrainedGA);
+			} else {
+				return [];
+			}
+		}
+
+
+		// Function that returns true if a GA node is constrained by a stop rule
+		var isConstrainedGA = function (d) {
+			return (d.go === 'go' && d.children === null);
+		}
+
+		// Function that returns true if the node is GA
+		var isGA = function (d) {
+			return d.category === 'GA';
+		}
+
+		// Function that updates the RCA state when a stop rule is removed
+		var removeStopRule = function (d) {
+			// We need to find out the closed GA that should now be opened
+			var tocheck = d.parent.children.filter(isGA);
+			var toexpand = tocheck.filter(hasConstrainedGA);
+			console.log(toexpand);
+			_.each(toexpand, function (value, key, list) {
+				value.children = digAntecedent(value)
+			});
+			// Eventually set the Stop rule to false.
+			d.stop = "false";
+		}
+
+		// Function that updates the RCA state when a stop rule is added
+		var addStopRule = function () {
+			// We need to check if there was already a stop rule engaged
+			// in n+* depth. Then remove it before adding this one.
+			// We need to check if some GA needs to be closed.
+
+		}
 
 		// Builds the path of a node
 		var getPath = function (d) {
@@ -301,7 +341,6 @@ angular.module('myApp.view3', [])
 			setToValue($scope.current.data, d, trail);
 		}
 
-
 		// Function that implements the stop rule
 		$scope.toggleAntecedent = function (d) {
 			if (d.children) { // Opened
@@ -316,7 +355,7 @@ angular.module('myApp.view3', [])
 					if (d.category == "SA") { // Toggling SA 
 						if (d.go == "true") {
 							d.go = "false";
-							d.stop = "false";
+							removeStopRule(d);
 						} else {
 							d.go = "true";
 							d.stop = "true";
