@@ -247,7 +247,7 @@ angular.module('myApp.view3', [])
 			return stoprule;
 		};
 
-		// Function that returns true if a GA node is constrained by a stop rule
+		// Function that adds to an array its children GA that are constrained by a SR
 		var getConstrainedGA = function (toexpand, d) {
 			if (!_.isUndefined(d.children)) {
 				return _.union(toexpand, d.children.filter(isConstrainedGA));
@@ -273,7 +273,7 @@ angular.module('myApp.view3', [])
 			var tocheck = d.parent.children.filter(isGA);
 			var toexpand = tocheck.reduce(getConstrainedGA, []);
 			_.each(toexpand, function (value, key, list) {
-				value.children = digAntecedent(value)
+				value.children = digAntecedent(value);
 			});
 			// Eventually set the Stop rule to false.
 			d.stop = "false";
