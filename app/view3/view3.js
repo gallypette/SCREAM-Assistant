@@ -248,18 +248,18 @@ angular.module('myApp.view3', [])
 		};
 
 		// Function that returns true if a GA node is constrained by a stop rule
-		var hasConstrainedGA = function (d) {
+		var getConstrainedGA = function (toexpand, d) {
 			if (!_.isUndefined(d.children)) {
-				return d.children.filter(isConstrainedGA);
+				return _.union(toexpand, d.children.filter(isConstrainedGA));
 			} else {
-				return [];
+				return toexpand;
 			}
 		}
 
 
 		// Function that returns true if a GA node is constrained by a stop rule
 		var isConstrainedGA = function (d) {
-			return (d.go === 'go' && d.children === null);
+			return (d.go === 'true' && (d.children === null || _.isUndefined(d.children)));
 		}
 
 		// Function that returns true if the node is GA
@@ -271,8 +271,7 @@ angular.module('myApp.view3', [])
 		var removeStopRule = function (d) {
 			// We need to find out the closed GA that should now be opened
 			var tocheck = d.parent.children.filter(isGA);
-			var toexpand = tocheck.filter(hasConstrainedGA);
-			console.log(toexpand);
+			var toexpand = tocheck.reduce(getConstrainedGA, []);
 			_.each(toexpand, function (value, key, list) {
 				value.children = digAntecedent(value)
 			});
