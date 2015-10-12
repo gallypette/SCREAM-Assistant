@@ -135,6 +135,10 @@ angular.module('myApp.emTree', [])
 								.style("fill", function (d) {
 									return (d.go == "true") ? "green" : "red";
 								});
+							nodeUpdate.select("image")
+								.attr("xlink:href", function (d) {
+									return d.stop == "true" ? "icons/stop-sign.png" : "icons/Mail.png";
+								});
 							nodeUpdate.select("text")
 								.style("fill-opacity", 1);
 
