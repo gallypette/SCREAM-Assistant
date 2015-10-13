@@ -10,10 +10,6 @@ angular.module('myApp.emTree', [])
 				link: function (scope, element, attrs) {
 					d3Service.d3().then(function (d3) {
 
-						// Define the zoom function for the zoomable tree
-						function zoom() {
-							svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-						}
 
 						// define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
 						var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
@@ -200,6 +196,24 @@ angular.module('myApp.emTree', [])
 							});
 						}
 
+						// Define the zoom function for the zoomable tree
+						function zoom() {
+							svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+						}
+						
+						function centerNode(source) {
+							var scale = zoomListener.scale();
+							var x = -source.y0;
+							var y = -source.x0;
+							x = x * scale + width / 2;
+							y = y * scale + height / 2;
+							d3.select('g').transition()
+								.duration(duration)
+								.attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
+							zoomListener.scale(scale);
+							zoomListener.translate([x, y]);
+						}
+
 						// Toggle children on click.
 						function click(d) {
 							// Run the SCREAM engine
@@ -207,6 +221,8 @@ angular.module('myApp.emTree', [])
 							console.log(d);
 							// Update the tree
 							update(d);
+							// Center on the node
+							centerNode(d);
 							return true;
 						}
 					});
