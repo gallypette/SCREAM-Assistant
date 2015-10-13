@@ -10,15 +10,15 @@ angular.module('myApp.emTree', [])
 				link: function (scope, element, attrs) {
 					d3Service.d3().then(function (d3) {
 
-
 						// define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
-						var zoomListener = d3.behavior.zoom().scaleExtent([0.5, 1.5]).on("zoom", zoom);
+						var zoomListener = d3.behavior.zoom().scaleExtent([0.5, 1.5])
+							.on("zoom", zoom);
+
+						var duration = 750;
 
 						var margin = {top: 0, right: 120, bottom: 20, left: 120},
 						width = 960 - margin.right - margin.left,
 							height = 1000 - margin.top - margin.bottom;
-
-						var duration = 750;
 
 						var svg = d3.select(element[0]).append("svg")
 							.attr("width", width + margin.right + margin.left)
@@ -198,9 +198,10 @@ angular.module('myApp.emTree', [])
 
 						// Define the zoom function for the zoomable tree
 						function zoom() {
+							d3.event.sourceEvent.stopPropagation();
 							svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 						}
-						
+
 						function centerNode(source) {
 							var scale = zoomListener.scale();
 							var x = -source.y0;
@@ -215,6 +216,7 @@ angular.module('myApp.emTree', [])
 
 						// Toggle children on click.
 						function click(d) {
+							if (d3.event.defaultPrevented) return; // click suppressed
 							// Run the SCREAM engine
 							d = scope.toggleAntecedent(d);
 							console.log(d);
