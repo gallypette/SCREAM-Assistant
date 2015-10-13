@@ -12,7 +12,7 @@ angular.module('myApp.emTree', [])
 
 
 						// define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
-						var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
+						var zoomListener = d3.behavior.zoom().scaleExtent([0.5, 1.5]).on("zoom", zoom);
 
 						var margin = {top: 0, right: 120, bottom: 20, left: 120},
 						width = 960 - margin.right - margin.left,
@@ -209,8 +209,7 @@ angular.module('myApp.emTree', [])
 							y = y * scale + height / 2;
 							d3.select('g').transition()
 								.duration(duration)
-								.attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
-							zoomListener.scale(scale);
+								.attr("transform", "translate(" + x + "," + y + ")");
 							zoomListener.translate([x, y]);
 						}
 
