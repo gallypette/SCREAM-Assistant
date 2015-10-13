@@ -10,6 +10,14 @@ angular.module('myApp.emTree', [])
 				link: function (scope, element, attrs) {
 					d3Service.d3().then(function (d3) {
 
+						// Define the zoom function for the zoomable tree
+						function zoom() {
+							svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+						}
+
+						// define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
+						var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
+
 						var margin = {top: 0, right: 120, bottom: 20, left: 120},
 						width = 960 - margin.right - margin.left,
 							height = 1000 - margin.top - margin.bottom;
@@ -21,7 +29,8 @@ angular.module('myApp.emTree', [])
 							.attr("height", height + margin.top + margin.bottom)
 							.style('width', '100%')
 							.append("g")
-							.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+							.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+							.call(zoomListener);
 
 						// Browser onresize event
 						window.onresize = function () {
@@ -52,6 +61,9 @@ angular.module('myApp.emTree', [])
 								return [d.y, d.x];
 							});
 
+						// Append a group which holds all nodesd and which the zoom listener can act upon
+						var svgGroup = svg.append("g");
+
 						update(scope.current.data);
 
 						function update(source) {
@@ -70,7 +82,7 @@ angular.module('myApp.emTree', [])
 							});
 
 							// Declare the nodes…
-							var node = svg.selectAll("g.node")
+							var node = svgGroup.selectAll("g.node")
 								.data(nodes, function (d) {
 									return d.id || (d.id = ++i);
 								});
@@ -154,7 +166,7 @@ angular.module('myApp.emTree', [])
 							nodeExit.select("text")
 								.style("fill-opacity", 1e-6);
 							// Update the links…
-							var link = svg.selectAll("path.link")
+							var link = svgGroup.selectAll("path.link")
 								.data(links, function (d) {
 									return d.target.id;
 								});
