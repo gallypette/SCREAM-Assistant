@@ -2,7 +2,7 @@
 
 // The emTree directive prints the tree corresponding to an error mode 
 angular.module('myApp.emTree', [])
-	.directive('errorModeTree', ['$window', 'd3Service', function ($window, d3Service) {
+	.directive('errorModeTree', ['$window', 'd3Service', '$q', function ($window, d3Service, $q) {
 			return {
 				restrict: 'A',
 				// I share the scope as I don't plan to have several trees on the same page.
@@ -217,13 +217,15 @@ angular.module('myApp.emTree', [])
 						// Toggle children on click.
 						function click(d) {
 							if (d3.event.defaultPrevented) return; // click suppressed
-							// Run the SCREAM engine
-							d = scope.toggleAntecedent(d);
-							console.log(d);
+							// Run the SCREAM engine into a promise
+							$q.resolve(scope.toggleAntecedent(d)).then(function(updatedd){
+								console.log(updatedd);
+								update(updatedd);
+							});
 							// Update the tree
-							update(d);
+//							update(scope.current.data);
 							// Center on the node
-							centerNode(d);
+//							centerNode(d);
 							return true;
 						}
 					});

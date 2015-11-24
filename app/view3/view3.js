@@ -140,11 +140,6 @@ angular.module('myApp.view3', [])
 //			console.log(element);
 		};
 
-		// Set the DB to the current emTree's state.
-		var updateEMDb = function () {
-			ErrorMode.update($scope.current.id, {data: $scope.current.data})
-		};
-
 		var findGA = function (d) {
 			// We go through categories 1-3
 			var pointer = {};
@@ -353,7 +348,6 @@ angular.module('myApp.view3', [])
 
 		var setToValue = function (obj, value, path) {
 			console.log(path);
-			// I to tell i start to get pissed...
 			eval("$scope.current.data." + path + "= value");
 			// There must be a way to avoid the dynamic interpretation evil:
 //			function resolve(root, link) {
@@ -378,11 +372,13 @@ angular.module('myApp.view3', [])
 		}
 
 		// Function that implements the stop rule
+		// Return a promise
 		$scope.toggleAntecedent = function (d) {
+			var defer = $q.defer();
+
 			if (d.children) { // Opened
 				d.go = "false";
 				// I don't keep track of previous computations
-				// because ids get messed up when manipulating the data
 				d._children = null;
 				d.children = null;
 			} else { // Closed or SA								
@@ -439,12 +435,19 @@ angular.module('myApp.view3', [])
 					}
 				}
 			}
-			updateEMDb();
-			// Before returning d for the display, we ensure that root is updated accordingly
+
+			// Before saving to the storage and displaying, we update the node value in the tree
 			if (d.depth > 0) {
 				matchRoot(d);
 			}
-			return d;
+
+			ErrorMode.update($scope.current.id, {data: $scope.current.data}).then(function (errorMode) {
+				console.log('localstorage updated!');
+				// Now that all is done, we can resolve the promise with d, allowing the display of the tree.
+				defer.resolve(d);
+			})
+
+			return defer.promise;
 		}
 
 		// Opens a modal to select an Error Mode to create
