@@ -11,7 +11,7 @@ angular.module('myApp.emTree', [])
 					d3Service.d3().then(function (d3) {
 
 						// define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
-						var zoomListener = d3.behavior.zoom().scaleExtent([0.5, 1.5])
+						var zoomListener = d3.behavior.zoom().scaleExtent([1, 1])
 							.on("zoom", zoom);
 
 						var duration = 750;
@@ -78,16 +78,13 @@ angular.module('myApp.emTree', [])
 								d.y = d.depth * 180;
 							});
 
-							console.log(nodes);
 							// Declare the nodes…
 							// Nodes are attributed guid as we are removing // adding nodes during execution	
 							var node = svgGroup.selectAll("g.node")
 								.data(nodes, function (d) {
-									console.log(d.id);
 									return d.id || (d.id = guid());
 								});
 
-							console.log(node);
 							// Enter the nodes.
 							var nodeEnter = node.enter().append("g")
 								.attr("class", "node")
@@ -213,22 +210,20 @@ angular.module('myApp.emTree', [])
 						// Define the zoom function for the zoomable tree
 						function zoom() {
 							d3.event.sourceEvent.stopPropagation();
-							svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+							svgGroup.attr("transform", "translate(" + d3.event.translate + ")");
 						}
 
-						function centerNode(source) {
-							var scale = zoomListener.scale();
-							var x = -source.y0;
-							var y = -source.x0;
-							x = x * scale + width / 2;
-							y = y * scale + height / 2;
-							d3.select('g').transition()
-								.duration(duration)
-								.attr("transform", "translate(" + x + "," + y + ")");
-							zoomListener.scale(scale);
-							zoomListener.translate([x, y]);
-						}
-						
+//						function centerNode(source) {
+//							var x = -source.y0;
+//							var y = -source.x0;
+//							x = x + width / 2;
+//							y = y + height / 2;
+//							d3.select('g').transition()
+//								.duration(duration)
+//								.attr("transform", "translate(" + x + "," + y + ")");
+//							zoomListener.translate([x, y]);
+//						}
+
 						// Toggle children on click.
 						function click(d) {
 							if (d3.event.defaultPrevented)
@@ -238,7 +233,7 @@ angular.module('myApp.emTree', [])
 								console.log(updatedd);
 								update(updatedd);
 								// Center on the node
-								centerNode(d);
+//								centerNode(d);
 							});
 							return true;
 						}
