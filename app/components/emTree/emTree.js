@@ -20,13 +20,14 @@ angular.module('myApp.emTree', [])
 						width = 960 - margin.right - margin.left,
 							height = 1000 - margin.top - margin.bottom;
 
-						var svg = d3.select(element[0]).append("svg")
+						var svg = d3.select("#tree-container").append("svg")
 							.attr("width", width + margin.right + margin.left)
 							.attr("height", height + margin.top + margin.bottom)
 							.style('width', '100%')
 							.append("g")
-							.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-							.call(zoomListener);
+							.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+						var zoomable = d3.select("#tree-container").call(zoomListener);
 
 						// Browser onresize event
 						window.onresize = function () {
@@ -224,21 +225,21 @@ angular.module('myApp.emTree', [])
 							d3.select('g').transition()
 								.duration(duration)
 								.attr("transform", "translate(" + x + "," + y + ")");
+							zoomListener.scale(scale);
 							zoomListener.translate([x, y]);
 						}
-
+						
 						// Toggle children on click.
 						function click(d) {
-							if (d3.event.defaultPrevented) return; // click suppressed
+							if (d3.event.defaultPrevented)
+								return; // click suppressed
 							// Run the SCREAM engine into a promise
-							$q.resolve(scope.toggleAntecedent(d)).then(function(updatedd){
+							$q.resolve(scope.toggleAntecedent(d)).then(function (updatedd) {
 								console.log(updatedd);
 								update(updatedd);
+								// Center on the node
+								centerNode(d);
 							});
-							// Update the tree
-//							update(scope.current.data);
-							// Center on the node
-//							centerNode(d);
 							return true;
 						}
 					});
