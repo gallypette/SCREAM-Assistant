@@ -77,12 +77,16 @@ angular.module('myApp.emTree', [])
 								d.y = d.depth * 180;
 							});
 
+							console.log(nodes);
 							// Declare the nodes…
+							// Nodes are attributed guid as we are removing // adding nodes during execution	
 							var node = svgGroup.selectAll("g.node")
 								.data(nodes, function (d) {
-									return d.id || (d.id = ++i);
+									console.log(d.id);
+									return d.id || (d.id = guid());
 								});
 
+							console.log(node);
 							// Enter the nodes.
 							var nodeEnter = node.enter().append("g")
 								.attr("class", "node")
@@ -194,6 +198,15 @@ angular.module('myApp.emTree', [])
 								d.x0 = d.x;
 								d.y0 = d.y;
 							});
+						}
+
+						// Generates guid
+						function guid() {
+							function _p8(s) {
+								var p = (Math.random().toString(16) + "000000000").substr(2, 8);
+								return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
+							}
+							return _p8() + _p8(true) + _p8(true) + _p8();
 						}
 
 						// Define the zoom function for the zoomable tree
