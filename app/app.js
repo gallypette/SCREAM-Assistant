@@ -476,3 +476,9 @@ angular.module('myApp', [
 			}
 		});
 	})
+
+	// To make the export blob downloadable
+	.config(['$compileProvider',
+		function ($compileProvider) {
+			$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
+		}])

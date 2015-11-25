@@ -10,7 +10,8 @@ angular.module('myApp.viewMain', [])
 		}])
 
 	.controller('ViewMainCtrl', function ($scope) {
-
-		
-
-		});
+		// Export localStorage through a blob
+		var content = JSON.stringify(localStorage);
+		var blob = new Blob([content], {type: 'text/plain'});
+		$scope.url = (window.URL || window.webkitURL).createObjectURL(blob);
+	});
