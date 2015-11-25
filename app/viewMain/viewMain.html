@@ -27,5 +27,17 @@
 
 <div class='well'>
 	<h3>Exporting your work.</h3>
-	<p>To export your work, click on the following button and save the results into a text file.</p><a class="btn--xs btn-primary" role="button" download="export.txt" ng-href="{{ url }}">Export LocalStorage</a>
+	<p>Click <a class="btn--xs btn-primary" role="button" download="export.txt" ng-href="{{ url }}">here</a> to export and save the your work into a text file.</p>
+	<p>To import existing exported work choose a file then clikc the import button:</p><input type="file" id="file" name="file"/><a class="btn--xs btn-primary" role="button" ng-click="import()">Import File</a>
+	<p>Keep in mind that non exported work will be erased by the file you upload!</p>
+</div>
+
+<div>
+	<script type="text/ng-template" id="loadingStateModal">
+        <div class="modal-header">
+		<h3 class="modal-title">The file has been successfully imported.</h3>
+	<br>
+		<button class="btn btn-primary" type="button" ng-click="cancel()">OK</button>
+        </div>
+	</script>
 </div>
