@@ -376,12 +376,13 @@ angular.module('myApp.view3', [])
 		$scope.toggleAntecedent = function (d) {
 			var defer = $q.defer();
 
-			if (d.children) { // Opened
+			if (d.children || (d.children == null && d.category == "GA" && d.go == "true")) {
+				console.log("[+] Removing antecedent.");
 				d.go = "false";
 				// I don't keep track of previous computations
 				d._children = null;
 				d.children = null;
-			} else { // Closed or SA								
+			} else { // Closed GA or SA								
 				// First we check the state of the stop rule
 				if (stopStateN(d) == "false" && stopStateN1(d) == "false") { // OFF
 					if (d.category == "SA") { // Toggling SA 
