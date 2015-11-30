@@ -3,5 +3,23 @@
 <h2>Here are the list of possible antecedents explaining <b>{{atck.name}}</b>.</h2>
 <!-- Error Mode list -->
 <div class="well">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Error Mode</th>
+				<th>Antecedent</th>
+				<th>Type</th>
+				<th>Comments</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="em in atck.analysis.ems" ng-if="em.em != null">
+				<td></td>
+				<td></td>
+				<td>{{em.category}}</td>
+				<td>{{em.em}}</td>
+			</tr>
 
+		</tbody>
+	</table>
 </div>

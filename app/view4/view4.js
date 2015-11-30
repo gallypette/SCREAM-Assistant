@@ -62,17 +62,19 @@ angular.module('myApp.view4', [])
 		// lazy loading of nested realtions does not work with localstorage
 		// so we resolve those here
 		$q.resolve(Analysis.loadRelations($scope.atck.analysis.id)).then(function () {
-			// The model where we store the values linked in the view (form)
-			// We need to populated it with the analysis's error modes.
-			$scope.model = {};
 			if (_.isEmpty($scope.atck.analysis.ems)) {
+				// No ErrorMode for this analysis, we should warn the user 
+				// That the analysis of this attack is incomplete.
 				return true;
 			} else {
 				_.each($scope.atck.analysis.ems, function (value, key, list) {
-					$scope.model[value.category] = value.em;
+					// For each ErrorMode, we compile the list of antecedents
+					console.log(value);
 				});
 				return true;
 			}
 		});
+
+		// Function that compile the antecedents of an Error Mode
 	
 	});
