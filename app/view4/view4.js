@@ -44,7 +44,7 @@ angular.module('myApp.view4', [])
 				});
 		}])
 
-	.controller('View4Ctrl', function ($scope, $route, $q, analysisMenu, Analysis, Atck, ErrorMode) {
+	.controller('View4Ctrl', function (_, $scope, $route, $q, analysisMenu, Analysis, Atck, ErrorMode) {
 
 		// Menu vars from app constant
 		$scope.itemsMenu = analysisMenu;
@@ -59,7 +59,7 @@ angular.module('myApp.view4', [])
 		$scope.atck = $route.current.locals.atck;
 		$scope.current = $route.current.locals.current[0];
 		
-		// lazy loading of nested realtions does not work with localstorage
+		// lazy loading of nested relations does not work with localstorage
 		// so we resolve those here
 		$q.resolve(Analysis.loadRelations($scope.atck.analysis.id)).then(function () {
 			if (_.isEmpty($scope.atck.analysis.ems)) {
@@ -69,7 +69,7 @@ angular.module('myApp.view4', [])
 			} else {
 				_.each($scope.atck.analysis.ems, function (value, key, list) {
 					// For each ErrorMode, we compile the list of antecedents
-					console.log(value);
+					console.log(_.where);
 				});
 				return true;
 			}
