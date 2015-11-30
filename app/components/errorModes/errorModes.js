@@ -225,6 +225,16 @@ angular.module('myApp.errorModes', [])
 				return new Array(scope.current.data, d, trail);
 			};
 
+			// Function that ensures that the analysis reached an end
+			obj.analysisCompleted = function () {
+
+			};
+
+			// Function that list the antecedents selected at possible contributors.
+			obj.analysisResults = function () {
+
+			}
+
 			return obj;
 
 		}]);
