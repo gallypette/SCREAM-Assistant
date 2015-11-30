@@ -20,7 +20,8 @@ angular.module('myApp', [
 	'myApp.view3',
 	'myApp.view4',
 	'myApp.view5',
-	'myApp.emTree'
+	'myApp.emTree',
+	'myApp.errorModes'
 ])
 	.config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.otherwise({redirectTo: '/viewMain'});

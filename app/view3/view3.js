@@ -64,7 +64,7 @@ angular.module('myApp.view3', [])
 				});
 		}])
 
-	.controller('View3Ctrl', function ($sce, $scope, $route, $modal, $q, analysisMenu, Analysis, Atck, Description, ErrorMode, screamFlavors, xsltTransform, _) {
+	.controller('View3Ctrl', function ($sce, $scope, $route, $modal, $q, analysisMenu, Analysis, Atck, Description, ErrorMode, errorModes, screamFlavors, xsltTransform, _) {
 
 		console.log($route.current.locals.atck);
 		console.log($route.current.locals.atck.description);
@@ -140,237 +140,13 @@ angular.module('myApp.view3', [])
 //			console.log(element);
 		};
 
-		var findGA = function (d) {
-			// We go through categories 1-3
-			var pointer = {};
-			for (var i = 1; i < 4; i++) {
-				_.each($scope.creamtable.cream.category[i].group, function (value, key, list) {
-					// lone elements are not into an array but are an object in CREAM.xml
-					if (_.isArray(value.gc)) {
-						_.each(value.gc, function (vgc, kgc, lgc) {
-							if (vgc.name === d.em) {
-								pointer = vgc;
-							}
-						});
-					} else if (_.isObject(value.gc)) {
-						if (value.gc.name === d.em) {
-							pointer = value.gc;
-						}
-					}
-				});
-			}
-			return pointer;
+		// This evil hack must stay here because of the eval of 'this' $scope
+		var setToValue = function (toSet) {
+			console.log(toSet[2]);
+			eval("$scope.current.data." + toSet[2] + "= toSet[1]");
+			// There must be a way to avoid the dynamic interpretation evil
 		};
-
-		// Functions that find the antecedents for the next depth
-		var digAntecedent = function (d) {
-			console.log(d);
-			var pointer = {};
-			// We investigate the root by parsing category0
-			if (d.depth == 0) {
-				_.each($scope.creamtable.cream.category[0].group.gc, function (value, key, list) {
-					_.each(value.sc, function (vsc, ksc, lsc) {
-						if (vsc.name === d.em) {
-							pointer = value;
-						}
-					});
-				});
-			} else if (d.category == 'GA') {
-				pointer = findGA(d);
-			}
-			// Once pointer point on the right node in CREAM's tree, we populate the tree
-			var children = [];
-			// lone elements are not into an array but are an object in CREAM.xml
-			if (_.isArray(pointer.sa)) {
-				_.each(pointer.sa, function (value, key, list) {
-					children.push({
-						"category": "SA",
-						"em": value.name,
-						"go": "false",
-						"stop": "false"});
-				});
-			} else if (_.isObject(pointer.sa) && (pointer.sa.name != 'None defined')) {
-				children.push({
-					"category": "SA",
-					"em": pointer.sa.name,
-					"go": "false",
-					"stop": "false"});
-			}
-			if (_.isArray(pointer.ga)) {
-				_.each(pointer.ga, function (value, key, list) {
-					children.push({
-						"category": "GA",
-						"em": value.name,
-						"go": "false",
-						"stop": "false"});
-				});
-			} else if (_.isObject(pointer.ga) && (pointer.sa.name != 'None defined')) {
-				children.push({
-					"category": "GA",
-					"em": pointer.ga.name,
-					"go": "false",
-					"stop": "false"});
-			}
-			return children;
-		};
-
-		// Function that check the state of the stop rule on a node's siblings 
-		var stopStateN = function (d) {
-			var stoprule = "false";
-			if (d.depth > 0) {
-				_.each(d.parent.children, function (value, key, list) {
-					if (value.stop == "true" && value.em != d.em) {
-						stoprule = "true";
-						console.log("One sibling is stopped");
-					}
-				});
-			}
-			return stoprule;
-		};
-
-		// Function that check the state of the stop rule on a node's siblings 
-		var stopStateN1 = function (d) {
-			var stoprule = "false";
-			if (d.depth > 1) {
-				_.each(d.parent.parent.children, function (value, key, list) {
-					if (value.stop == "true") {
-						stoprule = "true";
-						console.log("One parent's sibling is stopped");
-					}
-				});
-			}
-			return stoprule;
-		};
-
-		// Function that adds to an array node's children GA that are constrained by a SR
-		var getConstrainedGA = function (toexpand, d) {
-			if (!_.isUndefined(d.children)) {
-				return _.union(toexpand, d.children.filter(isConstrainedGA));
-			} else {
-				return toexpand;
-			}
-		}
-
-		// Function that adds to an array node's children GA that are currently opened
-		var getOpenedGA = function (toclose, d) {
-			if (!_.isUndefined(d.children)) {
-				return _.union(toclose, d.children.filter(isOpened));
-			} else {
-				return toclose;
-			}
-		}
-
-		// Functions that return true if the node is opened
-		var isOpened = function (d) {
-			return !(d.children === null || _.isUndefined(d.children))
-		}
-
-		// Function that returns true if a GA node is constrained by a stop rule
-		var isConstrainedGA = function (d) {
-			return (d.go === 'true' && !isOpened(d));
-		}
-
-		// Function that returns true if the node is GA
-		var isGA = function (d) {
-			return d.category === 'GA';
-		}
-
-		// Function that updates the RCA state when a stop rule is removed
-		var removeStopRule = function (d) {
-			// We need to find out the closed GA that should now be opened
-			var tocheck = d.parent.children.filter(isGA);
-			var toexpand = tocheck.reduce(getConstrainedGA, []);
-			_.each(toexpand, function (value, key, list) {
-				value.children = digAntecedent(value);
-			});
-			// Eventually set the Stop rule to false.
-			d.stop = "false";
-		}
-
-		// Function tha recursively find the SA nodes with stop rule engaged
-		var findSR = function (tounstop, d) {
-			if (d.category === 'GA' && isOpened(d)) {
-				return _.union(tounstop, d.children.reduce(findSR, tounstop));
-			} else if (d.category === 'SA' && d.stop === 'true') {
-				return tounstop.push(d);
-			} else {
-				return tounstop;
-			}
-		}
-
-		// Function that updates the RCA state when a stop rule is added
-		var addStopRule = function (d) {
-			// We need to check if there was already a stop rule engaged
-			// in n+* depth. Then remove it before adding this one.
-			var tounstop = d.parent.children.reduce(findSR, []);
-			_.each(tounstop, function (value, key, list) {
-				removeStopRule(value);
-			});
-			// We need to check if some GA needs to be closed.
-			var tocheck = d.parent.children.filter(isGA);
-			var toclose = tocheck.reduce(getOpenedGA, []);
-			_.each(toclose, function (value, key, list) {
-				// the node is closed, but is still present in the analysis
-				value.children = null;
-				value._children = null;
-				value.go = 'true';
-			});
-
-			d.stop = 'true';
-		}
-
-		// Builds the path of a node
-		var getPath = function (d) {
-			var path = [];
-			for (var i = d.depth; i != 0; i--) {
-				path[d.depth] = {
-					"category": d.category,
-					"em": d.em
-				};
-				d = d.parent;
-			}
-			return path;
-		}
-
-		// Recursive tree traversal and update
-		var traverseMatch = function (path, d, tree) {
-			var trail = "";
-			_.each(tree.children, function (value, key, list) {
-				if (value.em == path[0].em) {
-					trail = "children[" + key + "]";
-					if (path.length > 1) {
-						trail += '.' + traverseMatch(_.rest(path), d, value);
-					}
-				}
-			});
-			return trail;
-		}
-
-		var setToValue = function (obj, value, path) {
-			console.log(path);
-			eval("$scope.current.data." + path + "= value");
-			// There must be a way to avoid the dynamic interpretation evil:
-//			function resolve(root, link) {
-//				return (new Function('root', 'return root.' + link + ';'))(root);
-//			}
-//			var value = resolve(tree, path.to.link);
-			// To be tested
-
-		}
-
-		// Function that ensures that d is updated in root
-		var matchRoot = function (d) {
-			// First we do a reverse tree traversal to find where this node is
-			var path = getPath(d);
-			path = _.rest(path);
-			var trail = '';
-			// Then a tree traversal to check the value of the node
-			if (path.length > 0) {
-				trail = traverseMatch(path, d, $scope.current.data);
-			}
-			setToValue($scope.current.data, d, trail);
-		}
-
+		
 		// Function that implements the stop rule
 		// Return a promise
 		$scope.toggleAntecedent = function (d) {
@@ -384,29 +160,29 @@ angular.module('myApp.view3', [])
 				d.children = null;
 			} else { // Closed GA or SA								
 				// First we check the state of the stop rule
-				if (stopStateN(d) == "false" && stopStateN1(d) == "false") { // OFF
+				if (errorModes.stopStateN(d, $scope) == "false" && errorModes.stopStateN1(d, $scope) == "false") { // OFF
 					if (d.category == "SA") { // Toggling SA 
 						if (d.go == "true") {
 							d.go = "false";
-							removeStopRule(d);
+							errorModes.removeStopRule(d, $scope);
 						} else {
 							d.go = "true";
-							addStopRule(d);
+							errorModes.addStopRule(d, $scope);
 						}
 					} else { // Opening closed GA
 						d.go = "true";
 						console.log("Opening Closed GA");
-						d.children = digAntecedent(d);
+						d.children = errorModes.digAntecedent(d, $scope);
 						d._children = null;
 					}
-				} else if (stopStateN(d) == "false" && stopStateN1(d) == "true") { // ON at N-1
+				} else if (errorModes.stopStateN(d, $scope) == "false" && errorModes.stopStateN1(d, $scope) == "true") { // ON at N-1
 					if (d.category === 'SA') {
 						if (d.go == "true") { // Was ON
 							d.go = "false"; // Becomes OFF
-							removeStopRule(d);
+							errorModes.removeStopRule(d, $scope);
 						} else { // Was OFF
 							d.go = "true"; // Becomes ON
-							removeStopRule(d);
+							errorModes.removeStopRule(d, $scope);
 						}
 					} else if (d.category == "GA") { // The GA can be closed because of SR ON
 						if (d.go === 'false') {
@@ -419,19 +195,19 @@ angular.module('myApp.view3', [])
 							d.go = "false"; // Becomes OFF
 						}
 					}
-				} else if (stopStateN(d) == "true" && stopStateN1(d) == "false") { // ON at N
+				} else if (errorModes.stopStateN(d, $scope) == "true" && errorModes.stopStateN1(d, $scope) == "false") { // ON at N
 					if (d.category === 'SA') {
 						if (d.go == "true") { // Was ON
 							d.go = "false"; // Becomes OFF
-							removeStopRule(d);
+							errorModes.removeStopRule(d, $scope);
 						} else { // Was OFF
 							d.go = "true"; // Becomes ON
-							removeStopRule(d);
+							errorModes.removeStopRule(d, $scope);
 						}
 					} else if (d.category == "GA") { // One sibling is stopped, we can open the GA
 						d.go = "true"; // Becomes ON
 						console.log("Last depth of GA opening.");
-						d.children = digAntecedent(d);
+						d.children = errorModes.digAntecedent(d, $scope);
 						d._children = null;
 					}
 				}
@@ -439,7 +215,8 @@ angular.module('myApp.view3', [])
 
 			// Before saving to the storage and displaying, we update the node value in the tree
 			if (d.depth > 0) {
-				matchRoot(d);
+				var toSet = errorModes.matchRoot(d, $scope);
+				setToValue(toSet);
 			}
 
 			ErrorMode.update($scope.current.id, {data: $scope.current.data}).then(function (errorMode) {
