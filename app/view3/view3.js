@@ -67,7 +67,7 @@ angular.module('myApp.view3', [])
 	.controller('View3Ctrl', function ($sce, $scope, $route, $modal, $q, analysisMenu, Analysis, Atck, Description, ErrorMode, errorModes, screamFlavors, xsltTransform, _) {
 
 		console.log($route.current.locals.atck);
-		console.log($route.current.locals.atck.description);
+//		console.log($route.current.locals.atck.description);
 		console.log($route.current.locals.atck.analysis);
 
 		$scope.itemsMenu = analysisMenu;

@@ -44,7 +44,7 @@ angular.module('myApp.view4', [])
 				});
 		}])
 
-	.controller('View4Ctrl', function (_, $scope, $route, $q, analysisMenu, Analysis, Atck, ErrorMode) {
+	.controller('View4Ctrl', function (_, $scope, $route, $q, analysisMenu, Analysis, Atck, ErrorMode, errorModes) {
 
 		// Menu vars from app constant
 		$scope.itemsMenu = analysisMenu;
@@ -68,8 +68,10 @@ angular.module('myApp.view4', [])
 				return true;
 			} else {
 				_.each($scope.atck.analysis.ems, function (value, key, list) {
+					// For each ErrorMode, we check that it reached an end state
+					console.log(errorModes.analysisCompleted(value));
 					// For each ErrorMode, we compile the list of antecedents
-					console.log(_.where);
+					
 				});
 				return true;
 			}

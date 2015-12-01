@@ -53,11 +53,11 @@ angular.module('myApp.errorModes', [])
 			};
 
 			// Function tha recursively find the SA nodes with stop rule engaged
-			var findSR = function (tounstop, d, scope) {
+			var findSR = function (tounstop, d) {
 				if (d.category === 'GA' && isOpened(d)) {
 					return _.union(tounstop, d.children.reduce(findSR, tounstop));
 				} else if (d.category === 'SA' && d.stop === 'true') {
-					return tounstop.push(d);
+					return _.union(tounstop, [d]);
 				} else {
 					return tounstop;
 				}
@@ -226,13 +226,13 @@ angular.module('myApp.errorModes', [])
 			};
 
 			// Function that ensures that the analysis reached an end
-			obj.analysisCompleted = function () {
-
+			obj.analysisCompleted = function (em) {
+				return !_.isEmpty(em.data.children.reduce(findSR, []))
 			};
 
-			// Function that list the antecedents selected at possible contributors.
+			// Function that lists the antecedents selected at possible contributors.
 			obj.analysisResults = function () {
-
+				return em.data.children.reduce(findSR, []);
 			}
 
 			return obj;
