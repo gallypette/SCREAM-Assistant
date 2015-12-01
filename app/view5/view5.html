@@ -87,7 +87,7 @@
         </div>
         <div class="modal-body">
 		<accordion close-others="true">
-			<accordion-group ng-repeat="schema in descriptionTypes">
+			<accordion-group ng-repeat="schema in descriptionTypes" is-open="status.open">
 				<accordion-heading>
 					<b>{{schema.name}}</b>: {{schema.desc}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 				</accordion-heading>
