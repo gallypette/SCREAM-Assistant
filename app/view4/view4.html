@@ -24,10 +24,10 @@
 							<accordion-heading>
 								<b>{{antecedent.category}}</b>: {{antecedent.em}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 							</accordion-heading>
-							<form name="addForm" role="form" ng-submit="registerComment()">
+							<form name="addForm" role="form" ng-submit="registerComments(em, antecedent)">
 								<div class="form-group">
 								<label for="comment">Comment:</label>
-								<textarea class="form-control" rows="5" id="comment"></textarea>
+								<textarea class="form-control" rows="5" ng-model="antecedent.comment"></textarea>
 
 								<input type="submit" class="btn btn-primary" value="Register Comment">
 

@@ -59,6 +59,20 @@ angular.module('myApp.errorModes', [])
 					return tounstop;
 				}
 			};
+			// Function tha recursively find the contributors
+			var findContributors = function (selected, d) {
+				// GA is opened, we go deeper
+				if (d.category === 'GA' && isOpened(d)) {
+					return _.union(selected, d.children.reduce(findContributors, selected));
+				// GA closed because of the stop rule, added to the selected list
+				} else if (d.category === 'GA' && !isOpened(d) && d.go === 'true'){
+					return _.union(selected, [d]);
+				}else if (d.category === 'SA' && d.go === 'true') {
+					return _.union(selected, [d]);
+				} else {
+					return selected;
+				}
+			};
 			// Functions that return true if the node is opened
 			var isOpened = function (d, scope) {
 				return !(d.children === null || _.isUndefined(d.children))
@@ -219,8 +233,8 @@ angular.module('myApp.errorModes', [])
 			// Function that lists the antecedents selected as possible contributors.
 			obj.analysisResults = function (em) {
 				// TODO
-				return em.data.children.reduce(findSR, []);
+				return em.data.children.reduce(findContributors, []);
 			}
-
+			
 			return obj;
 		}]);

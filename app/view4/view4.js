@@ -81,6 +81,13 @@ angular.module('myApp.view4', [])
 			}
 		});
 
-		// Function that compile the antecedents of an Error Mode
+		
+		
+		// Function that get the comment form back
+		$scope.registerComments = function (em){
+			console.log(em);
+			// We need to update corresponding errorMode in the localstorage.
+			ErrorMode.update(em.id, {data: em.data});
+		} 
 	
 	});
