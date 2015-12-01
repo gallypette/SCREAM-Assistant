@@ -74,6 +74,15 @@ angular.module('myApp.view3', [])
 		$scope.atck = $route.current.locals.atck;
 		$scope.current = $route.current.locals.current[0];
 		$scope.flavors = screamFlavors;
+		
+		$scope.areCompleted = function () {
+			_.each($scope.atck.analysis.ems, function (value, key, list) {
+				// For each ErrorMode, we check that it reached an end state
+				value.completed = errorModes.analysisCompleted(value);
+				console.log(value.completed);
+			});
+		}
+		
 		// lazy loading of nested realtions does not work with localstorage
 		// so we resolve those here
 		$q.resolve(Analysis.loadRelations($scope.atck.analysis.id)).then(function () {
@@ -86,6 +95,8 @@ angular.module('myApp.view3', [])
 				_.each($scope.atck.analysis.ems, function (value, key, list) {
 					$scope.model[value.category] = value.em;
 				});
+				// Update of the state of the errorModes
+				$scope.areCompleted();
 				return true;
 			}
 		});
@@ -146,7 +157,7 @@ angular.module('myApp.view3', [])
 			eval("$scope.current.data." + toSet[2] + "= toSet[1]");
 			// There must be a way to avoid the dynamic interpretation evil
 		};
-		
+
 		// Function that implements the stop rule
 		// Return a promise
 		$scope.toggleAntecedent = function (d) {

@@ -15,19 +15,23 @@
 			<tr>
 				<th>Name</th>
 				<th>Description</th>
+				<th>Completed</th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="em in atck.analysis.ems" ng-if="em.em != null">
 				<td>{{em.category}}</td>
 				<td>{{em.em}}</td>
+				<td>{{em.completed}}</td>
 				<td><button type="button" class="btn btn-success" ng-click="analyzeEM(em)">Analyze</button></td>
-				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteEM(em)">Delete</button></td>
+				
 			</tr>
 
 		</tbody>
 	</table>
 	<button type="button" class="btn btn-primary" ng-click="addEM()">Manage Error Modes</button>
+	<button type="button" class="btn btn-primary" ng-click="areCompleted()">Update Complete States</button>
 	<a href="#/view4/{{atck.id}}" class="btn btn-info" role="button">Compile results</a>
 </div>
 
