@@ -224,10 +224,10 @@ angular.module('myApp.view3', [])
 			}
 
 			// Before saving to the storage and displaying, we update the node value in the tree
-			if (d.depth > 0) {
-				var toSet = errorModes.matchRoot(d, $scope);
-				setToValue(toSet);
-			}
+//			if (d.depth > 0) {
+//				var toSet = errorModes.matchRoot(d, $scope);
+//				setToValue(toSet);
+//			}
 
 			ErrorMode.update($scope.current.id, {data: $scope.current.data}).then(function (errorMode) {
 				console.log('localstorage updated!');

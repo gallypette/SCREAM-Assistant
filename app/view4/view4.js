@@ -86,8 +86,12 @@ angular.module('myApp.view4', [])
 		// Function that get the comment form back
 		$scope.registerComments = function (em){
 			console.log(em);
+			// Here we launch a modal with a loading gif
+			
 			// We need to update corresponding errorMode in the localstorage.
 			ErrorMode.update(em.id, {data: em.data});
+			// Then we reomve the gif
+			
 		} 
 	
 	});
