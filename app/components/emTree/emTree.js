@@ -232,6 +232,8 @@ angular.module('myApp.emTree', [])
 							$q.resolve(scope.toggleAntecedent(d)).then(function (updatedd) {
 								console.log(updatedd);
 								update(updatedd);
+								// Update the completness state in the view
+								scope.areCompleted();
 								// Center on the node
 //								centerNode(d);
 							});
