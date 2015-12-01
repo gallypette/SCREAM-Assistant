@@ -24,7 +24,6 @@ angular.module('myApp.errorModes', [])
 				}
 				return pointer;
 			};
-
 			// Builds the path of a node
 			var getPath = function (d) {
 				var path = [];
@@ -37,7 +36,6 @@ angular.module('myApp.errorModes', [])
 				}
 				return path;
 			};
-
 			// Recursive tree traversal and update
 			var traverseMatch = function (path, d, tree) {
 				var trail = "";
@@ -51,7 +49,6 @@ angular.module('myApp.errorModes', [])
 				});
 				return trail;
 			};
-
 			// Function tha recursively find the SA nodes with stop rule engaged
 			var findSR = function (tounstop, d) {
 				if (d.category === 'GA' && isOpened(d)) {
@@ -62,22 +59,18 @@ angular.module('myApp.errorModes', [])
 					return tounstop;
 				}
 			};
-
 			// Functions that return true if the node is opened
 			var isOpened = function (d, scope) {
 				return !(d.children === null || _.isUndefined(d.children))
 			};
-
 			// Function that returns true if a GA node is constrained by a stop rule
 			var isConstrainedGA = function (d, scope) {
 				return (d.go === 'true' && !isOpened(d));
 			};
-
 			// Function that returns true if the node is GA
 			var isGA = function (d, scope) {
 				return d.category === 'GA';
 			};
-
 			// Function that adds to an array node's children GA that are constrained by a SR
 			var getConstrainedGA = function (toexpand, d, scope) {
 				if (!_.isUndefined(d.children)) {
@@ -86,7 +79,6 @@ angular.module('myApp.errorModes', [])
 					return toexpand;
 				}
 			};
-
 			// Function that adds to an array node's children GA that are currently opened
 			var getOpenedGA = function (toclose, d, scope) {
 				if (!_.isUndefined(d.children)) {
@@ -95,11 +87,8 @@ angular.module('myApp.errorModes', [])
 					return toclose;
 				}
 			};
-
 			// Public methods
 			var obj = {};
-
-
 			// Functions that find the antecedents for the next depth
 			obj.digAntecedent = function (d, scope) {
 				console.log(d);
@@ -151,7 +140,6 @@ angular.module('myApp.errorModes', [])
 				}
 				return children;
 			};
-
 			// Function that check the state of the stop rule on a node's siblings 
 			obj.stopStateN = function (d, scope) {
 				var stoprule = "false";
@@ -165,7 +153,6 @@ angular.module('myApp.errorModes', [])
 				}
 				return stoprule;
 			};
-
 			// Function that check the state of the stop rule on a node's siblings 
 			obj.stopStateN1 = function (d, scope) {
 				var stoprule = "false";
@@ -179,7 +166,6 @@ angular.module('myApp.errorModes', [])
 				}
 				return stoprule;
 			};
-
 			// Function that updates the RCA state when a stop rule is removed
 			obj.removeStopRule = function (d, scope) {
 				// We need to find out the closed GA that should now be opened
@@ -191,7 +177,6 @@ angular.module('myApp.errorModes', [])
 				// Eventually set the Stop rule to false.
 				d.stop = "false";
 			};
-
 			// Function that updates the RCA state when a stop rule is added
 			obj.addStopRule = function (d, scope) {
 				// We need to check if there was already a stop rule engaged
@@ -211,7 +196,6 @@ angular.module('myApp.errorModes', [])
 				});
 				d.stop = 'true';
 			};
-
 			// Function that ensures that d is updated in root
 			obj.matchRoot = function (d, scope) {
 				// First we do a reverse tree traversal to find where this node is
@@ -224,12 +208,14 @@ angular.module('myApp.errorModes', [])
 				}
 				return new Array(scope.current.data, d, trail);
 			};
-
 			// Function that ensures that the analysis reached an end
 			obj.analysisCompleted = function (em) {
-				return !_.isEmpty(em.data.children.reduce(findSR, []))
+				if (!_.isEmpty(em.data.children)) {
+					return !_.isEmpty(em.data.children.reduce(findSR, []));
+				} else {
+					return false;
+				}
 			};
-
 			// Function that lists the antecedents selected as possible contributors.
 			obj.analysisResults = function (em) {
 				// TODO
@@ -237,5 +223,4 @@ angular.module('myApp.errorModes', [])
 			}
 
 			return obj;
-
 		}]);
