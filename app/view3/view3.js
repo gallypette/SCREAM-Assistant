@@ -79,7 +79,6 @@ angular.module('myApp.view3', [])
 			_.each($scope.atck.analysis.ems, function (value, key, list) {
 				// For each ErrorMode, we check that it reached an end state
 				value.completed = errorModes.analysisCompleted(value);
-				console.log(value.completed);
 			});
 		}
 		

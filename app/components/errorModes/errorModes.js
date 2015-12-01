@@ -230,8 +230,9 @@ angular.module('myApp.errorModes', [])
 				return !_.isEmpty(em.data.children.reduce(findSR, []))
 			};
 
-			// Function that lists the antecedents selected at possible contributors.
-			obj.analysisResults = function () {
+			// Function that lists the antecedents selected as possible contributors.
+			obj.analysisResults = function (em) {
+				// TODO
 				return em.data.children.reduce(findSR, []);
 			}
 

@@ -7,17 +7,36 @@
 		<thead>
 			<tr>
 				<th>Error Mode</th>
-				<th>Antecedent</th>
-				<th>Type</th>
-				<th>Comments</th>
+				<th  style="text-align: center">Completed</th>
+				<th>Antecedents</th>
+				
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="em in atck.analysis.ems" ng-if="em.em != null">
-				<td></td>
-				<td></td>
-				<td>{{em.category}}</td>
-				<td>{{em.em}}</td>
+				<td>{{em.category}} - {{em.em}}</td>
+				<td  style="text-align: center"><div ng-show="em.completed"><span class="glyphicon glyphicon-ok"></div>
+				    <div ng-show="!em.completed"><span class="glyphicon glyphicon-flash"></div>
+				</td>
+				<td>
+					<accordion close-others="true">
+						<accordion-group ng-repeat="antecedent in em.antecedents" is-open="status.open">
+							<accordion-heading>
+								<b>{{antecedent.category}}</b>: {{antecedent.em}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+							</accordion-heading>
+							<form name="addForm" role="form" ng-submit="registerComment()">
+								<div class="form-group">
+									Here comes the placeholder for the comments.
+
+								<input type="submit" class="btn btn-primary" value="Register Comment">
+								<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+
+							</form>
+						</accordion-group>
+					</accordion>
+					
+				</td>
+				
 			</tr>
 
 		</tbody>

@@ -59,6 +59,7 @@ angular.module('myApp.view4', [])
 		$scope.atck = $route.current.locals.atck;
 		$scope.current = $route.current.locals.current[0];
 		
+		
 		// lazy loading of nested relations does not work with localstorage
 		// so we resolve those here
 		$q.resolve(Analysis.loadRelations($scope.atck.analysis.id)).then(function () {
@@ -69,9 +70,12 @@ angular.module('myApp.view4', [])
 			} else {
 				_.each($scope.atck.analysis.ems, function (value, key, list) {
 					// For each ErrorMode, we check that it reached an end state
-					console.log(errorModes.analysisCompleted(value));
+					value.completed = errorModes.analysisCompleted(value);
 					// For each ErrorMode, we compile the list of antecedents
-					
+					if(value.completed){
+						value.antecedents = errorModes.analysisResults(value);
+						console.log(value.antecedents);
+					}	
 				});
 				return true;
 			}
