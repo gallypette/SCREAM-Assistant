@@ -12,6 +12,7 @@
 				<th>Name</th>
 				<th>Description</th>
 				<th>Creation date</th>
+				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -19,7 +20,7 @@
 				<td>{{current.name}}</td>
 				<td>{{current.desc}}</td>
 				<td>{{current.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><a href="#/view5/{{current.id}}" class="btn btn-info" role="button">Manage Attacks</a></td>
+				<td><a href="#/view5/{{current.id}}" class="btn btn-primary" role="button">Manage Attacks</a>    <a href="#/view2/{{current.id}}" class="btn btn-success" role="button">AttackModes</a></td>
 			</tr>
 		</tbody>
 	</table>
