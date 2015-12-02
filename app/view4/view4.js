@@ -3,46 +3,37 @@
 angular.module('myApp.view4', [])
 
 	.config(['$routeProvider', function ($routeProvider) {
-		$routeProvider.
-			// when we land directly on the analysis by the use of the main menu's button
-			when('/view4/:id', {
-				templateUrl: 'view4/view4.html',
-				controller: 'View4Ctrl',
-				resolve: {
-					atck: function ($route, Stc, Atck, Analysis, Description) {
-						return Atck.find($route.current.params.id).then(function (atck) {
-							return Atck.loadRelations(atck.id, ['analysis', 'description']);
-						});
-					},
-					current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
-						return Atck.find($route.current.params.id).then(function (atck) {
-							return Atck.loadRelations(atck.id, ['analysis']).then(function (atck) {
-								return ErrorMode.findAll({current: 'true', analysisId: atck.analysis.id}, {cacheResponse: false});
+			$routeProvider.
+				// when we land directly on the analysis by the use of the main menu's button
+				when('/view4/:id', {
+					templateUrl: 'view4/view4.html',
+					controller: 'View4Ctrl',
+					resolve: {
+						atck: function ($route, Stc, Atck, Analysis, Description) {
+							return Atck.find($route.current.params.id).then(function (atck) {
+								return Atck.loadRelations(atck.id, ['analysis', 'description']);
 							});
-						});
+						}
 					}
-				}
-			}).
-			// .when we land on the view4's root, we need to get the current analysis
-			when('/view4', {
-				templateUrl: 'view4/view4.html',
-				controller: 'View4Ctrl',
-				resolve: {
-					atck: function ($route, Stc, Atck, Analysis, Description) {
-						return Atck.findAll({current: 'true'}).then(function (atcks) {
-							return Atck.loadRelations(atcks[0].id, ['analysis', 'description']);
-						});
-					},
-					current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
-						return Atck.findAll({current: 'true'}).then(function (atck) {
-							return Atck.loadRelations(atck[0].id, ['analysis']).then(function (atck) {
-								return ErrorMode.findAll({current: 'true', analysisId: atck.analysis.id}, {cacheResponse: false});
-							});
-						});
+				}).
+				// .when we land on the view4's root, we need to get the current analysis
+				when('/view4', {
+					templateUrl: 'view4/view4.html',
+					controller: 'View4Ctrl',
+					resolve: {
+						atck: function ($route, Stc, Atck, Analysis, Description, _) {
+							return Stc.findAll({current: 'true'}).then(function (stc) {
+								return Stc.loadRelations(stc[0].id, []).then(function (stc) {
+									// stc contains all current stc' attacks
+									// Filter the current one
+									var atck = _.where(stc.atcks, {current: 'true'})[0];
+									return Atck.loadRelations(atck.id, []);
+								});
+							})
+						}
 					}
-				}
-			});
-	}])
+				});
+		}])
 
 	.controller('View4Ctrl', function (_, $scope, $route, $q, $modal, analysisMenu, Analysis, Atck, ErrorMode, errorModes) {
 
@@ -57,8 +48,6 @@ angular.module('myApp.view4', [])
 
 		// View var from resolve 
 		$scope.atck = $route.current.locals.atck;
-		$scope.current = $route.current.locals.current[0];
-
 
 		// lazy loading of nested relations does not work with localstorage
 		// so we resolve those here
@@ -86,21 +75,19 @@ angular.module('myApp.view4', [])
 			// We need to update corresponding errorMode in the localstorage.
 			ErrorMode.update(em.id, {data: em.data}).then()
 			{
-			// Display a modal for the user' feedback
-			var modalInstance = $modal.open({
-				animation: true,
-				templateUrl: 'loadingStateModal',
-				size: 'sg',
-				controller: function ($scope, $modalInstance) {
-					// Dimiss the modal when OK is clicked.
-					$scope.cancel = function () {
-						$modalInstance.dismiss('cancel');
-					};
-				}
-			});
-		};
-		// Then we reomve the gif
-
-	}
-
+				// Display a modal for the user' feedback
+				var modalInstance = $modal.open({
+					animation: true,
+					templateUrl: 'loadingStateModal',
+					size: 'sg',
+					controller: function ($scope, $modalInstance) {
+						// Dimiss the modal when OK is clicked.
+						$scope.cancel = function () {
+							$modalInstance.dismiss('cancel');
+						};
+					}
+				});
+			}
+			;
+		}
 	});
