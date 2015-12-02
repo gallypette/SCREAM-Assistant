@@ -15,7 +15,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="em in atck.analysis.ems" ng-if="em.em != null">
-				<td class="col-md-2">{{em.category}} - {{em.em}} <br><br><br> <button ng-if="em.antecedents != null" type="button" class="btn btn-primary" ng-click="registerComments(em)">Register comments</button></td>
+				<td class="col-md-2"><b>{{em.category}} - {{em.em}}</b> <br><br><br> <button ng-if="em.antecedents != null" type="button" class="btn btn-primary" ng-click="registerComments(em)">Register comments</button></td>
 				<td  class="col-md-1" style="text-align: center"><div ng-show="em.completed"><span class="glyphicon glyphicon-ok"></div>
 				    <div ng-show="!em.completed"><span class="glyphicon glyphicon-flash"></div>
 				</td>
