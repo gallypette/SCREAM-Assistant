@@ -42,9 +42,8 @@ angular.module('myApp.view5', [])
 		// Load the data into the view
 		$scope.stc = $route.current.locals.stc;
 		// Point current to the current one
-		$scope.current = _.where($route.current.locals.stc.atcks, {current: 'true'});
-
-		console.log($route.current.locals.current);
+		$scope.current = _.where($route.current.locals.stc.atcks, {current: 'true'})[0];
+		console.log($scope.current);
 
 		$scope.addAtck = function (atck) {
 			// Set the date and stcId before injecting
