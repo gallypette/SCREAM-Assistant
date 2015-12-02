@@ -11,17 +11,11 @@ angular.module('myApp.view2', [])
 					templateUrl: 'view2/view2.html',
 					controller: 'View2Ctrl',
 					resolve: {
-						atck: function ($route, Stc, Atck, Analysis, Description) {
-							return Atck.find($route.current.params.id).then(function (atck) {
-								return Atck.loadRelations(atck.id, ['analysis', 'description']);
-							});
-						},
-						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
-							return Atck.find($route.current.params.id).then(function (atck) {
-								return Atck.loadRelations(atck.id, ['analysis']).then(function (atck) {
-									return ErrorMode.findAll({current: 'true', analysisId: atck.analysis.id}, {cacheResponse: false});
-								});
-							});
+						stc: function ($route, Stc, Atck, Analysis, Description, _) {
+							return Stc.find($route.current.params.id).then(function (stc) {
+								return Stc.loadRelations(stc.id, []);
+								// I can't go further down the nest because of js-data limitations.
+							})
 						}
 					}
 				}).
@@ -30,23 +24,11 @@ angular.module('myApp.view2', [])
 					templateUrl: 'view2/view2.html',
 					controller: 'View2Ctrl',
 					resolve: {
-						atck: function ($route, Stc, Atck, Analysis, Description) {
-							return Atck.findAll({current: 'true'}).then(function (atcks) {
-								return Atck.loadRelations(atcks[0].id, ['analysis', 'description']);
-							});
-						},
-						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
-							return Atck.findAll({current: 'true'}).then(function (atck) {
-								return Atck.loadRelations(atck[0].id, ['analysis']).then(function (atck) {
-									return ErrorMode.findAll({current: 'true', analysisId: atck.analysis.id}, {cacheResponse: false});
-								});
-							});
-						}
 					}
 				});
 		}])
 
-	.controller('View2Ctrl', function ($scope, $route, $q, analysisMenu, Analysis, Atck, ErrorMode) {
+	.controller('View2Ctrl', function ($scope, $route, $q, analysisMenu, Analysis, Atck, ErrorMode, errorModes) {
 
 		// Menu vars from app constant
 		$scope.itemsMenu = analysisMenu;
@@ -57,24 +39,37 @@ angular.module('myApp.view2', [])
 			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
 		}
 
+		$scope.areCompleted = function () {
+			_.each($scope.atck.analysis.ems, function (value, key, list) {
+				// For each ErrorMode, we check that it reached an end state
+				value.completed = errorModes.analysisCompleted(value);
+			});
+		}
+
 		// View var from resolve 
-		$scope.atck = $route.current.locals.atck;
-		$scope.current = $route.current.locals.current[0];
-		
+		$scope.stc = $route.current.locals.stc;
+
 		// lazy loading of nested realtions does not work with localstorage
 		// so we resolve those here
-		$q.resolve(Analysis.loadRelations($scope.atck.analysis.id)).then(function () {
-			// The model where we store the values linked in the view (form)
-			// We need to populated it with the analysis's error modes.
-			$scope.model = {};
-			if (_.isEmpty($scope.atck.analysis.ems)) {
-				return true;
-			} else {
-				_.each($scope.atck.analysis.ems, function (value, key, list) {
-					$scope.model[value.category] = value.em;
-				});
-				return true;
-			}
+		_.each($scope.stc.atcks, function (element, index, list) {
+			$q.resolve(Atck.loadRelations(element.id)).then(function (atck) {
+				Analysis.loadRelations($scope.stc.atcks[index].analysis.id).then(function () {
+					if (_.isEmpty($scope.stc.atcks[index].analysis.ems)) {
+						console.log('No error modes');
+						return true;
+					} else {
+						_.each($scope.stc.atcks[index].analysis.ems, function (value, key, list) {
+							// For each ErrorMode, we check that it reached an end state
+							value.completed = errorModes.analysisCompleted(value);
+							// For each ErrorMode, we compile the list of antecedents
+							if (value.completed) {
+								value.antecedents = errorModes.analysisResults(value);
+								console.log(value.antecedents);
+							}
+						});
+						return true;
+					}
+				})
+			});
 		});
-	
 	});
