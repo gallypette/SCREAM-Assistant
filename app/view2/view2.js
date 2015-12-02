@@ -49,11 +49,15 @@ angular.module('myApp.view2', [])
 		// View var from resolve 
 		$scope.stc = $route.current.locals.stc;
 
-		// lazy loading of nested realtions does not work with localstorage
+		// lazy loading of nested relations does not work with localstorage
 		// so we resolve those here
+		var defer = $q.defer();
+		var promises = [];
+		$scope.antecedents = [];
+		// Crunching everything into one big arry
 		_.each($scope.stc.atcks, function (element, index, list) {
-			$q.resolve(Atck.loadRelations(element.id)).then(function (atck) {
-				Analysis.loadRelations($scope.stc.atcks[index].analysis.id).then(function () {
+			promises.push(Atck.loadRelations(element.id).then(function () {
+				return Analysis.loadRelations($scope.stc.atcks[index].analysis.id).then(function () {
 					if (_.isEmpty($scope.stc.atcks[index].analysis.ems)) {
 						console.log('No error modes');
 						return true;
@@ -63,13 +67,15 @@ angular.module('myApp.view2', [])
 							value.completed = errorModes.analysisCompleted(value);
 							// For each ErrorMode, we compile the list of antecedents
 							if (value.completed) {
-								value.antecedents = errorModes.analysisResults(value);
-								console.log(value.antecedents);
+								$scope.antecedents.push({ant: errorModes.analysisResults(value), em: value, description: $scope.stc.atcks[index].description});
 							}
 						});
-						return true;
 					}
+					return true;
 				})
-			});
+			}));
+		});
+		$q.all(promises).then(function(){
+			console.log($scope.antecedents);
 		});
 	});

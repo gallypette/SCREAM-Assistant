@@ -232,7 +232,6 @@ angular.module('myApp.errorModes', [])
 			};
 			// Function that lists the antecedents selected as possible contributors.
 			obj.analysisResults = function (em) {
-				// TODO
 				return em.data.children.reduce(findContributors, []);
 			}
 			
