@@ -14,31 +14,37 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="em in atck.analysis.ems" ng-if="em.em != null">
-				<td class="col-md-2">{{em.category}} - {{em.em}}</td>
+				<td class="col-md-2">{{em.category}} - {{em.em}} <br><br><br> <button ng-if="em.antecedents != null" type="button" class="btn btn-primary" ng-click="registerComments(em)">Register comments</button></td>
 				<td  class="col-md-1" style="text-align: center"><div ng-show="em.completed"><span class="glyphicon glyphicon-ok"></div>
 				    <div ng-show="!em.completed"><span class="glyphicon glyphicon-flash"></div>
 				</td>
 				<td class="col-md-9">
-					<accordion close-others="true">
+					<accordion close-others="false">
 						<accordion-group ng-repeat="antecedent in em.antecedents" is-open="status.open">
 							<accordion-heading>
 								<b>{{antecedent.category}}</b>: {{antecedent.em}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 							</accordion-heading>
-							<form name="addForm" role="form" ng-submit="registerComments(em, antecedent)">
+							<form name="addForm" role="form">
 								<div class="form-group">
 								<label for="comment">Comment:</label>
 								<textarea class="form-control" rows="5" ng-model="antecedent.comment"></textarea>
-
-								<input type="submit" class="btn btn-primary" value="Register Comment">
-
 							</form>
 						</accordion-group>
 					</accordion>
-					
 				</td>
 				
 			</tr>
 
 		</tbody>
 	</table>
+</div>
+
+<div>
+	<script type="text/ng-template" id="loadingStateModal">
+        <div class="modal-header">
+		<h3 class="modal-title">Comments registered.</h3>
+	<br>
+		<button class="btn btn-primary" type="button" ng-click="cancel()">OK</button>
+        </div>
+	</script>
 </div>
