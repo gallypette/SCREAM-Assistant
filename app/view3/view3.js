@@ -13,7 +13,7 @@ angular.module('myApp.view3', [])
 							return Atck.find($route.current.params.id).then(function (atck) {
 								return Atck.loadRelations(atck.id, []);
 							});
-						},
+						}, // nested load relations does not work on localStorage - that's the why of this ugly bit
 						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
 							return Atck.find($route.current.params.id).then(function (atck) {
 								return Atck.loadRelations(atck.id, ['analysis']).then(function (atck) {
@@ -42,7 +42,7 @@ angular.module('myApp.view3', [])
 							return Atck.findAll({current: 'true'}).then(function (atcks) {
 								return Atck.loadRelations(atcks[0].id, []);
 							});
-						},
+						},// nested load relations does not work on localStorage - that's the why of this ugly bit
 						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
 							return Atck.findAll({current: 'true'}).then(function (atck) {
 								return Atck.loadRelations(atck[0].id, ['analysis']).then(function (atck) {

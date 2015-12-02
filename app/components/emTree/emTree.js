@@ -2,66 +2,67 @@
 
 // The emTree directive prints the tree corresponding to an error mode 
 angular.module('myApp.emTree', [])
-	.directive('errorModeTree', ['$window', 'd3Service', '$q', function ($window, d3Service, $q) {
+	.directive('errorModeTree', ['$window', 'd3Service', '$q', '_', function ($window, d3Service, $q, _) {
 			return {
 				restrict: 'A',
 				// I share the scope as I don't plan to have several trees on the same page.
 				scope: false,
 				link: function (scope, element, attrs) {
 					d3Service.d3().then(function (d3) {
+						if (!_.isEmpty(scope.current)) {
+							// define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
+							var zoomListener = d3.behavior.zoom().scaleExtent([1, 1])
+								.on("zoom", zoom);
 
-						// define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
-						var zoomListener = d3.behavior.zoom().scaleExtent([1, 1])
-							.on("zoom", zoom);
+							var duration = 750;
 
-						var duration = 750;
+							var margin = {top: 0, right: 120, bottom: 20, left: 120},
+							width = 960 - margin.right - margin.left,
+								height = 1000 - margin.top - margin.bottom;
 
-						var margin = {top: 0, right: 120, bottom: 20, left: 120},
-						width = 960 - margin.right - margin.left,
-							height = 1000 - margin.top - margin.bottom;
+							var svg = d3.select("#tree-container").append("svg")
+								.attr("width", width + margin.right + margin.left)
+								.attr("height", height + margin.top + margin.bottom)
+								.style('width', '100%')
+								.append("g")
+								.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-						var svg = d3.select("#tree-container").append("svg")
-							.attr("width", width + margin.right + margin.left)
-							.attr("height", height + margin.top + margin.bottom)
-							.style('width', '100%')
-							.append("g")
-							.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+							var zoomable = d3.select("#tree-container").call(zoomListener);
 
-						var zoomable = d3.select("#tree-container").call(zoomListener);
+							// Browser onresize event
+							window.onresize = function () {
+								scope.$apply();
+							};
 
-						// Browser onresize event
-						window.onresize = function () {
-							scope.$apply();
-						};
-
-						// Watch for resize event
+							// Watch for resize event
 //						scope.$watch(function () {
 //							return angular.element($window)[0].innerWidth;
 //						}, function () {
 //							update(scope.current.data);
 //						});
-						// Watch for change of current Error Mode
-						scope.$watch('current.id', function (newData, oldData) {
-							if (oldData != newData)
-							{
-								update(scope.current.data);
-							}
-						}, true);
+							// Watch for change of current Error Mode
+							scope.$watch('current.id', function (newData, oldData) {
+								if (oldData != newData)
+								{
+									update(scope.current.data);
+								}
+							}, true);
 
-						var i = 0;
+							var i = 0;
 
-						var tree = d3.layout.tree()
-							.size([height, width]);
+							var tree = d3.layout.tree()
+								.size([height, width]);
 
-						var diagonal = d3.svg.diagonal()
-							.projection(function (d) {
-								return [d.y, d.x];
-							});
+							var diagonal = d3.svg.diagonal()
+								.projection(function (d) {
+									return [d.y, d.x];
+								});
 
-						// Append a group which holds all nodesd and which the zoom listener can act upon
-						var svgGroup = svg.append("g");
+							// Append a group which holds all nodesd and which the zoom listener can act upon
+							var svgGroup = svg.append("g");
 
-						update(scope.current.data);
+							update(scope.current.data);
+						}
 
 						function update(source) {
 
