@@ -38,17 +38,18 @@ angular.module('myApp.view3', [])
 					templateUrl: 'view3/view3.html',
 					controller: 'View3Ctrl',
 					resolve: {
-						atck: function ($route, Stc, Atck, Analysis, Description) {
-							return Atck.findAll({current: 'true'}).then(function (atcks) {
-								return Atck.loadRelations(atcks[0].id, []);
-							});
-						},// nested load relations does not work on localStorage - that's the why of this ugly bit
-						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
-							return Atck.findAll({current: 'true'}).then(function (atck) {
-								return Atck.loadRelations(atck[0].id, ['analysis']).then(function (atck) {
-									return ErrorMode.findAll({current: 'true', analysisId: atck.analysis.id}, {cacheResponse: false});
+						atck: function ($route, Stc, Atck, Analysis, Description, _) {
+							return Stc.findAll({current: 'true'}).then(function (stc) {
+								return Stc.loadRelations(stc[0].id, []).then(function (stc) {
+									// stc contains all current stc' attacks
+									// Filter the current one
+									var atck = _.where(stc.atcks, {current: 'true'})[0];
+									return Atck.loadRelations(atck.id, []);
 								});
-							});
+							})
+						}, // Without the id, we just return all current Error Modes
+						current: function ($route, ErrorMode) {
+							return ErrorMode.findAll({current: 'true'}, {cacheResponse: false});
 						},
 						creamtable: function ($q, Atck, Analysis, screamFlavors, xsltTransform) {
 							// First we need to get the Analysis's CREAM flavor
@@ -73,7 +74,7 @@ angular.module('myApp.view3', [])
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.atck = $route.current.locals.atck;
-		$scope.current = $route.current.locals.current[0];
+		$scope.current = _.where($route.current.locals.current, {analysisId: $scope.atck.analysis.id})[0];
 		$scope.flavors = screamFlavors;
 
 		$scope.areCompleted = function () {
@@ -82,7 +83,7 @@ angular.module('myApp.view3', [])
 				value.completed = errorModes.analysisCompleted(value);
 			});
 		}
-		
+
 		// lazy loading of nested realtions does not work with localstorage
 		// so we resolve those here
 		$q.resolve(Analysis.loadRelations($scope.atck.analysis.id)).then(function () {
