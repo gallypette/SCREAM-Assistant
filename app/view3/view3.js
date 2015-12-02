@@ -11,7 +11,7 @@ angular.module('myApp.view3', [])
 					resolve: {
 						atck: function ($route, Stc, Atck, Analysis, Description) {
 							return Atck.find($route.current.params.id).then(function (atck) {
-								return Atck.loadRelations(atck.id, ['analysis', 'description']);
+								return Atck.loadRelations(atck.id, []);
 							});
 						},
 						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
@@ -25,7 +25,7 @@ angular.module('myApp.view3', [])
 							// First we need to get the Analysis's CREAM flavor
 							return $q.resolve(Atck.find($route.current.params.id)).
 								then(function (atck) {
-									return Atck.loadRelations(atck.id, ['analysis', 'description']);
+									return Atck.loadRelations(atck.id, ['analysis', 'descriptions']);
 								}).
 								then(function (atck) {
 									return xsltTransform.importFlavor(atck.analysis.flavor);
@@ -40,7 +40,7 @@ angular.module('myApp.view3', [])
 					resolve: {
 						atck: function ($route, Stc, Atck, Analysis, Description) {
 							return Atck.findAll({current: 'true'}).then(function (atcks) {
-								return Atck.loadRelations(atcks[0].id, ['analysis', 'description']);
+								return Atck.loadRelations(atcks[0].id, []);
 							});
 						},
 						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
@@ -66,9 +66,9 @@ angular.module('myApp.view3', [])
 
 	.controller('View3Ctrl', function ($sce, $scope, $route, $modal, $q, analysisMenu, Analysis, Atck, Description, ErrorMode, errorModes, screamFlavors, xsltTransform, _) {
 
-		console.log($route.current.locals.atck);
+//		console.log($route.current.locals.atck.name);
+//		console.log($route.current.locals.atck);
 //		console.log($route.current.locals.atck.description);
-		console.log($route.current.locals.atck.analysis);
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.atck = $route.current.locals.atck;

@@ -12,6 +12,7 @@ angular.module('myApp', [
 	'LocalStorageModule',
 	'xsltProcessor',
 	'myApp.navBar',
+	'myApp.descriptionDisplay',
 	'myApp.viewAttackAnalysis',
 	'myApp.viewMain',
 	'myApp.viewTMAnalysis',

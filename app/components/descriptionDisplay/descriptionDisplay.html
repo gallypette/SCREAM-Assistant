@@ -1,23 +1,44 @@
-<nav class="navbar navbar-default">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<a class="navbar-brand" href="#/viewMain"><span class="glyphicon glyphicon-home"></span> Stool</a>
-		</div>
-		<div>
-			<ul class="nav navbar-nav">
-				<li ng-class="isActiveM('#/viewTMAnalysis')"><a href="#/viewTMAnalysis">STTM</a></li>
-				<li ng-class="isActiveM('#/viewAttackAnalysis')"><a href="#/viewAttackAnalysis">SCREAM</a></li>
-			</ul>
-		</div>
-	</div>
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<a class="navbar-brand" href="#/viewMain"><span class="icon-bar"></span><span class="glyphicon glyphicon-chevron-right"></span></a>
-		</div>
-		<div>
-			<ul class="nav navbar-nav">
-				<li ng-class="isActive('{{item.url}}')" ng-repeat="item in itemsMenu"><a href={{item.url}}>{{item.text}}</a></li>
-			</ul>
-		</div>
-	</div>
-</nav>
+<div class="well">
+	<accordion close-others="true">
+			<accordion-group ng-repeat="schema in descriptionTypes | filter:atck.description.type" is-open="status.open">
+				<accordion-heading>
+					<b>{{schema.name}}</b>: {{schema.desc}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+				</accordion-heading>
+				<form name="addForm" role="form" ng-submit="registerDescription(atckMod.id, schema.name)">
+					<div class="form-group">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Field</th>
+								<th>Description</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="field in schema.fields">
+								<td>{{field.fieldName}}</td>
+								<td>{{field.desc}}</td>
+								<td ng-switch on="field.type">
+							
+									<div ng-switch-when="boolean">
+										<input disabled readonly type="radio" ng-model="atck.description[field.fieldName]" value="true">True
+										<input disabled readonly type="radio" ng-model="atck.description[field.fieldName]"  value="false">Fals
+									</div>
+								
+									<div ng-switch-when="text">
+										<input disabled readonly type="textarea" ng-model="atck.description[field.fieldName]" class="form-control">
+									</div>
+								
+									<div ng-switch-when="list">
+										<select disabled readonly ng-model="atck.description[field.fieldName]">
+											<option ng-repeat="value in field.value" value={{value}}>{{value}}</option>
+										</select> 
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</accordion-group>
+		</accordion>
+</div>
