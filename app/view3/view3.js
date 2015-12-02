@@ -68,13 +68,14 @@ angular.module('myApp.view3', [])
 
 //		console.log($route.current.locals.atck.name);
 //		console.log($route.current.locals.atck);
+//		console.log($route.current.locals.atck.analysis);
 //		console.log($route.current.locals.atck.description);
 
 		$scope.itemsMenu = analysisMenu;
 		$scope.atck = $route.current.locals.atck;
 		$scope.current = $route.current.locals.current[0];
 		$scope.flavors = screamFlavors;
-		
+
 		$scope.areCompleted = function () {
 			_.each($scope.atck.analysis.ems, function (value, key, list) {
 				// For each ErrorMode, we check that it reached an end state
@@ -89,6 +90,7 @@ angular.module('myApp.view3', [])
 			// We need to populated it with the analysis's error modes.
 			$scope.model = {};
 			if (_.isEmpty($scope.atck.analysis.ems)) {
+				console.log('No error modes associated.');
 				return true;
 			} else {
 				_.each($scope.atck.analysis.ems, function (value, key, list) {
@@ -98,6 +100,7 @@ angular.module('myApp.view3', [])
 				$scope.areCompleted();
 				return true;
 			}
+			console.log($scope.atck.analysis.ems);
 		});
 
 		$scope.creamtable = $route.current.locals.creamtable;
@@ -261,7 +264,7 @@ angular.module('myApp.view3', [])
 						// We add each Error Mode to the Analysis
 						_.each($scope.model, function (value, key, list) {
 							// We update the categories that are updated and we create the missing ones.
-							ErrorMode.findAll({where: {category: {'==': key}}}, {cacheResponse: false}).then(function (em) {
+							ErrorMode.findAll({where: {analysisId: {'===': $scope.atck.analysis.id}, category: {'==': key}}}, {cacheResponse: false}).then(function (em) {
 								console.log(em);
 								if (_.isEmpty(em)) {
 									ErrorMode.create({category: key, em: value, analysisId: $scope.atck.analysis.id}).

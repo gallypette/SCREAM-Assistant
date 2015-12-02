@@ -87,9 +87,9 @@
 	</script>
 </div>
 
-<h2 ng_if="atck.description != null">SCREAM analysis of <b>{{current.category}} : {{current.em}}</b></h2>
+<h2 ng_if="current != null">SCREAM analysis of <b>{{current.category}} : {{current.em}}</b></h2>
 <!-- EM tree -->
-<div class="well" ng_if="atck.description != null">
-	<attack-description atck="atck"></attack-description>
+<div class="well" ng_if="current != null">
+	<attack-description atck="atck" ng_if="atck.description != null"></attack-description>
 	<div error-mode-tree id="tree-container"></div>
 </div>
