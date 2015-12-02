@@ -12,9 +12,6 @@ angular.module('myApp.view5', [])
 							return Stc.find($route.current.params.id).then(function (stc) {
 								return Stc.loadRelations(stc.id, []);
 							});
-						},
-						current: function ($route, Atck) {
-							return Atck.findAll({current: 'true'}, {cacheResponse: false});
 						}
 					}
 				}).
@@ -27,15 +24,7 @@ angular.module('myApp.view5', [])
 							return Stc.findAll({current: 'true'}).then(function (stc) {
 								return Stc.loadRelations(stc[0].id, []);
 							});
-						},
-						current: function ($route, Atck) {
-							console.log("ok");
-							return Atck.findAll({where: {
-									'current': {
-										'===': 'true'
-									}
-								}}, {cacheResponse: false});
-						},
+						}
 					}
 				});
 		}])
@@ -51,10 +40,9 @@ angular.module('myApp.view5', [])
 		}
 
 		// Load the data into the view
-		$scope.current = $route.current.locals.current[0];
 		$scope.stc = $route.current.locals.stc;
-//		console.log($scope.stc);
-//		console.log($scope.stc.atcks);
+		// Point current to the current one
+		$scope.current = _.where($route.current.locals.stc.atcks, {current: 'true'});
 
 		console.log($route.current.locals.current);
 
