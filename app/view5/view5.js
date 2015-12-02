@@ -10,7 +10,7 @@ angular.module('myApp.view5', [])
 					resolve: {
 						stc: function ($route, Stc, Atck) {
 							return Stc.find($route.current.params.id).then(function (stc) {
-								return Stc.loadRelations(stc.id, ['atck']);
+								return Stc.loadRelations(stc.id, []);
 							});
 						},
 						current: function ($route, Atck) {
@@ -25,7 +25,7 @@ angular.module('myApp.view5', [])
 					resolve: {
 						stc: function ($route, Stc, Atck) {
 							return Stc.findAll({current: 'true'}).then(function (stc) {
-								return Stc.loadRelations(stc[0].id, ['atcks']);
+								return Stc.loadRelations(stc[0].id, []);
 							});
 						},
 						current: function ($route, Atck) {
@@ -115,8 +115,8 @@ angular.module('myApp.view5', [])
 					$scope.atckMod = atckDesc;
 					$scope.descriptionTypes = descriptionTypes;
 
-					$scope.registerDescription = function (id) {
-						$scope.addDescription(id);
+					$scope.registerDescription = function (id, schema) {
+						$scope.addDescription(id, schema);
 						$modalInstance.close();
 					};
 
@@ -125,12 +125,13 @@ angular.module('myApp.view5', [])
 					};
 
 					// Injects a description for an attack into the storage.
-					$scope.addDescription = function (id) {
+					$scope.addDescription = function (id, schema) {
 						console.log('Addind description to atck:' + id);
-						console.log($scope.model);
 						// Set the date and atckId before injecting
 						$scope.model.date = new Date();
 						$scope.model.atckId = id;
+						$scope.model.type = schema;
+						console.log($scope.model);
 						// Inject
 						return Description.create($scope.model).then(function (desc) {
 							console.log(desc.id + ' injected.');
