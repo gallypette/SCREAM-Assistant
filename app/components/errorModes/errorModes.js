@@ -64,10 +64,10 @@ angular.module('myApp.errorModes', [])
 				// GA is opened, we go deeper
 				if (d.category === 'GA' && isOpened(d)) {
 					return _.union(selected, d.children.reduce(findContributors, selected));
-				// GA closed because of the stop rule, added to the selected list
-				} else if (d.category === 'GA' && !isOpened(d) && d.go === 'true'){
+					// GA closed because of the stop rule, added to the selected list
+				} else if (d.category === 'GA' && !isOpened(d) && d.go === 'true') {
 					return _.union(selected, [d]);
-				}else if (d.category === 'SA' && d.go === 'true') {
+				} else if (d.category === 'SA' && d.go === 'true') {
 					return _.union(selected, [d]);
 				} else {
 					return selected;
@@ -234,6 +234,44 @@ angular.module('myApp.errorModes', [])
 			obj.analysisResults = function (em) {
 				return em.data.children.reduce(findContributors, []);
 			}
-			
+			// Function that crunches duplicate antecedents together,
+			// but still distinguishing the different descriptions (or TM)
+			// and associated comments.
+			// The end result is an array  of objects where the antecedent are keys
+			// to an array of 2uple (comment / description) are the values
+			obj.analysisResultsSTC = function (table) {
+				var init = [];
+				var results = [];
+				var keys = [];
+				// Throws everything in an Array
+				_.each(table, function (element, index, list) {
+					_.each(element.ant, function (element1, index1, list1) {
+						init.push({ant: element1, context: [[element.em, element.description]]});
+						keys.push([element1.category, element1.em]);
+					});
+				});
+				// Remove duplicate keys
+				keys = _.uniq(keys, function (x) {
+					return x[0] + x[1];
+				});
+				// Build the final object for each key
+				_.each(keys, function (element, index, list) {
+					// Group same antecedents together
+					var tmp = _.filter(init, function (obj) {
+						return obj.ant.category === element[0] && obj.ant.em === element[1];
+					});
+					// Compile the context into the modes array
+					var context = []
+					_.each(tmp, function (element2, index2, list2) {
+						context.push(element2.context[0]);
+					});
+					results.push({ant: element[0] + "-" + element[1], modes: context});
+				});
+				// TODO
+				// Pick only the comment of the antecedents that have the same context
+				// May be done in the view
+				return results;
+			}
+
 			return obj;
 		}]);

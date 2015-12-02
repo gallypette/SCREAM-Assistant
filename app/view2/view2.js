@@ -76,6 +76,6 @@ angular.module('myApp.view2', [])
 			}));
 		});
 		$q.all(promises).then(function(){
-			console.log($scope.antecedents);
+			console.log(errorModes.analysisResultsSTC($scope.antecedents));
 		});
 	});
