@@ -265,11 +265,15 @@ angular.module('myApp.errorModes', [])
 					_.each(tmp, function (element2, index2, list2) {
 						context.push(element2.context[0]);
 					});
-					results.push({ant: element[0] + "-" + element[1], modes: context});
+					// Compile the comments into the comments array
+					var comments = []
+					_.each(tmp, function (element3, index3, list3) {
+						if (!_.isUndefined(element3.ant.comment)) {
+							comments.push(element3.ant.comment);
+						}
+					});
+					results.push({ant: element[0] + "-" + element[1], modes: context, comments: comments});
 				});
-				// TODO
-				// Pick only the comment of the antecedents that have the same context
-				// May be done in the view
 				return results;
 			}
 

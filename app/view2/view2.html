@@ -3,5 +3,21 @@
 <h2>Here here the compiled list of <b>Attack Modes</b> for the <b>{{stc.name}}</b> capability.</h2>
 <!-- Error Mode list -->
 <div class="well">
-	{{antecedents}}
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th class="col-md-2">Attack Mode</th>
+				<th class="col-md-2">Error Mode</th>
+				<th class="col-md-4">Description</th>
+				<th class="col-md-4">Comment</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="attackMode in display">
+				<td  class="col-md-2">{{attackMode.ant}}</td>
+				<td  class="col-md-2"><div ng-repeat="context in attackMode.modes">{{context[0].category}}-{{context[0].em}}</div></td>
+				<td  class="col-md-4"><div ng-repeat="context in attackMode.modes">{{context[1].type}}</div></td>
+				<td  class="col-md-4"><div ng-repeat="comment in attackMode.comments">{{comment}}</div></td>
+			</tr>
+		</tbody>
 </div>
