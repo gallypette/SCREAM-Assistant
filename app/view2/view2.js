@@ -24,6 +24,11 @@ angular.module('myApp.view2', [])
 					templateUrl: 'view2/view2.html',
 					controller: 'View2Ctrl',
 					resolve: {
+						stc: function ($route, Stc, Atck, Analysis, Description, _) {
+							return Stc.findAll({current: 'true'}).then(function (stc) {
+								return Stc.loadRelations(stc[0].id, []);
+							})
+						}
 					}
 				});
 		}])
