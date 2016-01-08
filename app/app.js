@@ -13,9 +13,16 @@ angular.module('myApp', [
 	'xsltProcessor',
 	'myApp.navBar',
 	'myApp.descriptionDisplay',
-	'myApp.viewAttackAnalysis',
 	'myApp.viewMain',
-	'myApp.viewTMAnalysis',
+	'myApp.viewSTC',
+	'myApp.viewInvestigation',
+	'myApp.viewSTTM',
+	'myApp.viewAttacks',
+	'myApp.viewRCA',
+	'myApp.viewResults',
+	'myApp.viewSystems',
+	'myApp.viewSystemAttacks',
+	'myApp.viewSystemResults',
 	'myApp.view1',
 	'myApp.view2',
 	'myApp.view3',
@@ -28,17 +35,16 @@ angular.module('myApp', [
 			$routeProvider.otherwise({redirectTo: '/viewMain'});
 		}])
 
-	.constant('analysisMenu', [
-		{url: '#/view1', text: 'Manage ST Capabilities'},
-		{url: '#/view5', text: 'Manage Attacks'},
-		{url: '#/view3', text: 'SCREAM Analysis'},
-		{url: '#/view4', text: 'Analysis Summary'},
-		{url: '#/view2', text: 'STC Attack Modes'}
+	.constant('investigationMenu', [
+		{url: '#/viewAttacks', text: 'Manage Attacks'},
+		{url: '#/viewRCA', text: 'Perform RCA'},
+		{url: '#/viewResults', text: 'View Results'}
 	])
-
-	.constant('TMMenu', [
-		{url: '#/TMview1', text: 'TMview1'},
-		{url: '#/TMview2', text: 'TMview2'}
+	
+	.constant('screamMenu', [
+		{url: '#/viewSystems', text: 'Manage Systems'},
+		{url: '#/viewSystemAttacks', text: 'Manage Attacks'},
+		{url: '#/viewSystemResults', text: 'View SCREAM Analysis Results'}
 	])
 
 	.constant('screamFlavors', [
