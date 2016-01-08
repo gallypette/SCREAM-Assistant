@@ -21,15 +21,11 @@ angular.module('myApp.viewResults', [])
 					templateUrl: 'viewResults/viewResults.html',
 					controller: 'ViewResultsCtrl',
 					resolve: {
-						atck: function ($route, Stc, Atck, Analysis, Description, _) {
-							return Stc.findAll({current: 'true'}).then(function (stc) {
-								return Stc.loadRelations(stc[0].id, []).then(function (stc) {
-									// stc contains all current stc' attacks
-									// Filter the current one
-									var atck = _.where(stc.atcks, {current: 'true'})[0];
-									return Atck.loadRelations(atck.id, []);
-								});
-							})
+						atck: function ($route, Atck, Analysis, Description, _) {
+							return Atck.findAll({current: 'true'}).then(function (atck) {
+								// There should only be one current atck
+								return Atck.loadRelations(atck[0].id, []);
+							});
 						}
 					}
 				});

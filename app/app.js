@@ -125,32 +125,6 @@ angular.module('myApp', [
 							foreignKey: 'stcId'
 						}
 				}
-			},
-			beforeDestroy: function (resource, data, cb, DSUtils) {
-				console.log('Slaying Stc ' + data.id + ' and relatives.');
-				return resource.loadRelations(data.id, ['atcks']).
-					then(function () {
-						if (_.isUndefined(data.atcks)) {
-							return true;
-						} else if (data.atcks.length == 0) {
-							return true;
-						} else {
-							// The following code should work, but no luck :'(
-//							Atck.destroyAll({
-//								stcId: data.id
-//							});
-
-							// Instead this ugly piece of code does:
-							var defer = $q.defer();
-							angular.forEach(data.atcks, function (item) {
-								defer.resolve(Atck.destroy(item.id));
-							});
-							return defer.promise;
-						}
-					}).
-					then(function () {
-						return cb(null, data);
-					});
 			}
 		});
 	})

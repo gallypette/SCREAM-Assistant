@@ -38,16 +38,13 @@ angular.module('myApp.viewRCA', [])
 					templateUrl: 'viewRCA/viewRCA.html',
 					controller: 'ViewRCACtrl',
 					resolve: {
-						atck: function ($route, Stc, Atck, Analysis, Description, _) {
-							return Stc.findAll({current: 'true'}).then(function (stc) {
-								return Stc.loadRelations(stc[0].id, []).then(function (stc) {
-									// stc contains all current stc' attacks
-									// Filter the current one
-									var atck = _.where(stc.atcks, {current: 'true'})[0];
-									return Atck.loadRelations(atck.id, []);
-								});
-							})
-						}, // Without the id, we just return all current Error Modes
+						atck: function ($route, Atck, Analysis, Description, _) {
+							return Atck.findAll({current: 'true'}).then(function (atck) {
+								// There should only be one current atck
+								return Atck.loadRelations(atck[0].id, []);
+							});
+						},
+						// Without the id, we just return all current Error Modes
 						current: function ($route, ErrorMode) {
 							return ErrorMode.findAll({current: 'true'}, {cacheResponse: false});
 						},
@@ -67,14 +64,8 @@ angular.module('myApp.viewRCA', [])
 
 	.controller('ViewRCACtrl', function ($sce, $scope, $route, $modal, $q, investigationMenu, Analysis, Atck, Description, ErrorMode, errorModes, screamFlavors, xsltTransform, _) {
 
-//		console.log($route.current.locals.atck.name);
-//		console.log($route.current.locals.atck);
-//		console.log($route.current.locals.atck.analysis);
-//		console.log($route.current.locals.atck.description);
-
-
-		
 		$scope.atck = $route.current.locals.atck;
+		// Current EM being analyzed
 		$scope.current = _.where($route.current.locals.current, {analysisId: $scope.atck.analysis.id})[0];
 		$scope.flavors = screamFlavors;
 
@@ -301,7 +292,7 @@ angular.module('myApp.viewRCA', [])
 				}
 			});
 		}
-		
+
 		// Menu vars from app constant
 		$scope.secondLine = true;
 		$scope.itemsMenu = investigationMenu;
