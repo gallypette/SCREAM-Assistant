@@ -49,7 +49,7 @@ angular.module('myApp.viewAttacks', [])
 
 			// We set the attack target as current
 			$q.all(deferred).then(function (values) {
-				Atck.update(atck.id, {current: 'true'}).then(function () {
+				Atck.update(atck.id, {current: 'true'}).then(function (value) {
 					$location.path("/" + location + "/" + atck.id);
 				});
 			});

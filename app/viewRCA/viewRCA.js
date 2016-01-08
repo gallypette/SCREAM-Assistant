@@ -39,8 +39,9 @@ angular.module('myApp.viewRCA', [])
 					controller: 'ViewRCACtrl',
 					resolve: {
 						atck: function ($route, Atck, Analysis, Description, _) {
-							return Atck.findAll({current: 'true'}).then(function (atck) {
+							return Atck.findAll({current: 'true'}, {cacheResponse: false}).then(function (atck) {
 								// There should only be one current atck
+								console.log(atck);
 								return Atck.loadRelations(atck[0].id, []);
 							});
 						},
@@ -133,13 +134,6 @@ angular.module('myApp.viewRCA', [])
 				}).then(function (result) {// Now we import the flavor in the app
 				$scope.creamtable = result;
 			});
-		}
-
-		$scope.isActive = function (url) {
-			return url === "#/view3" ? 'active' : '';
-		}
-		$scope.isActiveM = function (url) {
-			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
 		}
 
 		$scope.onClick = function (element) {

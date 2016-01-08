@@ -22,7 +22,7 @@ angular.module('myApp.viewResults', [])
 					controller: 'ViewResultsCtrl',
 					resolve: {
 						atck: function ($route, Atck, Analysis, Description, _) {
-							return Atck.findAll({current: 'true'}).then(function (atck) {
+							return Atck.findAll({current: 'true'}, {cacheResponse: false}).then(function (atck) {
 								// There should only be one current atck
 								return Atck.loadRelations(atck[0].id, []);
 							});
