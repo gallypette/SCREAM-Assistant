@@ -65,39 +65,46 @@ angular.module('myApp', [
 				{
 					fieldName: 'Source',
 					desc: 'The principal that the user believes he is interacting with',
-					type: 'text'
+					type: 'text',
+					pr:'false'
 				},
 				{
 					fieldName: 'Declared Identity',
 					desc: 'Is the attacker stating that he is the source',
-					type: 'boolean'
+					type: 'boolean',
+					pr:'true'
 				},
 				{
 					fieldName: 'Imitated Identity',
 					desc: 'Is the attacker using the logo or the visual identity of the source',
-					type: 'boolean'
+					type: 'boolean',
+					pr:'true'
 				},
 				{
 					fieldName: 'Command',
 					desc: 'Describe the command that the user is asked to execute',
-					type: 'text'
+					type: 'text',
+					pr:'true'
 				},
 				{
 					fieldName: 'Action',
 					desc: 'Describe the action, if it is a genuine action or if the action is loaded',
-					type: 'boolean'
+					type: 'boolean',
+					pr:'true'
 				},
 				{
 					fieldName: 'Sequence',
 					desc: 'Where is the message located in the sequence of messages',
 					type: 'list',
-					value: ['initiation', 'continuation', 'reply to user request']
+					value: ['initiation', 'continuation', 'reply to user request'],
+					pr:'true'
 				},
 				{
 					fieldName: 'Medium',
 					desc: 'On which medium is the message issued',
 					type: 'list',
-					value: ['web', 'phone', 'paper']
+					value: ['web', 'phone', 'paper'],
+					pr:'true'
 				},
 			]
 		},
