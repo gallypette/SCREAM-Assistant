@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('myApp.attackManager', [])
-	.directive('attackManager', function (_, Stc, Atck, $q, $rootScope) {
+	.directive('attackManager', function (_, Stc, Atck, $q, $location) {
 		return {
 			restrict: 'E',
 			replace: true,
@@ -21,7 +21,7 @@ angular.module('myApp.attackManager', [])
 						});
 					});
 				}
-				
+
 				scope.addAttack = function (atck) {
 					if (scope.type == 'Stc') {
 						return Atck.update(atck.id, {stcId: scope.displayed.id}).then(function () {
@@ -35,9 +35,17 @@ angular.module('myApp.attackManager', [])
 
 				scope.removeAttack = function (atck) {
 					if (scope.type == 'Stc') {
-						return Atck.update(atck.id, {stcId: "undefined"}).then(function(){
+						return Atck.update(atck.id, {stcId: "undefined"}).then(function () {
 							updateRepository();
 						});
+					} else if (scope.type === 'System') {
+
+					}
+				};
+
+				scope.compileAM = function () {
+					if (scope.type == 'Stc') {
+						$location.path("/viewSTCAMs/" + scope.displayed.id);
 					} else if (scope.type === 'System') {
 
 					}
