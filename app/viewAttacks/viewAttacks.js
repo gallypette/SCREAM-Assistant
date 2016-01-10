@@ -29,6 +29,7 @@ angular.module('myApp.viewAttacks', [])
 				atck.name = '';
 				atck.desc = '';
 				atck.id = null;
+				atck.stcId = 'undefined';
 			});
 		}
 		// Delete an Attack and its description.
@@ -105,6 +106,8 @@ angular.module('myApp.viewAttacks', [])
 				}
 			});
 		}
+		
+		Atck.bindAll({}, $scope, 'atcks');
 
 		$scope.secondLine = true;
 		$scope.itemsMenu = investigationMenu;

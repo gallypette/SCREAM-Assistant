@@ -9,9 +9,9 @@ angular.module('myApp.viewRCA', [])
 					templateUrl: 'viewRCA/viewRCA.html',
 					controller: 'ViewRCACtrl',
 					resolve: {
-						atck: function ($route, Stc, Atck, Analysis, Description) {
+						atck: function ($route, Atck, Analysis, Description) {
 							return Atck.find($route.current.params.id).then(function (atck) {
-								return Atck.loadRelations(atck.id, []);
+								return Atck.loadRelations(atck.id, [Atck, Analysis, Description]);
 							});
 						}, // nested load relations does not work on localStorage - that's the why of this ugly bit
 						current: function ($route, Stc, Atck, Analysis, Description, ErrorMode) {
@@ -42,7 +42,7 @@ angular.module('myApp.viewRCA', [])
 							return Atck.findAll({current: 'true'}, {cacheResponse: false}).then(function (atck) {
 								// There should only be one current atck
 								console.log(atck);
-								return Atck.loadRelations(atck[0].id, []);
+								return Atck.loadRelations(atck[0].id, [Atck, Analysis, Description]);
 							});
 						},
 						// Without the id, we just return all current Error Modes

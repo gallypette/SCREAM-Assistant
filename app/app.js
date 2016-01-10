@@ -139,6 +139,26 @@ angular.module('myApp', [
 							foreignKey: 'stcId'
 						}
 				}
+			},
+			beforeDestroy: function (resource, data, cb, DSUtils) {
+				console.log('Breaking links from relatives to ' + data.id + '.');
+				return resource.loadRelations(data.id, ['atcks']).
+					then(function () {
+						if (_.isUndefined(data.atcks)) {
+							return true;
+						} else if (data.atcks.length == 0) {
+							return true;
+						} else {
+							var defer = $q.defer();
+							angular.forEach(data.atcks, function (item) {
+								defer.resolve(Atck.update(item.id, {stcId: 'undefined'}));
+							});
+							return defer.promise;
+						}
+					}).
+					then(function () {
+						return cb(null, data);
+					});
 			}
 		});
 	})

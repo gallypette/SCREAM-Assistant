@@ -24,7 +24,7 @@ angular.module('myApp.viewResults', [])
 						atck: function ($route, Atck, Analysis, Description, _) {
 							return Atck.findAll({current: 'true'}, {cacheResponse: false}).then(function (atck) {
 								// There should only be one current atck
-								return Atck.loadRelations(atck[0].id, []);
+								return Atck.loadRelations(atck[0].id, [Analysis, Description]);
 							});
 						}
 					}
