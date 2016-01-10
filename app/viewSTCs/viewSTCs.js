@@ -8,6 +8,11 @@ angular.module('myApp.viewSTCs', [])
 				resolve: {
 					stcs: function ($route, Stc) {
 						return Stc.findAll();
+					},
+					current: function ($route, Stc, Atck) {
+						return Stc.findAll({current: 'true'}, {cacheResponse: false}).then(function (stcs) {
+							return Stc.loadRelations(stcs[0].id, []);
+						});
 					}
 				}
 			});
@@ -17,6 +22,7 @@ angular.module('myApp.viewSTCs', [])
 
 		// We copy the list of stcs into the view
 		$scope.stcs = $route.current.locals.stcs;
+		$scope.current = $route.current.locals.current;
 
 		$scope.addStc = function (stc) {
 			stc.date = new Date();
@@ -29,9 +35,14 @@ angular.module('myApp.viewSTCs', [])
 		}
 
 		$scope.deleteStc = function (stc) {
-			if (!_.isUndefined($scope.current) && $scope.current.id === stc.id)
-				$scope.current = '';
-			Stc.destroy(stc.id);
+			if (!_.isUndefined($scope.current) && $scope.current.id === stc.id) {
+				$scope.current = $scope.stcs[0];
+				Stc.update($scope.stcs[0].id, {current: 'true'}).then(function (value) {
+					Stc.destroy(stc.id);
+				});
+			} else {
+				Stc.destroy(stc.id);
+			}
 		}
 
 		$scope.selectAction = function (stc, location) {
