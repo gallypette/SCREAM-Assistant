@@ -40,7 +40,13 @@ angular.module('myApp', [
 		{url: '#/viewRCA', text: 'Perform RCA'},
 		{url: '#/viewResults', text: 'View Results'}
 	])
-	
+
+	.constant('stcMenu', [
+		{url: '#/viewSTCs', text: 'Manage STCs'},
+		{url: '#/viewSTCAttack', text: 'Manage STC\'s attacks'},
+		{url: '#/viewSTCAMs', text: 'List of STC\'s Attack Modes'}
+	])
+
 	.constant('screamMenu', [
 		{url: '#/viewSystems', text: 'Manage Systems'},
 		{url: '#/viewSystemAttacks', text: 'Manage Attacks'},
@@ -66,45 +72,45 @@ angular.module('myApp', [
 					fieldName: 'Source',
 					desc: 'The principal that the user believes he is interacting with',
 					type: 'text',
-					pr:'false'
+					pr: 'false'
 				},
 				{
 					fieldName: 'Declared Identity',
 					desc: 'Is the attacker stating that he is the source',
 					type: 'boolean',
-					pr:'true'
+					pr: 'true'
 				},
 				{
 					fieldName: 'Imitated Identity',
 					desc: 'Is the attacker using the logo or the visual identity of the source',
 					type: 'boolean',
-					pr:'true'
+					pr: 'true'
 				},
 				{
 					fieldName: 'Command',
 					desc: 'Describe the command that the user is asked to execute',
 					type: 'text',
-					pr:'true'
+					pr: 'true'
 				},
 				{
 					fieldName: 'Action',
 					desc: 'Describe the action, if it is a genuine action or if the action is loaded',
 					type: 'boolean',
-					pr:'true'
+					pr: 'true'
 				},
 				{
 					fieldName: 'Sequence',
 					desc: 'Where is the message located in the sequence of messages',
 					type: 'list',
 					value: ['initiation', 'continuation', 'reply to user request'],
-					pr:'true'
+					pr: 'true'
 				},
 				{
 					fieldName: 'Medium',
 					desc: 'On which medium is the message issued',
 					type: 'list',
 					value: ['web', 'phone', 'paper'],
-					pr:'true'
+					pr: 'true'
 				},
 			]
 		},

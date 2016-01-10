@@ -9,9 +9,10 @@ angular.module('myApp.viewSTC', [])
 			});
 		}])
 
-	.controller('viewSTCCtrl', function ($scope) {
+	.controller('viewSTCCtrl', function ($scope, stcMenu) {
 
-		$scope.secondLine = false;
+		$scope.secondLine = true;
+		$scope.itemsMenu = stcMenu;
 		$scope.isActive = function (url) {
 			return '';
 		}
