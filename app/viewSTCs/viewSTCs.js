@@ -1,10 +1,10 @@
 'use strict';
-angular.module('myApp.view1', [])
+angular.module('myApp.viewSTCs', [])
 
 	.config(['$routeProvider', function ($routeProvider) {
-			$routeProvider.when('/view1', {
-				templateUrl: 'view1/view1.html',
-				controller: 'View1Ctrl',
+			$routeProvider.when('/viewSTCs', {
+				templateUrl: 'viewSTCs/viewSTCs.html',
+				controller: 'ViewSTCsCtrl',
 				resolve: {
 					stcs: function ($route, Stc) {
 						return Stc.findAll();
@@ -16,21 +16,12 @@ angular.module('myApp.view1', [])
 			});
 		}])
 
-	.controller('View1Ctrl', function ($route, $scope, _, analysisMenu, store, Stc) {
+	.controller('ViewSTCsCtrl', function ($route, $scope, _, stcMenu, store, Stc) {
 
 		// We copy the list of stcs into the view
 		$scope.stcs = $route.current.locals.stcs;
 		$scope.current = $route.current.locals.current[0];
 		console.log($scope.stcs.length + ' items were loaded from the store.');
-
-		// Setting the menu
-		$scope.itemsMenu = analysisMenu;
-		$scope.isActive = function (url) {
-			return url === "#/view1" ? 'active' : '';
-		}
-		$scope.isActiveM = function (url) {
-			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
-		}
 
 		$scope.addStc = function (stc) {
 			stc.date = new Date();
@@ -61,4 +52,13 @@ angular.module('myApp.view1', [])
 		}
 
 		Stc.bindAll({}, $scope, 'stcs');
+
+		$scope.secondLine = true;
+		$scope.itemsMenu = stcMenu;
+		$scope.isActive = function (url) {
+			return url === "#/viewSTCs" ? 'active' : '';
+		}
+		$scope.isActiveM = function (url) {
+			return url === "#/viewSTC" ? 'active' : 'brand';
+		}
 	});

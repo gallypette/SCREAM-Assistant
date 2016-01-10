@@ -2,14 +2,14 @@
 
 // I put this here as a scaffold but the real view needs to bring almost all the app's data model.
 
-angular.module('myApp.view2', [])
+angular.module('myApp.viewSTCAMs', [])
 
 	.config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.
 				// when we land directly on the analysis by the use of the main menu's button
-				when('/view2/:id', {
-					templateUrl: 'view2/view2.html',
-					controller: 'View2Ctrl',
+				when('/viewSTCAMs/:id', {
+					templateUrl: 'viewSTCAMs/viewSTCAMs.html',
+					controller: 'ViewSTCAMsCtrl',
 					resolve: {
 						stc: function ($route, Stc, Atck, Analysis, Description, _) {
 							return Stc.find($route.current.params.id).then(function (stc) {
@@ -20,9 +20,9 @@ angular.module('myApp.view2', [])
 					}
 				}).
 				// .when we land on the view4's root, we need to get the current analysis
-				when('/view2', {
-					templateUrl: 'view2/view2.html',
-					controller: 'View2Ctrl',
+				when('/viewSTCAMs', {
+					templateUrl: 'viewSTCAMs/viewSTCAMs.html',
+					controller: 'ViewSTCAMsCtrl',
 					resolve: {
 						stc: function ($route, Stc, Atck, Analysis, Description, _) {
 							return Stc.findAll({current: 'true'}).then(function (stc) {
@@ -33,16 +33,7 @@ angular.module('myApp.view2', [])
 				});
 		}])
 
-	.controller('View2Ctrl', function ($scope, $route, $q, analysisMenu, Analysis, Atck, ErrorMode, errorModes) {
-
-		// Menu vars from app constant
-		$scope.itemsMenu = analysisMenu;
-		$scope.isActive = function (url) {
-			return url === "#/view2" ? 'active' : '';
-		}
-		$scope.isActiveM = function (url) {
-			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
-		}
+	.controller('ViewSTCAMsCtrl', function ($scope, $route, $q, stcMenu, Analysis, Atck, ErrorMode, errorModes) {
 
 		$scope.areCompleted = function () {
 			_.each($scope.atck.analysis.ems, function (value, key, list) {
@@ -80,8 +71,17 @@ angular.module('myApp.view2', [])
 				})
 			}));
 		});
-		$q.all(promises).then(function(){
+		$q.all(promises).then(function () {
 			$scope.display = errorModes.analysisResultsSTC($scope.antecedents);
 			console.log($scope.display);
 		});
+
+		$scope.secondLine = true;
+		$scope.itemsMenu = stcMenu;
+		$scope.isActive = function (url) {
+			return url === "#/viewSTCAMs" ? 'active' : '';
+		}
+		$scope.isActiveM = function (url) {
+			return url === "#/viewSTC" ? 'active' : 'brand';
+		}
 	});

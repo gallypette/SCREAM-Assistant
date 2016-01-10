@@ -1,12 +1,12 @@
 'use strict';
-angular.module('myApp.view5', [])
+angular.module('myApp.viewSTCAttacks', [])
 
 	.config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.
 				// when we land directly on the stc by the use of the button
-				when('/view5/:id', {
-					templateUrl: 'view5/view5.html',
-					controller: 'View5Ctrl',
+				when('/viewSTCAttacks/:id', {
+					templateUrl: 'viewSTCAttacks/viewSTCAttacks.html',
+					controller: 'ViewSTCAttacksCtrl',
 					resolve: {
 						stc: function ($route, Stc, Atck) {
 							return Stc.find($route.current.params.id).then(function (stc) {
@@ -16,9 +16,9 @@ angular.module('myApp.view5', [])
 					}
 				}).
 				// .when we land on the view5's root, we need to get the current stc
-				when('/view5', {
-					templateUrl: 'view5/view5.html',
-					controller: 'View5Ctrl',
+				when('/viewSTCAttacks', {
+					templateUrl: 'viewSTCAttacks/viewSTCAttacks.html',
+					controller: 'ViewSTCAttacksCtrl',
 					resolve: {
 						stc: function ($route, Stc, Atck) {
 							return Stc.findAll({current: 'true'}).then(function (stc) {
@@ -29,15 +29,7 @@ angular.module('myApp.view5', [])
 				});
 		}])
 
-	.controller('View5Ctrl', function ($route, $scope, $modal, analysisMenu, Atck, descriptionTypes, Description, Analysis, _) {
-
-		$scope.itemsMenu = analysisMenu;
-		$scope.isActive = function (url) {
-			return url === "#/view5" ? 'active' : '';
-		}
-		$scope.isActiveM = function (url) {
-			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
-		}
+	.controller('ViewSTCAttacksCtrl', function ($route, $scope, $modal, stcMenu, Atck, descriptionTypes, Description, Analysis, _) {
 
 		// Load the data into the view
 		$scope.stc = $route.current.locals.stc;
@@ -126,6 +118,15 @@ angular.module('myApp.view5', [])
 					};
 				}
 			});
+		}
+
+		$scope.secondLine = true;
+		$scope.itemsMenu = stcMenu;
+		$scope.isActive = function (url) {
+			return url === "#/viewSTCAttacks" ? 'active' : '';
+		}
+		$scope.isActiveM = function (url) {
+			return url === "#/viewSTC" ? 'active' : 'brand';
 		}
 
 	});

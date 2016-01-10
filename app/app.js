@@ -23,11 +23,11 @@ angular.module('myApp', [
 	'myApp.viewSystems',
 	'myApp.viewSystemAttacks',
 	'myApp.viewSystemResults',
-	'myApp.view1',
-	'myApp.view2',
+	'myApp.viewSTCs',
+	'myApp.viewSTCAMs',
 	'myApp.view3',
 	'myApp.view4',
-	'myApp.view5',
+	'myApp.viewSTCAttacks',
 	'myApp.emTree',
 	'myApp.errorModes'
 ])
@@ -43,7 +43,7 @@ angular.module('myApp', [
 
 	.constant('stcMenu', [
 		{url: '#/viewSTCs', text: 'Manage STCs'},
-		{url: '#/viewSTCAttack', text: 'Manage STC\'s attacks'},
+		{url: '#/viewSTCAttacks', text: 'Manage STC\'s attacks'},
 		{url: '#/viewSTCAMs', text: 'List of STC\'s Attack Modes'}
 	])
 
