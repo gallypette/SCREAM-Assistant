@@ -8,20 +8,15 @@ angular.module('myApp.viewSTCs', [])
 				resolve: {
 					stcs: function ($route, Stc) {
 						return Stc.findAll();
-					},
-					current: function ($route, Stc) {
-						return Stc.findAll({current: 'true'}, {cacheResponse: false});
 					}
 				}
 			});
 		}])
 
-	.controller('ViewSTCsCtrl', function ($route, $scope, _, stcMenu, store, Stc) {
+	.controller('ViewSTCsCtrl', function ($q, $location, $route, $scope, _, stcMenu, store, Stc) {
 
 		// We copy the list of stcs into the view
 		$scope.stcs = $route.current.locals.stcs;
-		$scope.current = $route.current.locals.current[0];
-		console.log($scope.stcs.length + ' items were loaded from the store.');
 
 		$scope.addStc = function (stc) {
 			stc.date = new Date();
@@ -39,16 +34,19 @@ angular.module('myApp.viewSTCs', [])
 			Stc.destroy(stc.id);
 		}
 
-		$scope.selectStc = function (stc) {
+		$scope.selectAction = function (stc, location) {
 			// We set all other Stc.current to false
-			_.each($scope.stcs, function (stc) {
-				Stc.update(stc.id, {current: 'false'});
+			var deferred = [];
+			_.each($scope.stcs, function (allstc) {
+				deferred.push(Stc.update(allstc.id, {current: 'false'}));
 			})
 
-			// We set the target as current
-			Stc.update(stc.id, {current: 'true'});
-			// We update the view
-			$scope.current = Stc.get(stc.id);
+			// We set the stc target as current
+			$q.all(deferred).then(function (values) {
+				Stc.update(stc.id, {current: 'true'}).then(function (value) {
+					$location.path("/" + location + "/" + stc.id);
+				});
+			});
 		}
 
 		Stc.bindAll({}, $scope, 'stcs');

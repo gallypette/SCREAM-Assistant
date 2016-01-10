@@ -1,35 +1,7 @@
 <top-bar></top-bar>
 
-<h2>Welcome in the SCREAM analysis tool</h2>
-
-<p>Here is the current Socio Technical Capability under scrutiny, select one of the previous one from the list below or create a new one
-	by clicking the 'Create new capability' button.</p>
-
-<div class="well">
-	<table class="table table">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Description</th>
-				<th>Creation date</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>{{current.name}}</td>
-				<td>{{current.desc}}</td>
-				<td>{{current.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><a href="#/view5/{{current.id}}" class="btn btn-primary" role="button">Manage Attacks</a>    <a href="#/view2/{{current.id}}" class="btn btn-success" role="button">AttackModes</a></td>
-			</tr>
-		</tbody>
-	</table>
-</div>
-
-<br/>
-
-<h2>List of Socio-Technical Capabilities</h2>
-<!-- Analysis list -->
+<h3>Repository of Socio-Technical Capabilities</h3>
+<!-- ST list -->
 <div class="well">
 	<table class="table table-hover">
 		<thead>
@@ -44,16 +16,15 @@
 				<td>{{stc.name}}</td>
 				<td>{{stc.desc}}</td>
 				<td>{{stc.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><button type="button" class="btn btn-success" ng-click="selectStc(stc)">Select</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click="exportStc(stc)">Export</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click="importStc(stc)">Import</button></td>
 				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteStc(stc)">Delete</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click='selectAction(stc, "viewSTCAttacks")'>Manage Attacks</button></td>
+				<td><button type="button" class="btn btn-success" ng-click='selectAction(stc, "viewSTCAMs")'>View Attack Modes</button></td>
 			</tr>
 		</tbody>
 	</table>
 </div>
 
-<h2>Create new Socio-Technical Capability</h2>
+<h3>Create new Socio-Technical Capability</h3>
 <!-- Analysis input -->
 <div class="well">
 	<form name="addForm" role="form" ng-submit="addStc(stc)">

@@ -10,6 +10,7 @@ angular.module('myApp.viewSTCAttacks', [])
 					resolve: {
 						stc: function ($route, Stc, Atck) {
 							return Stc.find($route.current.params.id).then(function (stc) {
+								console.log(stc);
 								return Stc.loadRelations(stc.id, []);
 							});
 						}
@@ -21,8 +22,9 @@ angular.module('myApp.viewSTCAttacks', [])
 					controller: 'ViewSTCAttacksCtrl',
 					resolve: {
 						stc: function ($route, Stc, Atck) {
-							return Stc.findAll({current: 'true'}).then(function (stc) {
-								return Stc.loadRelations(stc[0].id, []);
+							return Stc.findAll({current: 'true'}, {cacheResponse: false}).then(function (stcs) {
+								console.log(stcs);
+								return Stc.loadRelations(stcs[0].id, []);
 							});
 						}
 					}

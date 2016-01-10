@@ -25,7 +25,7 @@ angular.module('myApp.viewSTCAMs', [])
 					controller: 'ViewSTCAMsCtrl',
 					resolve: {
 						stc: function ($route, Stc, Atck, Analysis, Description, _) {
-							return Stc.findAll({current: 'true'}).then(function (stc) {
+							return Stc.findAll({current: 'true'}, {cacheResponse: false}).then(function (stc) {
 								return Stc.loadRelations(stc[0].id, []);
 							})
 						}

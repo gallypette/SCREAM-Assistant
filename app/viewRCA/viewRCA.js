@@ -33,7 +33,7 @@ angular.module('myApp.viewRCA', [])
 						}
 					}
 				}).
-				// .when we land on the view3's root, we need to get the current analysis
+				// .when we land on the viewRCA's root, we need to get the current analysis
 				when('/viewRCA', {
 					templateUrl: 'viewRCA/viewRCA.html',
 					controller: 'ViewRCACtrl',
