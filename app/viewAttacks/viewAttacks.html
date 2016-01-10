@@ -1,6 +1,33 @@
 <top-bar></top-bar>
 
-<h3>Create a new Attack to investigate:</h3>
+<h3>Repository of Attacks:</h3>
+<!-- Attack list -->
+<div class="well">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Creation date</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="atck in atcks">
+				<td>{{atck.name}}</td>
+				<td>{{atck.desc}}</td>
+				<td>{{atck.date| date:'MM/dd/yyyy @ h:mma'}}</td>
+				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAtck(atck)">Delete</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click="describeAtck(atck)">Describe</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click='selectAction(atck, "viewRCA")'>Perform RCA</button></td>
+				<td><button type="button" class="btn btn-success" ng-click='selectAction(atck, "viewResults")'>View Results</button></td>
+			</tr>
+		<div class=""></div>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<h3>Create a new Attack:</h3>
 <!-- Analysis input -->
 <div class="well">
 	<form name="addForm" role="form" ng-submit="addAtck(atck)">
@@ -26,33 +53,6 @@
 			</div>
 	</form>
 </div>
-</div>
-
-<h3>Here is the repository of Attacks:</h3>
-<!-- Attack list -->
-<div class="well">
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Description</th>
-				<th>Creation date</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="atck in atcks">
-				<td>{{atck.name}}</td>
-				<td>{{atck.desc}}</td>
-				<td>{{atck.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAtck(atck)">Delete</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click="describeAtck(atck)">Describe</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click='selectAction(atck, "viewRCA")'>Perform RCA</button></td>
-				<td><button type="button" class="btn btn-success" ng-click='selectAction(atck, "viewResults")'>View Results</button></td>
-			</tr>
-		<div class=""></div>
-		</tr>
-		</tbody>
-	</table>
 </div>
 
 <div>
