@@ -29,7 +29,8 @@ angular.module('myApp', [
 	'myApp.view4',
 	'myApp.viewSTCAttacks',
 	'myApp.emTree',
-	'myApp.errorModes'
+	'myApp.errorModes',
+	'myApp.attackManager'
 ])
 	.config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.otherwise({redirectTo: '/viewMain'});

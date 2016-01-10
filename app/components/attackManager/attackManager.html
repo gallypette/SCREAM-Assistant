@@ -1,0 +1,21 @@
+<div class="well">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-6">
+				<p class='text-center'><b>List of available attacks</b></p>
+				<div class="list-group">
+					<button type="button" class="list-group-item" ng-model="repository" ng-repeat="atck in repository" ng-click="addAttack(atck)">{{atck.name}}</button>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<p class='text-center'><b>List of attacks linked to {{displayed.name}}</b></p>
+				<div class="list-group">
+					<button type="button" class="list-group-item" ng-repeat="atck in displayed.atcks" ng-click="removeAttack(atck)">{{atck.name}}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<td><button type="button" class="btn btn-success" ng-click='compileAM()'>View Attack Modes</button></td>
+</div>
