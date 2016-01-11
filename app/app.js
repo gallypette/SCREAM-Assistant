@@ -236,6 +236,13 @@ angular.module('myApp', [
 						localField: 'description',
 						foreignKey: 'sysId'
 					}
+				},
+				hasMany: {
+					atck:
+						{
+							localField: 'atcks',
+							foreignKey: 'sysId'
+						}
 				}
 			},
 			// Before destroying the system , we take care of cleaning up linked description
