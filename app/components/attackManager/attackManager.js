@@ -15,16 +15,16 @@ angular.module('myApp.attackManager', [])
 				function updateRepository() {
 					if (scope.type == 'Stc') {
 						Stc.find(scope.displayed.id).then(function (stc) {
-							return Stc.loadRelations(stc.id, [], {cacheResponse: false}).then(function (stc) {
-								return Atck.findAll({ }, {cacheResponse: false}).then(function (atcks) {
+							return Stc.loadRelations(stc.id, [], {bypassCache: true}).then(function (stc) {
+								return Atck.findAll({ }, {bypassCache: true}).then(function (atcks) {
 									scope.repository = _.difference(atcks, stc.atcks);
 								});
 							});
 						});
 					} else if (scope.type === 'Sys') {
 						Sys.find(scope.displayed.id).then(function (sys) {
-							return Sys.loadRelations(sys.id, [], {cacheResponse: false}).then(function (sys) {
-								return Atck.findAll({ }, {cacheResponse: false}).then(function (atcks) {
+							return Sys.loadRelations(sys.id, [], {bypassCache: true}).then(function (sys) {
+								return Atck.findAll({ }, {bypassCache: true}).then(function (atcks) {
 									scope.repository = _.difference(atcks, sys.atcks);
 								});
 							});
