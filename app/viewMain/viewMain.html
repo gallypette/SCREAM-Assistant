@@ -1,12 +1,13 @@
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#/viewMain"><span class="glyphicon glyphicon-home"></span> Stool</a>
+			<a class="navbar-brand" href="#/viewMain"><span class="glyphicon glyphicon-home"></span> SCREAM assistant</a>
 		</div>
 		<div>
 			<ul class="nav navbar-nav">
-				<li ng-class="brand"><a href="#/viewTMAnalysis">STTM</a></li>
-				<li ng-class="brand"><a href="#/viewAttackAnalysis">SCREAM</a></li>
+				<li ng-class="isActiveM('#/viewInvestigation')"><a href="#/viewInvestigation">Investigate Attacks</a></li>
+				<li ng-class="isActiveM('#/viewSTC')"><a href="#/viewSTC">Manage ST Capabilities</a></li>
+				<li ng-class="isActiveM('#/viewSTTM')"><a href="#/viewSTTM">SCREAM analysis</a></li>
 			</ul>
 		</div>
 	</div>
@@ -14,7 +15,7 @@
 
 
 <div class="jumbotron">
-	<h2>SCREAM: Root Cause Analysis // Socio-Technical Security Threat Modeler.</h2>      
+	<h2>SCREAM assistant: Root Cause Analysis for Cyber-Security.</h2>      
 </div>
 
 <div class='well'>

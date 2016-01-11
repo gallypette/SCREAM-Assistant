@@ -1,0 +1,121 @@
+<top-bar></top-bar>
+
+<h3>Repository of systems:</h3>
+<!-- System list -->
+<div class="well">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Creation date</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="sys in syss">
+				<td>{{sys.name}}</td>
+				<td>{{sys.desc}}</td>
+				<td>{{sys.date| date:'MM/dd/yyyy @ h:mma'}}</td>
+								<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteSys(sys)">Delete</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click="describeSys(sys)">Describe Theat Model</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click='selectAction(sys, "viewSystemAttacks")'>Manage Attacks</button></td>
+				<td><button type="button" class="btn btn-success" ng-click='selectAction(sys, "viewSystemResults")'>View Results</button></td>
+			</tr>
+		<div class=""></div>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<h3>Create a new System to analyze</h3>
+<!-- Analysis input -->
+<div class="well">
+	<form name="addForm" role="form" ng-submit="addSys(sys)">
+		<div class="row">
+
+			<div class="form-group">
+				<label for="stcName">Name of the new System</label>
+				<div class="alert alert-warning" ng-show="!addForm.nameControl.$valid">
+					<span ng-show="addForm.nameControl.$error.required">Required!</span>
+					<span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
+				</div>
+				<input type="text" ng-model="sys.name" name="nameControl" placeholder="System's name" class="form-control" required="required" ng-minlength="3">
+
+				<div class="form-group">
+					<label for="stcDesc">Description of the new System</label>
+					<input type="textarea" ng-model="sys.desc" placeholder="Description" class="form-control">
+					<input type="hidden" ng-model="sys.date">
+				</div>
+
+				<span class="input-group-btn">
+					<input type="submit" class="btn btn-primary" value="Create new System">
+				</span>
+			</div>
+	</form>
+</div>
+</div>
+
+<div>
+	<script type="text/ng-template" id="myDescriptionModal">
+        <div class="modal-header">
+		<h3 class="modal-title">Select a Scheme to describe the Threat Model of <b>{{sysMod.name}}</b>:</h3>
+        </div>
+        <div class="modal-body">
+		<accordion close-others="true">
+			<accordion-group ng-repeat="schema in descriptionTypes" is-open="status.open">
+				<accordion-heading>
+					<b>{{schema.name}}</b>: {{schema.desc}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+				</accordion-heading>
+				<p>Fill-out the following fields to describe the Threat Model using <b>{{schema.name}}</b>:</p>
+				<form name="addForm" role="form" ng-submit="registerDescription(sysMod.id, schema.name)">
+					<div class="form-group">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Field</th>
+								<th>Description</th>
+								<th>Value</th>
+								<th>PR</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="field in schema.fields">
+							<ng-form name="form">
+								<td>{{field.fieldName}}</td>
+								<td>{{field.desc}}</td>
+								<td ng-switch on="field.type">
+							
+									<div ng-switch-when="boolean">
+										<input type="radio" ng-model="model[field.fieldName]" value="true">True
+										<input type="radio" ng-model="model[field.fieldName]"  value="false">False
+									</div>
+								
+									<div ng-switch-when="text">
+										<input type="textarea" ng-model="model[field.fieldName]" class="form-control">
+									</div>
+								
+									<div ng-switch-when="list">
+										<select ng-model="model[field.fieldName]">
+											<option ng-repeat="value in field.value" value={{value}}>{{value}}</option>
+										</select> 
+									</div>
+								</td>
+								<td ng-switch on="field.pr">
+									<div ng-switch-when="true">
+										<input type="checkbox" ng-model="model[field.fieldName+'-required']">
+									</div>
+								</td>
+							<ng-form>
+							</tr>
+						</tbody>
+					</table>
+
+					<input type="submit" class="btn btn-primary" value="Register Description">
+					<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+			
+				</form>
+			</accordion-group>
+		</accordion>
+        </div>
+	</script>
+</div>

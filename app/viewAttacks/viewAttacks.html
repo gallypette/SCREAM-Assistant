@@ -1,32 +1,6 @@
 <top-bar></top-bar>
 
-<h2>Investigatin Attack Modes for the STC: <b>{{stc.name}}</b></h2>
-
-<p>Here is the Attack under investigation:</p>
-
-<div class="well">
-	<table class="table table">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Description</th>
-				<th>Creation date</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>{{current.name}}</td>
-				<td>{{current.desc}}</td>
-				<td>{{current.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><a href="#/view3/{{current.id}}" class="btn btn-info" role="button">Investigate with SCREAM</a></td>
-			</tr>
-		</tbody>
-	</table>
-</div>
-
-<br/>
-
-<h2>List of Attacks linked to the STC: <b>{{stc.name}}</b></h2>
+<h3>Repository of Attacks:</h3>
 <!-- Attack list -->
 <div class="well">
 	<table class="table table-hover">
@@ -38,13 +12,14 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="atck in stc.atcks">
+			<tr ng-repeat="atck in atcks">
 				<td>{{atck.name}}</td>
 				<td>{{atck.desc}}</td>
 				<td>{{atck.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><button type="button" class="btn btn-success" ng-click="selectAtck(atck)">Select</button></td>
 				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAtck(atck)">Delete</button></td>
 				<td><button type="button" class="btn btn-primary" ng-click="describeAtck(atck)">Describe</button></td>
+				<td><button type="button" class="btn btn-primary" ng-click='selectAction(atck, "viewRCA")'>Perform RCA</button></td>
+				<td><button type="button" class="btn btn-success" ng-click='selectAction(atck, "viewResults")'>View Results</button></td>
 			</tr>
 		<div class=""></div>
 		</tr>
@@ -52,7 +27,7 @@
 	</table>
 </div>
 
-<h2>Create a new Attack to investigate</h2>
+<h3>Create a new Attack:</h3>
 <!-- Analysis input -->
 <div class="well">
 	<form name="addForm" role="form" ng-submit="addAtck(atck)">
@@ -76,8 +51,8 @@
 					<input type="submit" class="btn btn-primary" value="Create new Attack">
 				</span>
 			</div>
+			</div>
 	</form>
-</div>
 </div>
 
 <div>
@@ -100,6 +75,7 @@
 								<th>Field</th>
 								<th>Description</th>
 								<th>Value</th>
+								<th>PR</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -120,8 +96,14 @@
 								
 									<div ng-switch-when="list">
 										<select ng-model="model[field.fieldName]">
+											<option></option>
 											<option ng-repeat="value in field.value" value={{value}}>{{value}}</option>
 										</select> 
+									</div>
+								</td>
+								<td ng-switch on="field.pr">
+									<div ng-switch-when="true">
+										<input type="checkbox" ng-model="model[field.fieldName+'-required']">
 									</div>
 								</td>
 							<ng-form>

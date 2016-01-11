@@ -13,32 +13,46 @@ angular.module('myApp', [
 	'xsltProcessor',
 	'myApp.navBar',
 	'myApp.descriptionDisplay',
-	'myApp.viewAttackAnalysis',
 	'myApp.viewMain',
-	'myApp.viewTMAnalysis',
-	'myApp.view1',
-	'myApp.view2',
+	'myApp.viewSTC',
+	'myApp.viewInvestigation',
+	'myApp.viewSTTM',
+	'myApp.viewAttacks',
+	'myApp.viewRCA',
+	'myApp.viewResults',
+	'myApp.viewSystems',
+	'myApp.viewSystemAttacks',
+	'myApp.viewSystemResults',
+	'myApp.viewSTCs',
+	'myApp.viewSTCAMs',
 	'myApp.view3',
 	'myApp.view4',
-	'myApp.view5',
+	'myApp.viewSTCAttacks',
 	'myApp.emTree',
-	'myApp.errorModes'
+	'myApp.errorModes',
+	'myApp.threatModel',
+	'myApp.attackManager'
 ])
 	.config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.otherwise({redirectTo: '/viewMain'});
 		}])
 
-	.constant('analysisMenu', [
-		{url: '#/view1', text: 'Manage ST Capabilities'},
-		{url: '#/view5', text: 'Manage Attacks'},
-		{url: '#/view3', text: 'SCREAM Analysis'},
-		{url: '#/view4', text: 'Analysis Summary'},
-		{url: '#/view2', text: 'STC Attack Modes'}
+	.constant('investigationMenu', [
+		{url: '#/viewAttacks', text: 'Manage Attacks'},
+		{url: '#/viewRCA', text: 'Perform RCA'},
+		{url: '#/viewResults', text: 'View Results'}
 	])
 
-	.constant('TMMenu', [
-		{url: '#/TMview1', text: 'TMview1'},
-		{url: '#/TMview2', text: 'TMview2'}
+	.constant('stcMenu', [
+		{url: '#/viewSTCs', text: 'Manage STCs'},
+		{url: '#/viewSTCAttacks', text: 'Manage STC\'s attacks'},
+		{url: '#/viewSTCAMs', text: 'List of STC\'s Attack Modes'}
+	])
+
+	.constant('screamMenu', [
+		{url: '#/viewSystems', text: 'Manage Systems'},
+		{url: '#/viewSystemAttacks', text: 'Manage Attacks'},
+		{url: '#/viewSystemResults', text: 'View SCREAM Analysis Results'}
 	])
 
 	.constant('screamFlavors', [
@@ -54,44 +68,51 @@ angular.module('myApp', [
 	.constant('descriptionTypes', [
 		{
 			name: 'STEAL',
-			desc: 'Describe the attack in term of message flowing between the attacker and the victim.',
+			desc: 'Description in terms of properties shared by the messages flowing between the attacker and the victim.',
 			fields: [
 				{
 					fieldName: 'Source',
 					desc: 'The principal that the user believes he is interacting with',
-					type: 'text'
+					type: 'text',
+					pr: 'true'
 				},
 				{
 					fieldName: 'Declared Identity',
 					desc: 'Is the attacker stating that he is the source',
-					type: 'boolean'
+					type: 'boolean',
+					pr: 'true'
 				},
 				{
 					fieldName: 'Imitated Identity',
 					desc: 'Is the attacker using the logo or the visual identity of the source',
-					type: 'boolean'
+					type: 'boolean',
+					pr: 'true'
 				},
 				{
 					fieldName: 'Command',
 					desc: 'Describe the command that the user is asked to execute',
-					type: 'text'
+					type: 'text',
+					pr: 'true'
 				},
 				{
 					fieldName: 'Action',
 					desc: 'Describe the action, if it is a genuine action or if the action is loaded',
-					type: 'boolean'
+					type: 'boolean',
+					pr: 'true'
 				},
 				{
 					fieldName: 'Sequence',
 					desc: 'Where is the message located in the sequence of messages',
 					type: 'list',
-					value: ['initiation', 'continuation', 'reply to user request']
+					value: ['initiation', 'continuation', 'reply to user request'],
+					pr: 'true'
 				},
 				{
 					fieldName: 'Medium',
 					desc: 'On which medium is the message issued',
 					type: 'list',
-					value: ['web', 'phone', 'paper']
+					value: ['web', 'phone', 'paper'],
+					pr: 'true'
 				},
 			]
 		},
@@ -121,7 +142,7 @@ angular.module('myApp', [
 				}
 			},
 			beforeDestroy: function (resource, data, cb, DSUtils) {
-				console.log('Slaying Stc ' + data.id + ' and relatives.');
+				console.log('Breaking links from relatives to ' + data.id + '.');
 				return resource.loadRelations(data.id, ['atcks']).
 					then(function () {
 						if (_.isUndefined(data.atcks)) {
@@ -129,15 +150,9 @@ angular.module('myApp', [
 						} else if (data.atcks.length == 0) {
 							return true;
 						} else {
-							// The following code should work, but no luck :'(
-//							Atck.destroyAll({
-//								stcId: data.id
-//							});
-
-							// Instead this ugly piece of code does:
 							var defer = $q.defer();
 							angular.forEach(data.atcks, function (item) {
-								defer.resolve(Atck.destroy(item.id));
+								defer.resolve(Atck.update(item.id, {stcId: 'undefined'}));
 							});
 							return defer.promise;
 						}
@@ -167,6 +182,10 @@ angular.module('myApp', [
 					stc: {
 						localField: 'stc',
 						localKey: 'stcId'
+					},
+					sys: {
+						localField: 'sys',
+						localKey: 'sysId'
 					}
 				}
 			},
@@ -200,6 +219,43 @@ angular.module('myApp', [
 						} else {
 							console.log('Deletion of analysis: ' + data.analysis.id);
 							return Analysis.destroy(data.analysis.id);
+						}
+					}).
+					then(function () {
+						return cb(null, data);
+					});
+			}
+		});
+	})
+
+	.factory('Sys', function (store, _, Description, Analysis, screamFlavors) {
+		return store.defineResource({
+			name: 'sys',
+			relations: {
+				hasOne: {
+					description: {
+						localField: 'description',
+						foreignKey: 'sysId'
+					}
+				},
+				hasMany: {
+					atck:
+						{
+							localField: 'atcks',
+							foreignKey: 'sysId'
+						}
+				}
+			},
+			// Before destroying the system , we take care of cleaning up linked description
+			beforeDestroy: function (resource, data, cb) {
+				console.log('Slaying System ' + data.id + ' and relatives.');
+				return resource.loadRelations(data.id, ['description']).
+					then(function () {
+						if (_.isUndefined(data.description)) {
+							return true;
+						} else {
+							console.log('Deletion of description: ' + data.description.id);
+							return Description.destroy(data.description.id);
 						}
 					}).
 					then(function () {
@@ -287,6 +343,10 @@ angular.module('myApp', [
 					atck: {
 						localField: 'atck',
 						localKey: 'atckId'
+					},
+					sys: {
+						localField: 'sys',
+						localKey: 'sysId'
 					}
 				}
 			}

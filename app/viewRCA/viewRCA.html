@@ -1,0 +1,93 @@
+<top-bar></top-bar>
+<!-- Error Mode list -->
+<h2>List of Error Modes identified in <b>{{atck.name}}</b></h2>
+<!-- Error Mode list -->
+<div class="well">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th  style="text-align: center">Completed</th>
+				<th style="text-align: center" >Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="em in atck.analysis.ems" ng-if="em.em != null">
+				<td>{{em.category}}</td>
+				<td>{{em.em}}</td>
+				<td  style="text-align: center"><div ng-show="em.completed"><span class="glyphicon glyphicon-ok"></div>
+				    <div ng-show="!em.completed"><span class="glyphicon glyphicon-flash"></div>
+				</td>
+				<td  style="text-align: center"><button type="button" class="btn btn-success" ng-click="analyzeEM(em)">Analyze</button></td>
+				
+			</tr>
+
+		</tbody>
+	</table>
+	<button type="button" class="btn btn-primary" ng-click="addEM()">Manage Error Modes</button>
+	<a href="#/viewResults/{{atck.id}}" class="btn btn-info" role="button">Compile results</a>
+</div>
+
+<div>
+	<script type="text/ng-template" id="myEmSelectionModal">
+        <div class="modal-header">
+		<h3 class="modal-title">Select the Error Mode(s) occuring in <b>{{atck.name}}</b>:</h3>
+        </div>
+
+        <div class="modal-body">
+		<form name="addForm" role="form" ng-submit="registerEM()">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Description</th>
+						<th>Error Modes</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="cat in creamtable.cream.category[0].group.gc">
+						<td class="col-md-1">{{cat.name}}</td>
+						<td class="col-md-4">{{cat.desc}}</td>
+						<td class="col-md-7">
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Description</th>
+										<th>Select</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="sc in cat.sc">
+										<td class="col-md-2"><b>{{sc.name}}</b></td>
+										<td class="col-md-9">{{sc.desc}}</td>
+										<td class="col-md-1"> <input type="radio" name={{cat.name}}
+		       value={{sc.name}} ng-model="model[cat.name]"/></td>
+									</tr>
+								</tbody>
+							</table>
+						<button class="btn .btn-default" type="button" ng-click="clear(cat.name)">Clear</button>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+			<input type="submit" class="btn btn-primary" value="Commit changes">
+			<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+		</form>
+        </div>
+	</script>
+</div>
+
+<h2 ng_if="current != null">SCREAM analysis of <b>{{current.category}} : {{current.em}}</b></h2>
+<!-- EM tree -->
+<div class="well" ng_if="current != null">
+	<attack-description atck="atck" ng_if="atck.description != null"></attack-description>
+	<div error-mode-tree id="tree-container"></div>
+</div>
+
+<div class="well">
+	<select ng-model="myflavor" ng-options="value.name for value in flavors"></select>
+	<button type="button" class="btn btn-primary" ng-click="getFlavor(myflavor)">Import SCREAM flavor</button>
+</div>

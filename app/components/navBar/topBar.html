@@ -1,16 +1,17 @@
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#/viewMain"><span class="glyphicon glyphicon-home"></span> Stool</a>
+			<a class="navbar-brand" href="#/viewMain"><span class="glyphicon glyphicon-home"></span> SCREAM assistant</a>
 		</div>
 		<div>
 			<ul class="nav navbar-nav">
-				<li ng-class="isActiveM('#/viewTMAnalysis')"><a href="#/viewTMAnalysis">STTM</a></li>
-				<li ng-class="isActiveM('#/viewAttackAnalysis')"><a href="#/viewAttackAnalysis">SCREAM</a></li>
+				<li ng-class="isActiveM('#/viewInvestigation')"><a href="#/viewInvestigation">Investigate Attacks</a></li>
+				<li ng-class="isActiveM('#/viewSTC')"><a href="#/viewSTC">Manage ST Capabilities</a></li>
+				<li ng-class="isActiveM('#/viewSTTM')"><a href="#/viewSTTM">SCREAM analysis</a></li>
 			</ul>
 		</div>
 	</div>
-	<div class="container-fluid">
+	<div class="container-fluid" ng-show={{secondLine}}>
 		<div class="navbar-header">
 			<a class="navbar-brand" href="#/viewMain"><span class="icon-bar"></span><span class="glyphicon glyphicon-chevron-right"></span></a>
 		</div>

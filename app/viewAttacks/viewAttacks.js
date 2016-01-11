@@ -1,80 +1,83 @@
 'use strict';
-angular.module('myApp.view5', [])
+angular.module('myApp.viewAttacks', [])
 
 	.config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.
-				// when we land directly on the stc by the use of the button
-				when('/view5/:id', {
-					templateUrl: 'view5/view5.html',
-					controller: 'View5Ctrl',
+				when('/viewAttacks', {
+					templateUrl: 'viewAttacks/viewAttacks.html',
+					controller: 'ViewAttacks5Ctrl',
 					resolve: {
-						stc: function ($route, Stc, Atck) {
-							return Stc.find($route.current.params.id).then(function (stc) {
-								return Stc.loadRelations(stc.id, []);
+						atcks: function ($route, Stc, Atck) {
+							return Atck.findAll({}).then(function (atcks) {
+								return  atcks;
 							});
-						}
-					}
-				}).
-				// .when we land on the view5's root, we need to get the current stc
-				when('/view5', {
-					templateUrl: 'view5/view5.html',
-					controller: 'View5Ctrl',
-					resolve: {
-						stc: function ($route, Stc, Atck) {
-							return Stc.findAll({current: 'true'}).then(function (stc) {
-								return Stc.loadRelations(stc[0].id, []);
+						},
+						current: function ($route, Atck) {
+							return Atck.findAll({current: 'true'}, {cacheResponse: false}).then(function (atcks) {
+								return _.isUndefined(atcks[0]) ? "undefined" : atcks[0];
 							});
 						}
 					}
 				});
 		}])
 
-	.controller('View5Ctrl', function ($route, $scope, $modal, analysisMenu, Atck, descriptionTypes, Description, Analysis, _) {
-
-		$scope.itemsMenu = analysisMenu;
-		$scope.isActive = function (url) {
-			return url === "#/view5" ? 'active' : '';
-		}
-		$scope.isActiveM = function (url) {
-			return url === "#/viewAttackAnalysis" ? 'active' : 'brand';
-		}
+	.controller('ViewAttacks5Ctrl', function ($q, $location, $route, $scope, $modal, investigationMenu, Atck, descriptionTypes, Description, Analysis, _) {
 
 		// Load the data into the view
-		$scope.stc = $route.current.locals.stc;
-		// Point current to the current one
-		$scope.current = _.where($route.current.locals.stc.atcks, {current: 'true'})[0];
-		console.log($scope.current);
+		$scope.atcks = $route.current.locals.atcks;
+		$scope.current = $route.current.locals.current;
 
 		$scope.addAtck = function (atck) {
 			// Set the date and stcId before injecting
 			atck.date = new Date();
-			atck.stcId = $scope.stc.id;
 			// Inject and clear the view
 			return Atck.create(atck).then(function () {
 				atck.name = '';
 				atck.desc = '';
 				atck.id = null;
+				atck.stcId = 'undefined';
 			});
 		}
+		
 		// Delete an Attack and its description.
 		$scope.deleteAtck = function (atck) {
-			Atck.destroy(atck.id).then(function () {
-				// Update the view
-				$scope.current = "";
-				return true;
-			})
+			if (!_.isUndefined($scope.current) && $scope.current.id === atck.id) {
+				if (!_.isUndefined($scope.atcks[1])) {
+					if ($scope.current.id == $scope.atcks[0].id) {
+						console.log("destroying current number 0")
+						$scope.current = $scope.atcks[1];
+						Atck.update($scope.current.id, {current: 'true'}).then(function (value) {
+							Atck.destroy(atck.id);
+						});
+					} else {
+						console.log("destroying current number -- not 0")
+						$scope.current = $scope.atcks[0];
+						Atck.update($scope.current.id, {current: 'true'}).then(function (value) {
+							Atck.destroy(atck.id);
+						});
+					}
+				} else {
+					$scope.current = 'undefined';
+				}
+			} else {
+				console.log("destroying non current");
+				Atck.destroy(atck.id);
+			}
 		}
 
-		$scope.selectAtck = function (atck) {
+		$scope.selectAction = function (atck, location) {
 			// We set all other Atck.current to false
-			_.each($scope.stc.atcks, function (atck) {
-				Atck.update(atck.id, {current: 'false'});
+			var deferred = [];
+			_.each($scope.atcks, function (allatck) {
+				deferred.push(Atck.update(allatck.id, {current: 'false'}));
 			})
 
 			// We set the attack target as current
-			Atck.update(atck.id, {current: 'true'});
-			// We update the view
-			$scope.current = Atck.get(atck.id);
+			$q.all(deferred).then(function (values) {
+				Atck.update(atck.id, {current: 'true'}).then(function (value) {
+					$location.path("/" + location + "/" + atck.id);
+				});
+			});
 		}
 
 		// Opens a modal to describe the attack
@@ -126,6 +129,17 @@ angular.module('myApp.view5', [])
 					};
 				}
 			});
+		}
+
+		Atck.bindAll({}, $scope, 'atcks');
+
+		$scope.secondLine = true;
+		$scope.itemsMenu = investigationMenu;
+		$scope.isActive = function (url) {
+			return url === "#/viewAttacks" ? 'active' : '';
+		}
+		$scope.isActiveM = function (url) {
+			return url === "#/viewInvestigation" ? 'active' : 'brand';
 		}
 
 	});
