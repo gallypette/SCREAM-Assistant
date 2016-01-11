@@ -38,13 +38,11 @@ angular.module('myApp.viewSTCs', [])
 			if (!_.isUndefined($scope.current) && $scope.current.id === stc.id) {
 				if (!_.isUndefined($scope.stcs[1])) {
 					if ($scope.current.id == $scope.stcs[0].id) {
-						console.log("destroying current number 0")
 						$scope.current == $scope.stcs[1];
 					Stc.update($scope.current.id, {current: 'true'}).then(function (value) {
 						Stc.destroy(stc.id);
 					});
 					} else {
-						console.log("destroying current number -- not 0")
 						$scope.current == $scope.stcs[0];
 					Stc.update($scope.current.id, {current: 'true'}).then(function (value) {
 						Stc.destroy(stc.id);
@@ -54,7 +52,6 @@ angular.module('myApp.viewSTCs', [])
 					$scope.current = 'undefined';
 				}
 			} else {
-				console.log("destroying non current");
 				Stc.destroy(stc.id);
 			}
 		}

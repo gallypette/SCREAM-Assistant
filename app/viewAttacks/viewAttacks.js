@@ -11,6 +11,11 @@ angular.module('myApp.viewAttacks', [])
 							return Atck.findAll({}).then(function (atcks) {
 								return  atcks;
 							});
+						},
+						current: function ($route, Atck) {
+							return Atck.findAll({current: 'true'}, {cacheResponse: false}).then(function (atck) {
+								return atck[0];
+							});
 						}
 					}
 				});
@@ -20,6 +25,7 @@ angular.module('myApp.viewAttacks', [])
 
 		// Load the data into the view
 		$scope.atcks = $route.current.locals.atcks;
+		$scope.current = $route.current.locals.current;
 
 		$scope.addAtck = function (atck) {
 			// Set the date and stcId before injecting
@@ -32,20 +38,35 @@ angular.module('myApp.viewAttacks', [])
 				atck.stcId = 'undefined';
 			});
 		}
+		
 		// Delete an Attack and its description.
 		$scope.deleteAtck = function (atck) {
-			Atck.destroy(atck.id).then(function () {
-				// Update the view
-				$scope.current = "";
-				return true;
-			})
+			if (!_.isUndefined($scope.current) && $scope.current.id === atck.id) {
+				if (!_.isUndefined($scope.atcks[1])) {
+					if ($scope.current.id == $scope.atcks[0].id) {
+						$scope.current == $scope.atcks[1];
+						Atck.update($scope.current.id, {current: 'true'}).then(function (value) {
+							Atck.destroy(atck.id);
+						});
+					} else {
+						$scope.current == $scope.atcks[0];
+						Atck.update($scope.current.id, {current: 'true'}).then(function (value) {
+							Atck.destroy(atck.id);
+						});
+					}
+				} else {
+					$scope.current = 'undefined';
+				}
+			} else {
+				Atck.destroy(atck.id);
+			}
 		}
 
 		$scope.selectAction = function (atck, location) {
 			// We set all other Atck.current to false
 			var deferred = [];
 			_.each($scope.atcks, function (allatck) {
-				deferred.push(Atck.update(allatck.id, {current: 'false'}));	
+				deferred.push(Atck.update(allatck.id, {current: 'false'}));
 			})
 
 			// We set the attack target as current
@@ -106,7 +127,7 @@ angular.module('myApp.viewAttacks', [])
 				}
 			});
 		}
-		
+
 		Atck.bindAll({}, $scope, 'atcks');
 
 		$scope.secondLine = true;
