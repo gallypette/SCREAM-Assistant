@@ -96,6 +96,7 @@
 								
 									<div ng-switch-when="list">
 										<select ng-model="model[field.fieldName]">
+											<option></option>
 											<option ng-repeat="value in field.value" value={{value}}>{{value}}</option>
 										</select> 
 									</div>
