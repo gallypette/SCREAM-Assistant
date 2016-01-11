@@ -16,7 +16,7 @@ angular.module('myApp.attackManager', [])
 					if (scope.type == 'Stc') {
 						Stc.find(scope.displayed.id).then(function (stc) {
 							return Stc.loadRelations(stc.id, [], {cacheResponse: false}).then(function (stc) {
-								return Atck.findAll().then(function (atcks) {
+								return Atck.findAll({ }, {cacheResponse: false}).then(function (atcks) {
 									scope.repository = _.difference(atcks, stc.atcks);
 								});
 							});
@@ -24,7 +24,7 @@ angular.module('myApp.attackManager', [])
 					} else if (scope.type === 'Sys') {
 						Sys.find(scope.displayed.id).then(function (sys) {
 							return Sys.loadRelations(sys.id, [], {cacheResponse: false}).then(function (sys) {
-								return Atck.findAll().then(function (atcks) {
+								return Atck.findAll({ }, {cacheResponse: false}).then(function (atcks) {
 									scope.repository = _.difference(atcks, sys.atcks);
 								});
 							});
