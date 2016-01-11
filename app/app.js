@@ -181,6 +181,10 @@ angular.module('myApp', [
 					stc: {
 						localField: 'stc',
 						localKey: 'stcId'
+					},
+					sys: {
+						localField: 'sys',
+						localKey: 'sysId'
 					}
 				}
 			},
@@ -214,6 +218,36 @@ angular.module('myApp', [
 						} else {
 							console.log('Deletion of analysis: ' + data.analysis.id);
 							return Analysis.destroy(data.analysis.id);
+						}
+					}).
+					then(function () {
+						return cb(null, data);
+					});
+			}
+		});
+	})
+
+	.factory('Sys', function (store, _, Description, Analysis, screamFlavors) {
+		return store.defineResource({
+			name: 'sys',
+			relations: {
+				hasOne: {
+					description: {
+						localField: 'description',
+						foreignKey: 'sysId'
+					}
+				}
+			},
+			// Before destroying the system , we take care of cleaning up linked description
+			beforeDestroy: function (resource, data, cb) {
+				console.log('Slaying System ' + data.id + ' and relatives.');
+				return resource.loadRelations(data.id, ['description']).
+					then(function () {
+						if (_.isUndefined(data.description)) {
+							return true;
+						} else {
+							console.log('Deletion of description: ' + data.description.id);
+							return Description.destroy(data.description.id);
 						}
 					}).
 					then(function () {
@@ -301,6 +335,10 @@ angular.module('myApp', [
 					atck: {
 						localField: 'atck',
 						localKey: 'atckId'
+					},
+					sys: {
+						localField: 'sys',
+						localKey: 'sysId'
 					}
 				}
 			}

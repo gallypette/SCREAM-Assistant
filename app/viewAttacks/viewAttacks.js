@@ -13,8 +13,8 @@ angular.module('myApp.viewAttacks', [])
 							});
 						},
 						current: function ($route, Atck) {
-							return Atck.findAll({current: 'true'}, {cacheResponse: false}).then(function (atck) {
-								return atck[0];
+							return Atck.findAll({current: 'true'}, {cacheResponse: false}).then(function (atcks) {
+								return _.isUndefined(atcks[0]) ? "undefined" : atcks[0];
 							});
 						}
 					}

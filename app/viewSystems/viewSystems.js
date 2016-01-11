@@ -3,95 +3,105 @@ angular.module('myApp.viewSystems', [])
 
 	.config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.
-				// when we land directly on the stc by the use of the button
-				when('/viewSystems/:id', {
-					templateUrl: 'viewSystems/viewSystems.html',
-					controller: 'ViewSystemsCtrl',
-					resolve: {
-						stc: function ($route, Stc, Atck) {
-							return Stc.find($route.current.params.id).then(function (stc) {
-								return Stc.loadRelations(stc.id, []);
-							});
-						}
-					}
-				}).
-				// .when we land on the view5's root, we need to get the current stc
 				when('/viewSystems', {
 					templateUrl: 'viewSystems/viewSystems.html',
 					controller: 'ViewSystemsCtrl',
 					resolve: {
-						stc: function ($route, Stc, Atck) {
-							return Stc.findAll({current: 'true'}).then(function (stc) {
-								return Stc.loadRelations(stc[0].id, []);
+						syss: function ($route, Stc, Sys) {
+							return Sys.findAll({}).then(function (syss) {
+								return  syss;
+							});
+						},
+						current: function ($route, Sys, _) {
+							return Sys.findAll({current: 'true'}, {cacheResponse: false}).then(function (syss) {
+								return _.isUndefined(syss[0]) ? "undefined" : syss[0];
 							});
 						}
 					}
 				});
 		}])
 
-	.controller('ViewSystemsCtrl', function ($route, $scope, $modal, screamMenu, Atck, descriptionTypes, Description, Analysis, _) {
+	.controller('ViewSystemsCtrl', function ($q, $location, $route, $scope, $modal, screamMenu, Sys, descriptionTypes, Description, _) {
 
 		// Load the data into the view
-		$scope.stc = $route.current.locals.stc;
-		// Point current to the current one
-		$scope.current = _.where($route.current.locals.stc.atcks, {current: 'true'})[0];
-		console.log($scope.current);
+		$scope.syss = $route.current.locals.syss;
+		$scope.current = $route.current.locals.current;
+		console.log($scope.syss)
 
-		$scope.addAtck = function (atck) {
-			// Set the date and stcId before injecting
-			atck.date = new Date();
-			atck.stcId = $scope.stc.id;
+		$scope.addSys = function (sys) {
+			sys.date = new Date();
 			// Inject and clear the view
-			return Atck.create(atck).then(function () {
-				atck.name = '';
-				atck.desc = '';
-				atck.id = null;
+			return Sys.create(sys).then(function () {
+				sys.name = '';
+				sys.desc = '';
+				sys.id = null;
 			});
 		}
-		// Delete an Attack and its description.
-		$scope.deleteAtck = function (atck) {
-			Atck.destroy(atck.id).then(function () {
-				// Update the view
-				$scope.current = "";
-				return true;
-			})
+		
+		// Delete an System and its description.
+		$scope.deleteSys = function (sys) {
+			if (!_.isUndefined($scope.current) && $scope.current.id === sys.id) {
+				if (!_.isUndefined($scope.syss[1])) {
+					if ($scope.current.id == $scope.syss[0].id) {
+						console.log("destroying current number 0")
+						$scope.current = $scope.syss[1];
+						Sys.update($scope.current.id, {current: 'true'}).then(function (value) {
+							Sys.destroy(sys.id);
+						});
+					} else {
+						console.log("destroying current number -- not 0")
+						$scope.current = $scope.syss[0];
+						Sys.update($scope.current.id, {current: 'true'}).then(function (value) {
+							Sys.destroy(sys.id);
+						});
+					}
+				} else {
+					$scope.current = 'undefined';
+				}
+			} else {
+				console.log("destroying non current");
+				Sys.destroy(sys.id);
+			}
 		}
 
-		$scope.selectAtck = function (atck) {
-			// We set all other Atck.current to false
-			_.each($scope.stc.atcks, function (atck) {
-				Atck.update(atck.id, {current: 'false'});
+		$scope.selectAction = function (sys, location) {
+			// We set all other Sys.current to false
+			var deferred = [];
+			_.each($scope.syss, function (allsys) {
+				deferred.push(Sys.update(allsys.id, {current: 'false'}));
 			})
 
 			// We set the attack target as current
-			Atck.update(atck.id, {current: 'true'});
-			// We update the view
-			$scope.current = Atck.get(atck.id);
+			$q.all(deferred).then(function (values) {
+				Sys.update(sys.id, {current: 'true'}).then(function (value) {
+					$location.path("/" + location + "/" + sys.id);
+				});
+			});
 		}
 
 		// Opens a modal to describe the attack
-		$scope.describeAtck = function (atck) {
+		$scope.describeSys = function (sys) {
 			var modalInstance = $modal.open({
 				animation: true,
 				templateUrl: 'myDescriptionModal',
 				size: 'lg',
 				resolve: {
 					// We will need to fetch the existing description and feed it into the view
-					atckDesc: function (Atck) {
-						return Atck.loadRelations(atck.id, ['description']);
+					sysDesc: function (Sys) {
+						return Sys.loadRelations(sys.id, ['description']);
 					}
 
 				},
-				controller: function ($scope, $modalInstance, Description, atckDesc, _) {
+				controller: function ($scope, $modalInstance, Description, sysDesc, _) {
 
 					// The model that will get the description back
-					console.log(atckDesc.description);
-					console.log(atckDesc);
+					console.log(sysDesc.description);
+					console.log(sysDesc);
 
 					// The model where we store the values linked in the view (form)
-					_.isUndefined(atckDesc.description) ? $scope.model = {} : $scope.model = atckDesc.description;
+					_.isUndefined(sysDesc.description) ? $scope.model = {} : $scope.model = sysDesc.description;
 
-					$scope.atckMod = atckDesc;
+					$scope.sysMod = sysDesc;
 					$scope.descriptionTypes = descriptionTypes;
 
 					$scope.registerDescription = function (id, schema) {
@@ -105,10 +115,10 @@ angular.module('myApp.viewSystems', [])
 
 					// Injects a description for an attack into the storage.
 					$scope.addDescription = function (id, schema) {
-						console.log('Addind description to atck:' + id);
-						// Set the date and atckId before injecting
+						console.log('Addind description to sys:' + id);
+						// Set the date and sysId before injecting
 						$scope.model.date = new Date();
-						$scope.model.atckId = id;
+						$scope.model.sysId = id;
 						$scope.model.type = schema;
 						console.log($scope.model);
 						// Inject
@@ -120,6 +130,8 @@ angular.module('myApp.viewSystems', [])
 			});
 		}
 		
+		Sys.bindAll({}, $scope, 'syss');
+
 		$scope.secondLine = true;
 		$scope.itemsMenu = screamMenu;
 		$scope.isActive = function (url) {
