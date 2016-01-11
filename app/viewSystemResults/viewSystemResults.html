@@ -1,140 +1,22 @@
 <top-bar></top-bar>
 
-<h2>Investigatin Attack Modes for the STC: <b>{{stc.name}}</b></h2>
-
-<p>Here is the Attack under investigation:</p>
-
-<div class="well">
-	<table class="table table">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Description</th>
-				<th>Creation date</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>{{current.name}}</td>
-				<td>{{current.desc}}</td>
-				<td>{{current.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><a href="#/view3/{{current.id}}" class="btn btn-info" role="button">Investigate with SCREAM</a></td>
-			</tr>
-		</tbody>
-	</table>
-</div>
-
-<br/>
-
-<h2>List of Attacks linked to the STC: <b>{{stc.name}}</b></h2>
-<!-- Attack list -->
+<h2>List of <b>Attack Modes</b> for system: <b>{{sys.name}}</b>.</h2>
 <div class="well">
 	<table class="table table-hover">
 		<thead>
 			<tr>
-				<th>Name</th>
-				<th>Description</th>
-				<th>Creation date</th>
+				<th class="col-md-2">Attack Mode</th>
+				<th class="col-md-2">Error Mode</th>
+				<th class="col-md-4">Description</th>
+				<th class="col-md-4">Comment</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="atck in stc.atcks">
-				<td>{{atck.name}}</td>
-				<td>{{atck.desc}}</td>
-				<td>{{atck.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><button type="button" class="btn btn-success" ng-click="selectAtck(atck)">Select</button></td>
-				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAtck(atck)">Delete</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click="describeAtck(atck)">Describe</button></td>
+			<tr ng-repeat="attackMode in display">
+				<td  class="col-md-2">{{attackMode.ant}}</td>
+				<td  class="col-md-2"><div ng-repeat="context in attackMode.modes">{{context[0].category}}-{{context[0].em}}</div></td>
+				<td  class="col-md-4"><div ng-repeat="context in attackMode.modes">{{context[1].type}}</div></td>
+				<td  class="col-md-4"><div ng-repeat="comment in attackMode.comments">{{comment}}</div></td>
 			</tr>
-		<div class=""></div>
-		</tr>
 		</tbody>
-	</table>
-</div>
-
-<h2>Create a new Attack to investigate</h2>
-<!-- Analysis input -->
-<div class="well">
-	<form name="addForm" role="form" ng-submit="addAtck(atck)">
-		<div class="row">
-
-			<div class="form-group">
-				<label for="stcName">Name of the new Attack</label>
-				<div class="alert alert-warning" ng-show="!addForm.nameControl.$valid">
-					<span ng-show="addForm.nameControl.$error.required">Required!</span>
-					<span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
-				</div>
-				<input type="text" ng-model="atck.name" name="nameControl" placeholder="Attack's name" class="form-control" required="required" ng-minlength="3">
-
-				<div class="form-group">
-					<label for="stcDesc">Description of the new Attack</label>
-					<input type="textarea" ng-model="atck.desc" placeholder="Description" class="form-control">
-					<input type="hidden" ng-model="atck.date">
-				</div>
-
-				<span class="input-group-btn">
-					<input type="submit" class="btn btn-primary" value="Create new Attack">
-				</span>
-			</div>
-	</form>
-</div>
-</div>
-
-<div>
-	<script type="text/ng-template" id="myDescriptionModal">
-        <div class="modal-header">
-		<h3 class="modal-title">Select a Scheme to describe the attack <b>{{atckMod.name}}</b>:</h3>
-        </div>
-        <div class="modal-body">
-		<accordion close-others="true">
-			<accordion-group ng-repeat="schema in descriptionTypes" is-open="status.open">
-				<accordion-heading>
-					<b>{{schema.name}}</b>: {{schema.desc}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-				</accordion-heading>
-				<p>Fill-out the following fields to describe the attack using <b>{{schema.name}}</b>:</p>
-				<form name="addForm" role="form" ng-submit="registerDescription(atckMod.id, schema.name)">
-					<div class="form-group">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>Field</th>
-								<th>Description</th>
-								<th>Value</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="field in schema.fields">
-							<ng-form name="form">
-								<td>{{field.fieldName}}</td>
-								<td>{{field.desc}}</td>
-								<td ng-switch on="field.type">
-							
-									<div ng-switch-when="boolean">
-										<input type="radio" ng-model="model[field.fieldName]" value="true">True
-										<input type="radio" ng-model="model[field.fieldName]"  value="false">False
-									</div>
-								
-									<div ng-switch-when="text">
-										<input type="textarea" ng-model="model[field.fieldName]" class="form-control">
-									</div>
-								
-									<div ng-switch-when="list">
-										<select ng-model="model[field.fieldName]">
-											<option ng-repeat="value in field.value" value={{value}}>{{value}}</option>
-										</select> 
-									</div>
-								</td>
-							<ng-form>
-							</tr>
-						</tbody>
-					</table>
-
-					<input type="submit" class="btn btn-primary" value="Register Description">
-					<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-			
-				</form>
-			</accordion-group>
-		</accordion>
-        </div>
-	</script>
 </div>

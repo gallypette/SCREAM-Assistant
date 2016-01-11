@@ -1,125 +1,86 @@
 'use strict';
+
+// I put this here as a scaffold but the real view needs to bring almost all the app's data model.
+
 angular.module('myApp.viewSystemResults', [])
 
 	.config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.
-				// when we land directly on the stc by the use of the button
+				// when we land directly on the analysis by the use of the main menu's button
 				when('/viewSystemResults/:id', {
 					templateUrl: 'viewSystemResults/viewSystemResults.html',
 					controller: 'ViewSystemResultsCtrl',
 					resolve: {
-						stc: function ($route, Stc, Atck) {
-							return Stc.find($route.current.params.id).then(function (stc) {
-								return Stc.loadRelations(stc.id, []);
-							});
+						sys: function ($route, Sys, Atck, Analysis, Description, _) {
+							console.log('sdf')
+							return Sys.find($route.current.params.id).then(function (sys) {
+								return Sys.loadRelations(sys.id, []);
+								// I can't go further down the nest because of js-data limitations.
+							})
 						}
 					}
 				}).
-				// .when we land on the view5's root, we need to get the current stc
+				// .when we land on the view4's root, we need to get the current analysis
 				when('/viewSystemResults', {
 					templateUrl: 'viewSystemResults/viewSystemResults.html',
 					controller: 'ViewSystemResultsCtrl',
 					resolve: {
-						stc: function ($route, Stc, Atck) {
-							return Stc.findAll({current: 'true'}).then(function (stc) {
-								return Stc.loadRelations(stc[0].id, []);
-							});
+						sys: function ($route, $location, Sys, Atck, Analysis, Description, _) {
+							return Sys.findAll({current: 'true'}, {cacheResponse: false}).then(function (syss) {
+								if (_.isUndefined(syss[0])) {
+									$location.path("/viewSTCs/");	
+								} else {
+									return Sys.loadRelations(syss[0].id, []);
+								}
+							})
 						}
 					}
 				});
 		}])
 
-	.controller('ViewSystemResultsCtrl', function ($route, $scope, $modal, screamMenu, Atck, descriptionTypes, Description, Analysis, _) {
+	.controller('ViewSystemResultsCtrl', function ($scope, $route, $q, screamMenu, Analysis, Atck, ErrorMode, errorModes) {
 
-		// Load the data into the view
-		$scope.stc = $route.current.locals.stc;
-		// Point current to the current one
-		$scope.current = _.where($route.current.locals.stc.atcks, {current: 'true'})[0];
-		console.log($scope.current);
-
-		$scope.addAtck = function (atck) {
-			// Set the date and stcId before injecting
-			atck.date = new Date();
-			atck.stcId = $scope.stc.id;
-			// Inject and clear the view
-			return Atck.create(atck).then(function () {
-				atck.name = '';
-				atck.desc = '';
-				atck.id = null;
+		$scope.areCompleted = function () {
+			_.each($scope.atck.analysis.ems, function (value, key, list) {
+				// For each ErrorMode, we check that it reached an end state
+				value.completed = errorModes.analysisCompleted(value);
 			});
 		}
-		// Delete an Attack and its description.
-		$scope.deleteAtck = function (atck) {
-			Atck.destroy(atck.id).then(function () {
-				// Update the view
-				$scope.current = "";
-				return true;
-			})
-		}
 
-		$scope.selectAtck = function (atck) {
-			// We set all other Atck.current to false
-			_.each($scope.stc.atcks, function (atck) {
-				Atck.update(atck.id, {current: 'false'});
-			})
+		// View var from resolve 
+		$scope.sys = $route.current.locals.sys;
 
-			// We set the attack target as current
-			Atck.update(atck.id, {current: 'true'});
-			// We update the view
-			$scope.current = Atck.get(atck.id);
-		}
-
-		// Opens a modal to describe the attack
-		$scope.describeAtck = function (atck) {
-			var modalInstance = $modal.open({
-				animation: true,
-				templateUrl: 'myDescriptionModal',
-				size: 'lg',
-				resolve: {
-					// We will need to fetch the existing description and feed it into the view
-					atckDesc: function (Atck) {
-						return Atck.loadRelations(atck.id, ['description']);
-					}
-
-				},
-				controller: function ($scope, $modalInstance, Description, atckDesc, _) {
-
-					// The model that will get the description back
-					console.log(atckDesc.description);
-					console.log(atckDesc);
-
-					// The model where we store the values linked in the view (form)
-					_.isUndefined(atckDesc.description) ? $scope.model = {} : $scope.model = atckDesc.description;
-
-					$scope.atckMod = atckDesc;
-					$scope.descriptionTypes = descriptionTypes;
-
-					$scope.registerDescription = function (id, schema) {
-						$scope.addDescription(id, schema);
-						$modalInstance.close();
-					};
-
-					$scope.cancel = function () {
-						$modalInstance.dismiss('cancel');
-					};
-
-					// Injects a description for an attack into the storage.
-					$scope.addDescription = function (id, schema) {
-						console.log('Addind description to atck:' + id);
-						// Set the date and atckId before injecting
-						$scope.model.date = new Date();
-						$scope.model.atckId = id;
-						$scope.model.type = schema;
-						console.log($scope.model);
-						// Inject
-						return Description.create($scope.model).then(function (desc) {
-							console.log(desc.id + ' injected.');
+		// lazy loading of nested relations does not work with localstorage
+		// so we resolve those here
+		var defer = $q.defer();
+		var promises = [];
+		$scope.antecedents = [];
+		// Crunching everything into one big arry
+		_.each($scope.sys.atcks, function (element, index, list) {
+			promises.push(Atck.loadRelations(element.id).then(function () {
+				return Analysis.loadRelations($scope.sys.atcks[index].analysis.id).then(function () {
+					if (_.isEmpty($scope.sys.atcks[index].analysis.ems)) {
+						console.log('No error modes');
+						return true;
+					} else {
+						_.each($scope.sys.atcks[index].analysis.ems, function (value, key, list) {
+							// For each ErrorMode, we check that it reached an end state
+							value.completed = errorModes.analysisCompleted(value);
+							// For each ErrorMode, we compile the list of antecedents
+							if (value.completed) {
+								$scope.antecedents.push({ant: errorModes.analysisResults(value), em: value, description: $scope.sys.atcks[index].description});
+							}
 						});
-					};
-				}
-			});
-		}
-		
+					}
+					return true;
+				})
+			}));
+		});
+		$q.all(promises).then(function () {
+			$scope.display = errorModes.analysisResultsSTC($scope.antecedents);
+			console.log($scope.display);
+		});
+
 		$scope.secondLine = true;
 		$scope.itemsMenu = screamMenu;
 		$scope.isActive = function (url) {
@@ -128,5 +89,4 @@ angular.module('myApp.viewSystemResults', [])
 		$scope.isActiveM = function (url) {
 			return url === "#/viewSTTM" ? 'active' : 'brand';
 		}
-
 	});
