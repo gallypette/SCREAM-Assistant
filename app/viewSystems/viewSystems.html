@@ -58,7 +58,7 @@
 <div>
 	<script type="text/ng-template" id="myDescriptionModal">
         <div class="modal-header">
-		<h3 class="modal-title">Select a Scheme to describe the attack <b>{{sysMod.name}}</b>:</h3>
+		<h3 class="modal-title">Select a Scheme to describe the Threat Model of <b>{{sysMod.name}}</b>:</h3>
         </div>
         <div class="modal-body">
 		<accordion close-others="true">
@@ -66,7 +66,7 @@
 				<accordion-heading>
 					<b>{{schema.name}}</b>: {{schema.desc}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 				</accordion-heading>
-				<p>Fill-out the following fields to describe the attack using <b>{{schema.name}}</b>:</p>
+				<p>Fill-out the following fields to describe the Threat Model using <b>{{schema.name}}</b>:</p>
 				<form name="addForm" role="form" ng-submit="registerDescription(sysMod.id, schema.name)">
 					<div class="form-group">
 					<table class="table table-hover">
@@ -75,6 +75,7 @@
 								<th>Field</th>
 								<th>Description</th>
 								<th>Value</th>
+								<th>PR</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -97,6 +98,11 @@
 										<select ng-model="model[field.fieldName]">
 											<option ng-repeat="value in field.value" value={{value}}>{{value}}</option>
 										</select> 
+									</div>
+								</td>
+								<td ng-switch on="field.pr">
+									<div ng-switch-when="true">
+										<input type="checkbox" ng-model="model[field.fieldName+'-required']">
 									</div>
 								</td>
 							<ng-form>

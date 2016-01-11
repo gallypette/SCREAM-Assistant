@@ -30,6 +30,7 @@ angular.module('myApp', [
 	'myApp.viewSTCAttacks',
 	'myApp.emTree',
 	'myApp.errorModes',
+	'myApp.threatModel',
 	'myApp.attackManager'
 ])
 	.config(['$routeProvider', function ($routeProvider) {
@@ -67,13 +68,13 @@ angular.module('myApp', [
 	.constant('descriptionTypes', [
 		{
 			name: 'STEAL',
-			desc: 'Describe the attack in term of message flowing between the attacker and the victim.',
+			desc: 'Description in terms of properties shared by the messages flowing between the attacker and the victim.',
 			fields: [
 				{
 					fieldName: 'Source',
 					desc: 'The principal that the user believes he is interacting with',
 					type: 'text',
-					pr: 'false'
+					pr: 'true'
 				},
 				{
 					fieldName: 'Declared Identity',
