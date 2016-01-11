@@ -86,16 +86,17 @@
 								<td ng-switch on="field.type">
 							
 									<div ng-switch-when="boolean">
-										<input type="radio" ng-model="model[field.fieldName]" value="true">True
-										<input type="radio" ng-model="model[field.fieldName]"  value="false">False
+										<input type="radio" disabled ng-model="model[field.fieldName]" value="true">True
+										<input type="radio" disabled ng-model="model[field.fieldName]"  value="false">False
 									</div>
 								
 									<div ng-switch-when="text">
-										<input type="textarea" ng-model="model[field.fieldName]" class="form-control">
+										<input type="textarea" disabled  ng-model="model[field.fieldName]" class="form-control">
 									</div>
 								
 									<div ng-switch-when="list">
-										<select ng-model="model[field.fieldName]">
+										<select multiple ng-multiple="true" ng-model="model[field.fieldName]">
+											<option value = "undef">any</option>
 											<option ng-repeat="value in field.value" value={{value}}>{{value}}</option>
 										</select> 
 									</div>
