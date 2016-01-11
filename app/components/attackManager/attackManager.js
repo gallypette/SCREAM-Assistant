@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('myApp.attackManager', [])
-	.directive('attackManager', function (_, Stc, Sys, Atck, Description, threatModel, $q, $location) {
+	.directive('attackManager', function (_, Stc, Sys, Atck, Description, threatModel, $q, $location, $modal) {
 		return {
 			restrict: 'E',
-			replace: true,
+			
 			templateUrl: 'components/attackManager/attackManager.html',
 			scope: {
 				displayed: '=managed',
@@ -24,26 +24,40 @@ angular.module('myApp.attackManager', [])
 					} else if (scope.type === 'Sys') {
 						Sys.find(scope.displayed.id).then(function (sys) {
 							return Sys.loadRelations(sys.id, [], {bypassCache: true}).then(function (sys) {
-								return Atck.findAll({}, {bypassCache: true}).then(function (atcks) {
-									console.log('Atck findall')
-									// Here we filter the attack to get only the one compatible
-									// With the system's threatModel
-									var deferred = [];
-									_.each(atcks, function (atck) {
-										deferred.push(Atck.loadRelations(atck.id, ['description'], {bypassCache: true}));
-									})
-									var compatibleAtcks = [];
-									$q.all(deferred).then(function (values) {
-										compatibleAtcks = _.chain(values)
-											.filter(function (value) {
-												if (!_.isUndefined(value.description)) {
-													return threatModel.compare(sys.description, value.description);
-												}
-											});
-										compatibleAtcks = _(compatibleAtcks).value();
-										scope.repository = _.difference(compatibleAtcks, sys.atcks);
+								if (_.isUndefined(sys.description)) {
+									var modalInstance = $modal.open({
+										animation: true,
+										templateUrl: 'warningModal',
+										size: 'sg',
+										controller: function ($scope, $modalInstance, $location) {
+											// Dimiss the modal when OK is clicked.
+											$scope.cancel = function () {
+												$modalInstance.dismiss('cancel');
+												$location.path('/viewSystems/');
+											};
+										}
 									});
-								});
+								} else {
+									return Atck.findAll({}, {bypassCache: true}).then(function (atcks) {
+										// Here we filter the attack to get only the one compatible
+										// With the system's threatModel
+										var deferred = [];
+										_.each(atcks, function (atck) {
+											deferred.push(Atck.loadRelations(atck.id, ['description'], {bypassCache: true}));
+										})
+										var compatibleAtcks = [];
+										$q.all(deferred).then(function (values) {
+											compatibleAtcks = _.chain(values)
+												.filter(function (value) {
+													if (!_.isUndefined(value.description)) {
+														return threatModel.compare(sys.description, value.description);
+													}
+												});
+											compatibleAtcks = _(compatibleAtcks).value();
+											scope.repository = _.difference(compatibleAtcks, sys.atcks);
+										});
+									});
+								}
 							});
 						});
 					}
