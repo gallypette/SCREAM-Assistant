@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('myApp.attackManager', [])
-	.directive('attackManager', function (_, Stc, Sys, Atck, $q, $location) {
+	.directive('attackManager', function (_, Stc, Sys, Atck, Description, threatModel, $q, $location) {
 		return {
 			restrict: 'E',
 			replace: true,
@@ -16,7 +16,7 @@ angular.module('myApp.attackManager', [])
 					if (scope.type == 'Stc') {
 						Stc.find(scope.displayed.id).then(function (stc) {
 							return Stc.loadRelations(stc.id, [], {bypassCache: true}).then(function (stc) {
-								return Atck.findAll({ }, {bypassCache: true}).then(function (atcks) {
+								return Atck.findAll({}, {bypassCache: true}).then(function (atcks) {
 									scope.repository = _.difference(atcks, stc.atcks);
 								});
 							});
@@ -24,8 +24,25 @@ angular.module('myApp.attackManager', [])
 					} else if (scope.type === 'Sys') {
 						Sys.find(scope.displayed.id).then(function (sys) {
 							return Sys.loadRelations(sys.id, [], {bypassCache: true}).then(function (sys) {
-								return Atck.findAll({ }, {bypassCache: true}).then(function (atcks) {
-									scope.repository = _.difference(atcks, sys.atcks);
+								return Atck.findAll({}, {bypassCache: true}).then(function (atcks) {
+									console.log('Atck findall')
+									// Here we filter the attack to get only the one compatible
+									// With the system's threatModel
+									var deferred = [];
+									_.each(atcks, function (atck) {
+										deferred.push(Atck.loadRelations(atck.id, ['description'], {bypassCache: true}));
+									})
+									var compatibleAtcks = [];
+									$q.all(deferred).then(function (values) {
+										compatibleAtcks = _.chain(values)
+											.filter(function (value) {
+												if (!_.isUndefined(value.description)) {
+													return threatModel.compare(sys.description, value.description);
+												}
+											});
+										compatibleAtcks = _(compatibleAtcks).value();
+										scope.repository = _.difference(compatibleAtcks, sys.atcks);
+									});
 								});
 							});
 						});

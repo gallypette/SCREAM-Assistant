@@ -8,9 +8,14 @@ angular.module('myApp.threatModel', [])
 			var obj = {};
 
 			// Example function
-//			obj.example = function (d, scope) {
-//				return d;
-//			};
+			obj.compare = function (d1, d2, mode) {
+				var result = true;
+				console.log(d1);
+				console.log(d2);
+
+				return result == true;
+
+			};
 			
 			return obj;
 		}]);
