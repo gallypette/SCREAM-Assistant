@@ -44,12 +44,14 @@ angular.module('myApp.viewAttacks', [])
 			if (!_.isUndefined($scope.current) && $scope.current.id === atck.id) {
 				if (!_.isUndefined($scope.atcks[1])) {
 					if ($scope.current.id == $scope.atcks[0].id) {
-						$scope.current == $scope.atcks[1];
+						console.log("destroying current number 0")
+						$scope.current = $scope.atcks[1];
 						Atck.update($scope.current.id, {current: 'true'}).then(function (value) {
 							Atck.destroy(atck.id);
 						});
 					} else {
-						$scope.current == $scope.atcks[0];
+						console.log("destroying current number -- not 0")
+						$scope.current = $scope.atcks[0];
 						Atck.update($scope.current.id, {current: 'true'}).then(function (value) {
 							Atck.destroy(atck.id);
 						});
@@ -58,6 +60,7 @@ angular.module('myApp.viewAttacks', [])
 					$scope.current = 'undefined';
 				}
 			} else {
+				console.log("destroying non current");
 				Atck.destroy(atck.id);
 			}
 		}
