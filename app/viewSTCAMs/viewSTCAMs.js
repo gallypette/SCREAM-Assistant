@@ -24,9 +24,13 @@ angular.module('myApp.viewSTCAMs', [])
 					templateUrl: 'viewSTCAMs/viewSTCAMs.html',
 					controller: 'ViewSTCAMsCtrl',
 					resolve: {
-						stc: function ($route, Stc, Atck, Analysis, Description, _) {
-							return Stc.findAll({current: 'true'}, {cacheResponse: false}).then(function (stc) {
-								return Stc.loadRelations(stc[0].id, []);
+						stc: function ($route, $location, Stc, Atck, Analysis, Description, _) {
+							return Stc.findAll({current: 'true'}, {cacheResponse: false}).then(function (stcs) {
+								if (_.isUndefined(stcs[0])) {
+									$location.path("/viewSTCs/");	
+								} else {
+									return Stc.loadRelations(stcs[0].id, []);
+								}
 							})
 						}
 					}

@@ -21,10 +21,14 @@ angular.module('myApp.viewSTCAttacks', [])
 					templateUrl: 'viewSTCAttacks/viewSTCAttacks.html',
 					controller: 'ViewSTCAttacksCtrl',
 					resolve: {
-						stc: function ($route, Stc, Atck) {
+						stc: function ($route, $location, Stc, Atck, Analysis, Description, _) {
 							return Stc.findAll({current: 'true'}, {cacheResponse: false}).then(function (stcs) {
-								return Stc.loadRelations(stcs[0].id, []);
-							});
+								if (_.isUndefined(stcs[0])) {
+									$location.path("/viewSTCs/");	
+								} else {
+									return Stc.loadRelations(stcs[0].id, []);
+								}
+							})
 						}
 					}
 				});

@@ -38,11 +38,15 @@ angular.module('myApp.viewRCA', [])
 					templateUrl: 'viewRCA/viewRCA.html',
 					controller: 'ViewRCACtrl',
 					resolve: {
-						atck: function ($route, Atck, Analysis, Description, _) {
-							return Atck.findAll({current: 'true'}, {cacheResponse: false}).then(function (atck) {
-								// There should only be one current atck
-								console.log(atck);
-								return Atck.loadRelations(atck[0].id, [Atck, Analysis, Description]);
+						atck: function ($route, Atck, Analysis, Description, _, $location) {
+							return Atck.findAll({current: 'true'}, {cacheResponse: false}).then(function (atcks) {
+								// if current is undefined, go back to attack management
+								if (_.isUndefined(atcks[0])) {
+									$location.path("/viewAttacks/");
+								} else {
+									// There should only be one current atck
+									return Atck.loadRelations(atcks[0].id, [Atck, Analysis, Description]);
+								}
 							});
 						},
 						// Without the id, we just return all current Error Modes
