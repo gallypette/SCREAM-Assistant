@@ -11,7 +11,11 @@ angular.module('myApp.viewSTCs', [])
 					},
 					current: function ($route, Stc, Atck) {
 						return Stc.findAll({current: 'true'}, {cacheResponse: false}).then(function (stcs) {
-							return Stc.loadRelations(stcs[0].id, []);
+							if (_.isUndefined(stcs[0])) {
+								return false;
+							} else {
+								return Stc.loadRelations(stcs[0].id, []);
+							}
 						});
 					}
 				}
@@ -39,16 +43,16 @@ angular.module('myApp.viewSTCs', [])
 				if (!_.isUndefined($scope.stcs[1])) {
 					if ($scope.current.id == $scope.stcs[0].id) {
 						$scope.current = $scope.stcs[1];
-					Stc.update($scope.current.id, {current: 'true'}).then(function (value) {
-						Stc.destroy(stc.id);
-					});
+						Stc.update($scope.current.id, {current: 'true'}).then(function (value) {
+							Stc.destroy(stc.id);
+						});
 					} else {
 						$scope.current = $scope.stcs[0];
-					Stc.update($scope.current.id, {current: 'true'}).then(function (value) {
-						Stc.destroy(stc.id);
-					});
+						Stc.update($scope.current.id, {current: 'true'}).then(function (value) {
+							Stc.destroy(stc.id);
+						});
 					}
-				}else{
+				} else {
 					$scope.current = 'undefined';
 				}
 			} else {
