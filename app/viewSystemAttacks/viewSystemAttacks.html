@@ -3,3 +3,22 @@
 <h3>Manage Attacks linked to <b>{{sys.name}}</b>:</h3>
 <!-- Attack manager -->
 <attack-manager managed='sys' type='"Sys"'></attack-manager>
+
+<div>
+	<script type="text/ng-template" id="warningModalIncomp">
+        <div class="modal-header">
+		<h3 class="modal-title">Some Attacks were unlinked</h3>
+	</div>
+	<div class="modal-body">
+		Incompatibles changes has been made to some of the linked Attacks.
+		Here is the list of Attacks that are now unlinked to this system because of that:
+		<ul class="list-group">
+			<li ng-repeat="atck in incompatibleAtcks" class="list-group-item"><b>{{atck.name}}</b></li>
+		</ul>
+		Please notice that because of this incompatibility, those attacks are also removed from the list of available attacks.
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" type="button" ng-click="cancel()">OK</button>
+	</div>
+	</script>
+</div>

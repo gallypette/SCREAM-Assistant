@@ -23,7 +23,7 @@ angular.module('myApp.viewSystemAttacks', [])
 						sys: function ($route, $location, Sys, Atck, Analysis, Description, _) {
 							return Sys.findAll({current: 'true'}, {cacheResponse: false}).then(function (syss) {
 								if (_.isUndefined(syss[0])) {
-									$location.path("/viewSystems/");	
+									$location.path("/viewSystems/");
 								} else {
 									return Sys.loadRelations(syss[0].id, []);
 								}
@@ -33,18 +33,38 @@ angular.module('myApp.viewSystemAttacks', [])
 				});
 		}])
 
-	.controller('ViewSystemAttacksCtrl', function ($route, $scope, $modal, screamMenu, Atck, descriptionTypes, Description, Analysis, _) {
-
-		
-		
-		// First we check if previously added attacks are still 
-		// Compatible with the current system's Threat Model
-		
-		
-		//use compare TM on	$route.current.locals.sys
+	.controller('ViewSystemAttacksCtrl', function ($q, $route, $scope, $modal, screamMenu, Atck, descriptionTypes, Description, Analysis, _, threatModel) {
+		// We load data into the view
 		$scope.sys = $route.current.locals.sys;
-		// Load the data into the view
-//		$scope.sys = resultAtcks;
+
+		// Then we check if previously added attacks are still 
+		// Compatible with the current system's Threat Model
+		threatModel.verifyCompatibility($route.current.locals.sys).then(function (incompatibleAtcks) {
+			console.log('List of incompatible')
+			console.log(incompatibleAtcks);
+			if (incompatibleAtcks.length > 0) {
+				var modalInstance = $modal.open({
+					animation: true,
+					templateUrl: 'warningModalIncomp',
+					size: 'sg',
+					controller: function ($scope, $modalInstance) {
+						$scope.incompatibleAtcks = incompatibleAtcks;
+						// Dimiss the modal when OK is clicked.
+						$scope.cancel = function () {
+							$modalInstance.dismiss('cancel');
+						};
+					}
+				});
+				// Incompatible attacks are now unlinked
+				var deferred = [];
+				_.each(incompatibleAtcks, function (atck) {
+					deferred.push(Atck.update(atck.id, {sysId: "undefined"}), {bypassCache: true});
+				});
+				$q.all(deferred).then(function (values) {
+					$scope.sys.atcks = _.difference($scope.sys.atcks, incompatibleAtcks);
+				});
+			}
+		});
 
 		$scope.secondLine = true;
 		$scope.itemsMenu = screamMenu;

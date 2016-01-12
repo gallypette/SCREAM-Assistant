@@ -123,7 +123,7 @@ angular.module('myApp.viewAttacks', [])
 						$scope.model.type = schema;
 						console.log($scope.model);
 						// Inject
-						return Description.create($scope.model).then(function (desc) {
+						return Description.create($scope.model, {bypassCache: true}).then(function (desc) {
 							console.log(desc.id + ' injected.');
 						});
 					};
