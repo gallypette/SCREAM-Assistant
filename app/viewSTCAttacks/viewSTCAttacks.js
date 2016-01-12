@@ -21,7 +21,7 @@ angular.module('myApp.viewSTCAttacks', [])
 					controller: 'ViewSTCAttacksCtrl',
 					resolve: {
 						stc: function ($route, $location, Stc, Atck, Analysis, Description, _) {
-							return Stc.findAll({current: 'true'}, {cacheResponse: false}).then(function (stcs) {
+							return Stc.findAll({current: 'true'}, {bypassCache: true}).then(function (stcs) {
 								if (_.isUndefined(stcs[0])) {
 									$location.path("/viewSTCs/");	
 								} else {

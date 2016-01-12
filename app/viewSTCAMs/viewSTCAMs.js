@@ -25,7 +25,7 @@ angular.module('myApp.viewSTCAMs', [])
 					controller: 'ViewSTCAMsCtrl',
 					resolve: {
 						stc: function ($route, $location, Stc, Atck, Analysis, Description, _) {
-							return Stc.findAll({current: 'true'}, {cacheResponse: false}).then(function (stcs) {
+							return Stc.findAll({current: 'true'}, {bypassCache: true}).then(function (stcs) {
 								if (_.isUndefined(stcs[0])) {
 									$location.path("/viewSTCs/");	
 								} else {
@@ -51,23 +51,22 @@ angular.module('myApp.viewSTCAMs', [])
 
 		// lazy loading of nested relations does not work with localstorage
 		// so we resolve those here
-		var defer = $q.defer();
 		var promises = [];
 		$scope.antecedents = [];
 		// Crunching everything into one big arry
 		_.each($scope.stc.atcks, function (element, index, list) {
-			promises.push(Atck.loadRelations(element.id).then(function () {
-				return Analysis.loadRelations($scope.stc.atcks[index].analysis.id).then(function () {
-					if (_.isEmpty($scope.stc.atcks[index].analysis.ems)) {
+			promises.push(Atck.loadRelations(element.id, ['description', 'analysis']).then(function () {
+				return Analysis.loadRelations(element.analysis.id).then(function () {
+					if (_.isEmpty(element.analysis.ems)) {
 						console.log('No error modes');
 						return true;
 					} else {
-						_.each($scope.stc.atcks[index].analysis.ems, function (value, key, list) {
+						_.each(element.analysis.ems, function (value, key, list) {
 							// For each ErrorMode, we check that it reached an end state
 							value.completed = errorModes.analysisCompleted(value);
 							// For each ErrorMode, we compile the list of antecedents
 							if (value.completed) {
-								$scope.antecedents.push({ant: errorModes.analysisResults(value), em: value, description: $scope.stc.atcks[index].description});
+								$scope.antecedents.push({ant: errorModes.analysisResults(value), em: value, description: element.description});
 							}
 						});
 					}
