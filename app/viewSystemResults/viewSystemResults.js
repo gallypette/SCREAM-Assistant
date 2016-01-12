@@ -113,32 +113,33 @@ angular.module('myApp.viewSystemResults', [])
 					return stcs;
 					// The list of Stc is now ready
 				}).then(function (stcs) {
-					console.log(stcs)
+					$scope.stcs = stcs;
 					var promises = [];
-					$scope.antecedents = [];
-					_.each(stcs[0].atcks, function (element, index, list) {
-						promises.push(Atck.loadRelations(element.id, ['description', 'analysis']).then(function () {
-							return Analysis.loadRelations(stcs[0].atcks[index].analysis.id).then(function () {
-								if (_.isEmpty(stcs[0].atcks[index].analysis.ems)) {
-									console.log('No error modes');
+					_.each($scope.stcs, function (elementStc, indexStc, listStc) {
+						elementStc.antecedents = [];
+						_.each(elementStc.atcks, function (elementAtck, indexAtck, listAtck) {
+							promises.push(Atck.loadRelations(elementAtck.id, ['description', 'analysis']).then(function () {
+								return Analysis.loadRelations(elementAtck.analysis.id).then(function () {
+									if (_.isEmpty(elementAtck.analysis.ems)) {
+										console.log('No error modes');
+										return true;
+									} else {
+										_.each(elementAtck.analysis.ems, function (value, key, list) {
+											// For each ErrorMode, we check that it reached an end state
+											value.completed = errorModes.analysisCompleted(value);
+											// For each ErrorMode, we compile the list of antecedents
+											if (value.completed) {
+												$scope.stcs[indexStc].antecedents.push({ant: errorModes.analysisResults(value), em: value, description: stcs[indexStc].atcks[indexAtck].description});
+											}
+										});
+									}
 									return true;
-								} else {
-									_.each(stcs[0].atcks[index].analysis.ems, function (value, key, list) {
-										// For each ErrorMode, we check that it reached an end state
-										value.completed = errorModes.analysisCompleted(value);
-										// For each ErrorMode, we compile the list of antecedents
-										if (value.completed) {
-											$scope.antecedents.push({ant: errorModes.analysisResults(value), em: value, description: stcs[0].atcks[index].description});
-										}
-									});
-								}
-								return true;
-							})
-						}));
-					});
-					$q.all(promises).then(function () {
-						$scope.display = errorModes.analysisResultsSTC($scope.antecedents);
-						console.log($scope.display);
+								})
+							}));
+						});
+						$q.all(promises).then(function () {
+							$scope.stcs[indexStc].antecedents = errorModes.analysisResultsSTC($scope.stcs[indexStc].antecedents);
+						});
 					});
 				});
 			});
