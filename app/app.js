@@ -37,7 +37,7 @@ angular.module('myApp', [
 
 	.constant('investigationMenu', [
 		{url: '#/viewAttacks', text: 'Manage Attacks'},
-		{url: '#/viewRCA', text: 'Perform RCA'},
+		{url: '#/viewRCA', text: 'Perform the RCA of an attack'},
 		{url: '#/viewResults', text: 'View Results'}
 	])
 
@@ -49,7 +49,7 @@ angular.module('myApp', [
 
 	.constant('screamMenu', [
 		{url: '#/viewSystems', text: 'Manage Systems'},
-		{url: '#/viewSystemAttacks', text: 'Manage Attacks'},
+		{url: '#/viewSystemAttacks', text: 'Manage System\'s Attacks'},
 		{url: '#/viewSystemResults', text: 'View SCREAM Analysis Results'}
 	])
 
