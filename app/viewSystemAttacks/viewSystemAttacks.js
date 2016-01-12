@@ -40,8 +40,8 @@ angular.module('myApp.viewSystemAttacks', [])
 		// Then we check if previously added attacks are still 
 		// Compatible with the current system's Threat Model
 		threatModel.verifyCompatibility($route.current.locals.sys).then(function (incompatibleAtcks) {
-			console.log('List of incompatible')
-			console.log(incompatibleAtcks);
+//			console.log('List of incompatible')
+//			console.log(incompatibleAtcks);
 			if (incompatibleAtcks.length > 0) {
 				var modalInstance = $modal.open({
 					animation: true,

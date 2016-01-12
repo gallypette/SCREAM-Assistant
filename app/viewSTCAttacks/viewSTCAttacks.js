@@ -10,7 +10,6 @@ angular.module('myApp.viewSTCAttacks', [])
 					resolve: {
 						stc: function ($route, Stc, Atck) {
 							return Stc.find($route.current.params.id).then(function (stc) {
-								console.log(stc);
 								return Stc.loadRelations(stc.id, []);
 							});
 						}

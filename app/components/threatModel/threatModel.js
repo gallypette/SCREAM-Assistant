@@ -144,5 +144,17 @@ angular.module('myApp.threatModel', [])
 					});
 				});
 			};
+			
+			// Function that compiles all the Attack Modes / STC that
+			// are compatible with the system's Threat Model
+			obj.speStc = function(sys){
+				
+			};
+			
+			// Function that compiles all the contributors of attacks
+			// linked to the system
+			obj.speAtck = function(sys){
+				
+			};
 			return obj;
 		}]);
