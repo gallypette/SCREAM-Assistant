@@ -26,7 +26,6 @@ angular.module('myApp.viewSystems', [])
 		// Load the data into the view
 		$scope.syss = $route.current.locals.syss;
 		$scope.current = $route.current.locals.current;
-		console.log($scope.syss)
 
 		$scope.addSys = function (sys) {
 			sys.date = new Date();

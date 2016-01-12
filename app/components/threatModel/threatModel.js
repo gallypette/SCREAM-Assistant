@@ -90,9 +90,12 @@ angular.module('myApp.threatModel', [])
 
 			// Function that creates a list of compatible Attack
 			// for a given system
-			obj.buildCompatibles = function (sys) {
+			obj.buildCompatibles = function (sys, filter) {
+				if (_.isUndefined(filter)) {
+					var filter = {};
+				}
 				return $q(function (resolve, reject) {
-					Atck.findAll({}, {bypassCache: true}).then(function (atcks) {
+					Atck.findAll(filter, {bypassCache: true}).then(function (atcks) {
 						// Here we filter the attack to get only the one compatible
 						// With the system's threatModel
 						var deferred = [];
@@ -144,17 +147,21 @@ angular.module('myApp.threatModel', [])
 					});
 				});
 			};
-			
-			// Function that compiles all the Attack Modes / STC that
+
+			// Function that compiles all the STC that
 			// are compatible with the system's Threat Model
-			obj.speStc = function(sys){
-				
-			};
-			
-			// Function that compiles all the contributors of attacks
-			// linked to the system
-			obj.speAtck = function(sys){
-				
+			// So it lists all the compatible attacks that are linked 
+			// to an STC and then return the 
+			// STC / atck.analysis.ems.antecedent couples
+			obj.speStc = function (sys) {
+				var filter = {
+					where: {
+						stcId: {
+							'!=': "undefined"
+						}
+					}
+				};
+				return this.buildCompatibles(sys, filter);
 			};
 			return obj;
 		}]);

@@ -238,7 +238,7 @@ angular.module('myApp.errorModes', [])
 			// but still distinguishing the different descriptions (or TM)
 			// and associated comments.
 			// The end result is an array  of objects where the antecedent are keys
-			// to an array of 2uple (comment / description) are the values
+			// to an array of tuples (comment / description) are the values
 			obj.analysisResultsSTC = function (table) {
 				var init = [];
 				var results = [];
@@ -276,6 +276,5 @@ angular.module('myApp.errorModes', [])
 				});
 				return results;
 			}
-
 			return obj;
 		}]);

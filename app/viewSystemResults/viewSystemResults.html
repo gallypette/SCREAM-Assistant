@@ -22,7 +22,7 @@
 	</table>
 </div>
 
-<h3>Results related to <b>Attacks</b> linked to <b>{{sys.name}}</b>.</h3>
+<h3 ng-show="atck.analysis.ems.length > 0">Results related to <b>Attacks</b> linked to <b>{{sys.name}}</b>.</h3>
 <div class="well" ng-repeat="atck in sys.atcks" ng-show="atck.analysis.ems.length > 0">
 		<attack-description atck="atck" ng-if="atck.description != null"></attack-description>
 		<h4>Possible contributors to <b>{{atck.name}}</b>:</h4>
