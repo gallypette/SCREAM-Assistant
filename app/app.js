@@ -25,8 +25,6 @@ angular.module('myApp', [
 	'myApp.viewSystemResults',
 	'myApp.viewSTCs',
 	'myApp.viewSTCAMs',
-	'myApp.view3',
-	'myApp.view4',
 	'myApp.viewSTCAttacks',
 	'myApp.emTree',
 	'myApp.errorModes',
