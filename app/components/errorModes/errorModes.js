@@ -163,8 +163,17 @@ angular.module('myApp.errorModes', [])
 				_.each(toexpand, function (value, key, list) {
 					value.children = obj.digAntecedent(value, scope);
 				});
+				// Then we check is there is a sibling SA that should now 
+				// Carry the stop rule
+				var toSet = false;
+				_.each(d.parent.children, function (value, key, list) {
+					if (value.stop == "false" && value.category === 'SA' && value.go == 'true' && !toSet) {
+						toSet = value;
+					}
+				});
 				// Eventually set the Stop rule to false.
 				d.stop = "false";
+				obj.addStopRule(toSet);
 			};
 			// Function that updates the RCA state when a stop rule is added
 			obj.addStopRule = function (d, scope) {
