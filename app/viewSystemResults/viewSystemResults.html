@@ -23,41 +23,41 @@
 </div>
 
 <h3>Results related to <b>Attacks</b> linked to <b>{{sys.name}}</b>.</h3>
-<div class="well" ng-repeat="atck in sys.atcks">
-	<h3>Here are the list of possible antecedents explaining <b>{{atck.name}}</b>.</h3>
-	<attack-description atck="atck" ng-if="atck.description != null"></attack-description>
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th class="col-md-2">Error Mode</th>
-				<th class="col-md-1" style="text-align: center">Completed</th>
-				<th class="col-md-9">Antecedents</th>
+<div class="well" ng-repeat="atck in sys.atcks" ng-show="atck.analysis.ems.length > 0">
+		<attack-description atck="atck" ng-if="atck.description != null"></attack-description>
+		<h4>Possible contributors to <b>{{atck.name}}</b>:</h4>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th class="col-md-2">Error Mode</th>
+					<th class="col-md-1" style="text-align: center">Completed</th>
+					<th class="col-md-9">Antecedents</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="em in atck.analysis.ems" ng-if="em.em != null">
+					<td class="col-md-2"><b>{{em.category}} - {{em.em}}</b></td>
+					<td  class="col-md-1" style="text-align: center"><div ng-show="em.completed"><span class="glyphicon glyphicon-ok"></div>
+						<div ng-show="!em.completed"><span class="glyphicon glyphicon-flash"></div>
+					</td>
+					<td class="col-md-9">
+			<accordion close-others="false">
+				<accordion-group ng-repeat="antecedent in em.antecedents" is-open="isOpenA(antecedent)" is-disabled="true">
+					<accordion-heading>
+						<b>{{antecedent.category}}</b>: {{antecedent.em}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+					</accordion-heading>
+					<form name="addForm" role="form">
+						<div class="form-group">
+							<label for="comment">Justification</label>
+							<pre>{{antecedent.comment}}</pre>
+					</form>
+				</accordion-group>
+			</accordion>
+			</td>
 
 			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="em in atck.analysis.ems" ng-if="em.em != null">
-				<td class="col-md-2"><b>{{em.category}} - {{em.em}}</b> <br><br><br> <button ng-if="em.antecedents != null" type="button" class="btn btn-primary" ng-click="registerComments(em)">Register comments</button></td>
-				<td  class="col-md-1" style="text-align: center"><div ng-show="em.completed"><span class="glyphicon glyphicon-ok"></div>
-					<div ng-show="!em.completed"><span class="glyphicon glyphicon-flash"></div>
-				</td>
-				<td class="col-md-9">
-		<accordion close-others="false">
-			<accordion-group ng-repeat="antecedent in em.antecedents" is-open="status.open">
-				<accordion-heading>
-					<b>{{antecedent.category}}</b>: {{antecedent.em}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-				</accordion-heading>
-				<form name="addForm" role="form">
-					<div class="form-group">
-						<label for="comment">Comment:</label>
-						<textarea class="form-control" rows="5" ng-model="antecedent.comment"></textarea>
-				</form>
-			</accordion-group>
-		</accordion>
-		</td>
 
-		</tr>
-
-		</tbody>
-	</table>
+			</tbody>
+		</table>
 </div>

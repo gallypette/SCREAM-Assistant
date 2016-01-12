@@ -45,6 +45,11 @@ angular.module('myApp.viewSystemResults', [])
 				value.completed = errorModes.analysisCompleted(value);
 			});
 		}
+		
+		
+		$scope.isOpenA = function (antecedent){
+			return (!_.isUndefined(antecedent.comment) && (antecedent.comment.length) > 0) ? true : false; 
+		}
 
 		// View var from resolve 
 		$scope.sys = $route.current.locals.sys;
@@ -67,7 +72,8 @@ angular.module('myApp.viewSystemResults', [])
 							value.completed = errorModes.analysisCompleted(value);
 							// For each ErrorMode, we compile the list of antecedents
 							if (value.completed) {
-								$scope.antecedents.push({ant: errorModes.analysisResults(value), em: value, description: $scope.sys.atcks[index].description});
+								$scope.sys.atcks[index].analysis.ems[key].antecedents = [];
+								$scope.sys.atcks[index].analysis.ems[key].antecedents = (errorModes.analysisResults(value));
 							}
 						});
 					}
