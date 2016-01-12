@@ -24,31 +24,6 @@ angular.module('myApp.errorModes', [])
 				}
 				return pointer;
 			};
-			// Builds the path of a node
-			var getPath = function (d) {
-				var path = [];
-				for (var i = d.depth; i != 0; i--) {
-					path[d.depth] = {
-						"category": d.category,
-						"em": d.em
-					};
-					d = d.parent;
-				}
-				return path;
-			};
-			// Recursive tree traversal and update
-			var traverseMatch = function (path, d, tree) {
-				var trail = "";
-				_.each(tree.children, function (value, key, list) {
-					if (value.em == path[0].em) {
-						trail = "children[" + key + "]";
-						if (path.length > 1) {
-							trail += '.' + traverseMatch(_.rest(path), d, value);
-						}
-					}
-				});
-				return trail;
-			};
 			// Function tha recursively find the SA nodes with stop rule engaged
 			var findSR = function (tounstop, d) {
 				if (d.category === 'GA' && isOpened(d)) {
@@ -209,18 +184,6 @@ angular.module('myApp.errorModes', [])
 					value.go = 'true';
 				});
 				d.stop = 'true';
-			};
-			// Function that ensures that d is updated in root
-			obj.matchRoot = function (d, scope) {
-				// First we do a reverse tree traversal to find where this node is
-				var path = getPath(d, scope);
-				path = _.rest(path);
-				var trail = '';
-				// Then a tree traversal to check the value of the node
-				if (path.length > 0) {
-					trail = traverseMatch(path, d, scope.current.data);
-				}
-				return new Array(scope.current.data, d, trail);
 			};
 			// Function that ensures that the analysis reached an end
 			obj.analysisCompleted = function (em) {
