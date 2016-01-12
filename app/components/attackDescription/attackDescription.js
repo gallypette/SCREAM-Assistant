@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('myApp.descriptionDisplay', [])
+angular.module('myApp.attackDescription', [])
 	.directive('attackDescription', ['descriptionTypes',function (descriptionTypes) {
 		return {
 			restrict: 'E',
 			replace: true,
-			templateUrl: 'components/descriptionDisplay/descriptionDisplay.html',
+			templateUrl: 'components/attackDescription/attackDescription.html',
 			// We bring atck from the upper scope
 			scope: {
 				atck: '='

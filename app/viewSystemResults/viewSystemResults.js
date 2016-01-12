@@ -12,7 +12,6 @@ angular.module('myApp.viewSystemResults', [])
 					controller: 'ViewSystemResultsCtrl',
 					resolve: {
 						sys: function ($route, Sys, Atck, Analysis, Description, _) {
-							console.log('sdf')
 							return Sys.find($route.current.params.id).then(function (sys) {
 								return Sys.loadRelations(sys.id, []);
 								// I can't go further down the nest because of js-data limitations.
