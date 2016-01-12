@@ -37,7 +37,7 @@ angular.module('myApp.attackManager', [])
 										}
 									});
 								} else {
-									threatModel.compareTM(sys).then(function (repository){
+									threatModel.buildCompatibles(sys).then(function (repository){
 										scope.repository = repository;
 									});
 								}

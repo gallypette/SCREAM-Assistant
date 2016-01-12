@@ -88,7 +88,7 @@ angular.module('myApp.threatModel', [])
 			// Public methods
 			var obj = {};
 
-			obj.compareTM = function (sys) {
+			obj.buildCompatibles = function (sys) {
 				return $q(function (resolve, reject) {
 					Atck.findAll({}, {bypassCache: true}).then(function (atcks) {
 						// Here we filter the attack to get only the one compatible
