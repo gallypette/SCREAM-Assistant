@@ -24,16 +24,6 @@ angular.module('myApp.errorModes', [])
 				}
 				return pointer;
 			};
-			// Function tha recursively find the SA nodes with stop rule engaged
-			var findSR = function (tounstop, d) {
-				if (d.category === 'GA' && isOpened(d)) {
-					return _.union(tounstop, d.children.reduce(findSR, tounstop));
-				} else if (d.category === 'SA' && d.stop === 'true') {
-					return _.union(tounstop, [d]);
-				} else {
-					return tounstop;
-				}
-			};
 			// Function tha recursively find the contributors
 			var findContributors = function (selected, d) {
 				// GA is opened, we go deeper
@@ -76,11 +66,51 @@ angular.module('myApp.errorModes', [])
 					return toclose;
 				}
 			};
+			// Function that recursively find the SA nodes with stop rule engaged
+			var findSR = function (tounstop, d) {
+				if (d.category === 'GA' && isOpened(d)) {
+					return _.union(tounstop, d.children.reduce(findSR, tounstop));
+				} else if (d.category === 'SA' && d.stop === 'true') {
+					return _.union(tounstop, [d]);
+				} else {
+					return tounstop;
+				}
+			};
+			// Recursive function that looks for a property 
+			// in the parent nodes.
+			var findUpstairs = function (d, c1, c2, holder) {
+				var up = false;
+				// We look at our siblings
+				if (!_.isUndefined(d.parent)) {
+					_.each(d.parent.children, function (value, key, list) {
+						if (value[c1] == c2) {
+							holder = value;
+							up = false;
+						} else {
+							up = true;
+						}
+					});
+					if (up) {
+						holder = findUpstairs(d.parent, c1, c2, holder);
+					}
+				}
+				return holder;
+			};
+			// Remove a stop rule check further checks,
+			// checks where made elsewhere
+			var removeStopRuleDirectly = function (d) {
+				d.stop = 'false';
+			};
+			var addStopRuleDirectly = function (d) {
+				console.log(d)
+				d.stop = 'true';
+			};
+			
 			// Public methods
 			var obj = {};
 			// Functions that find the antecedents for the next depth
 			obj.digAntecedent = function (d, scope) {
-				console.log(d);
+//				console.log(d);
 				var pointer = {};
 				// We investigate the root by parsing category0
 				if (d.depth == 0) {
@@ -136,7 +166,7 @@ angular.module('myApp.errorModes', [])
 					_.each(d.parent.children, function (value, key, list) {
 						if (value.stop == "true" && value.em != d.em) {
 							stoprule = "true";
-							console.log("One sibling is stopped");
+							console.log("[+] One sibling is stopped");
 						}
 					});
 				}
@@ -149,39 +179,68 @@ angular.module('myApp.errorModes', [])
 					_.each(d.parent.parent.children, function (value, key, list) {
 						if (value.stop == "true") {
 							stoprule = "true";
-							console.log("One parent's sibling is stopped");
+							console.log("[+] One parent's sibling is stopped");
 						}
 					});
 				}
 				return stoprule;
 			};
+			// Function that recursivaly looks downstairs
+			// for SA that could carry the stop rule
+			var findDownStairSA = function (tocarry, d) {
+				if (d.category === 'GA' && isOpened(d)) {
+					return _.union(tocarry, d.children.reduce(findDownStairSA, tocarry));
+				} else if (d.category === 'SA' && d.go === 'true') {
+					return _.union(tocarry, [d]);
+				} else {
+					return tocarry;
+				}
+			};
 			// Function that updates the RCA state when a stop rule is removed
 			obj.removeStopRule = function (d, scope) {
+				console.log('Removing stop rule')
 				// We need to find out the closed GA that should now be opened
 				var tocheck = d.parent.children.filter(isGA);
 				var toexpand = tocheck.reduce(getConstrainedGA, []);
 				_.each(toexpand, function (value, key, list) {
 					value.children = obj.digAntecedent(value, scope);
 				});
-				// Then we check is there is a sibling SA that should now 
-				// Carry the stop rule
 				var toSet = false;
+				// Who should now carry the stop rule ???
+				// We check if it should be a sibling 
 				_.each(d.parent.children, function (value, key, list) {
 					if (value.stop == "false" && value.category === 'SA' && value.go == 'true' && !toSet) {
 						toSet = value;
 					}
 				});
+				// Then we check down the line
+				if (!toSet) {
+					var toSet = d.parent.children.reduce(findDownStairSA, [])[0];
+				}
 				// Eventually set the Stop rule to false.
 				d.stop = "false";
-				obj.addStopRule(toSet);
+				// Set the carried stop rule on 'the one' 
+				if (toSet) {
+					addStopRuleDirectly(toSet);
+				}
 			};
 			// Function that updates the RCA state when a stop rule is added
 			obj.addStopRule = function (d, scope) {
-				// We need to check if there was already a stop rule engaged
+				console.log('[+] Adding stop rule')
+				var prevent = false;
+				// We need to check if there is a stop rule engaged in the
+				// parents of this node: if so, we don't add the stop rule
+				var test = findUpstairs(d.parent, "stop", "true", false);
+				if (test != false) {
+					console.log('[+] Stop rule prevented - already set upstairs')
+					prevent = true;
+				}
+				;
+				// The we check if there was already a stop rule engaged
 				// in n+* depth. Then remove it before adding this one.
 				var tounstop = d.parent.children.reduce(findSR, []);
 				_.each(tounstop, function (value, key, list) {
-					obj.removeStopRule(value);
+					removeStopRuleDirectly(value);
 				});
 				// We need to check if some GA needs to be closed.
 				var tocheck = d.parent.children.filter(isGA);
@@ -192,7 +251,9 @@ angular.module('myApp.errorModes', [])
 					value._children = null;
 					value.go = 'true';
 				});
-				d.stop = 'true';
+				if (!prevent) {
+					d.stop = 'true';
+				}
 			};
 			// Function that ensures that the analysis reached an end
 			obj.analysisCompleted = function (em) {

@@ -186,7 +186,6 @@ angular.module('myApp.viewRCA', [])
 							errorModes.removeStopRule(d, $scope);
 						} else { // Was OFF
 							d.go = "true"; // Becomes ON
-							errorModes.removeStopRule(d, $scope);
 						}
 					} else if (d.category == "GA") { // The GA can be closed because of SR ON
 						if (d.go === 'false') {
@@ -206,7 +205,6 @@ angular.module('myApp.viewRCA', [])
 							errorModes.removeStopRule(d, $scope);
 						} else { // Was OFF
 							d.go = "true"; // Becomes ON
-							errorModes.removeStopRule(d, $scope);
 						}
 					} else if (d.category == "GA") { // One sibling is stopped, we can open the GA
 						d.go = "true"; // Becomes ON

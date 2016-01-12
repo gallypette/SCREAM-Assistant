@@ -66,7 +66,7 @@ angular.module('myApp.emTree', [])
 
 						function update(source) {
 
-							console.log("Updating the tree.");
+							console.log("[+] Updating the tree.");
 //							console.log(source);
 //							console.log(root);
 
@@ -231,7 +231,7 @@ angular.module('myApp.emTree', [])
 								return; // click suppressed
 							// Run the SCREAM engine into a promise
 							$q.resolve(scope.toggleAntecedent(d)).then(function (updatedd) {
-								console.log(updatedd);
+//								console.log(updatedd);
 								update(updatedd);
 								// Update the completness state in the view
 								scope.areCompleted();
