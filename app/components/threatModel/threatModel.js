@@ -1,7 +1,7 @@
 'use strict';
 // Holds function related to error modes and emtrees 
 angular.module('myApp.threatModel', [])
-	.factory('threatModel', ['_', 'descriptionTypes', 'Description', function (_, descriptionTypes, Description) {
+	.factory('threatModel', ['_', 'descriptionTypes', 'Atck', 'Description', '$q', function (_, descriptionTypes, Atck, Description, $q) {
 			// Private methods
 			var prChecked = function (d, field) {
 				if (!_.isUndefined(d[field + "-required"])) {
@@ -12,11 +12,8 @@ angular.module('myApp.threatModel', [])
 				return checked;
 			};
 
-			// Public methods
-			var obj = {};
-
 			// return true if d2 attack fits into d1 threat model
-			obj.compare = function (d1, d2) {
+			var compareDesc = function (d1, d2) {
 				var result = true;
 				// First, we check if both descriptions use the 
 				// same schema
@@ -54,7 +51,7 @@ angular.module('myApp.threatModel', [])
 										if (_.contains(d1[element.fieldName], 'undef') || _.isUndefined(d1[element.fieldName])) {
 											console.log('undef')
 											test[index] = true;
-										} else  if(_.contains(d1[element.fieldName], d2[element.fieldName])){
+										} else if (_.contains(d1[element.fieldName], d2[element.fieldName])) {
 											test[index] = true;
 										} else {
 											test[index] = false;
@@ -86,6 +83,33 @@ angular.module('myApp.threatModel', [])
 					result = false;
 				}
 				return result && !_.contains(test, false);
+			};
+
+			// Public methods
+			var obj = {};
+
+			obj.compareTM = function (sys) {
+				return $q(function (resolve, reject) {
+					Atck.findAll({}, {bypassCache: true}).then(function (atcks) {
+						// Here we filter the attack to get only the one compatible
+						// With the system's threatModel
+						var deferred = [];
+						_.each(atcks, function (atck) {
+							deferred.push(Atck.loadRelations(atck.id, ['description'], {bypassCache: true}));
+						})
+						var compatibleAtcks = [];
+						$q.all(deferred).then(function (values) {
+							compatibleAtcks = _.chain(values)
+								.filter(function (value) {
+									if (!_.isUndefined(value.description)) {
+										return compareDesc(sys.description, value.description);
+									}
+								});
+							compatibleAtcks = _(compatibleAtcks).value();
+							resolve(_.difference(compatibleAtcks, sys.atcks));
+						});
+					});
+				});
 			};
 			return obj;
 		}]);

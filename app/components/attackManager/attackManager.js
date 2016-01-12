@@ -4,7 +4,6 @@ angular.module('myApp.attackManager', [])
 	.directive('attackManager', function (_, Stc, Sys, Atck, Description, threatModel, $q, $location, $modal) {
 		return {
 			restrict: 'E',
-			
 			templateUrl: 'components/attackManager/attackManager.html',
 			scope: {
 				displayed: '=managed',
@@ -38,24 +37,8 @@ angular.module('myApp.attackManager', [])
 										}
 									});
 								} else {
-									return Atck.findAll({}, {bypassCache: true}).then(function (atcks) {
-										// Here we filter the attack to get only the one compatible
-										// With the system's threatModel
-										var deferred = [];
-										_.each(atcks, function (atck) {
-											deferred.push(Atck.loadRelations(atck.id, ['description'], {bypassCache: true}));
-										})
-										var compatibleAtcks = [];
-										$q.all(deferred).then(function (values) {
-											compatibleAtcks = _.chain(values)
-												.filter(function (value) {
-													if (!_.isUndefined(value.description)) {
-														return threatModel.compare(sys.description, value.description);
-													}
-												});
-											compatibleAtcks = _(compatibleAtcks).value();
-											scope.repository = _.difference(compatibleAtcks, sys.atcks);
-										});
+									threatModel.compareTM(sys).then(function (repository){
+										scope.repository = repository;
 									});
 								}
 							});

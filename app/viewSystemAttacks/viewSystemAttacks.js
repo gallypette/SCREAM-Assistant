@@ -35,8 +35,16 @@ angular.module('myApp.viewSystemAttacks', [])
 
 	.controller('ViewSystemAttacksCtrl', function ($route, $scope, $modal, screamMenu, Atck, descriptionTypes, Description, Analysis, _) {
 
-		// Load the data into the view
+		
+		
+		// First we check if previously added attacks are still 
+		// Compatible with the current system's Threat Model
+		
+		
+		//use compare TM on	$route.current.locals.sys
 		$scope.sys = $route.current.locals.sys;
+		// Load the data into the view
+//		$scope.sys = resultAtcks;
 
 		$scope.secondLine = true;
 		$scope.itemsMenu = screamMenu;

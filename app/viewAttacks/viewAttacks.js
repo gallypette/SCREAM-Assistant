@@ -8,12 +8,12 @@ angular.module('myApp.viewAttacks', [])
 					controller: 'ViewAttacks5Ctrl',
 					resolve: {
 						atcks: function ($route, Stc, Atck) {
-							return Atck.findAll({}).then(function (atcks) {
+							return Atck.findAll({}, {bypassCache: true}).then(function (atcks) {
 								return  atcks;
 							});
 						},
 						current: function ($route, Atck) {
-							return Atck.findAll({current: 'true'}, {cacheResponse: false}).then(function (atcks) {
+							return Atck.findAll({current: 'true'}, {bypassCache: true}).then(function (atcks) {
 								return _.isUndefined(atcks[0]) ? "undefined" : atcks[0];
 							});
 						}
