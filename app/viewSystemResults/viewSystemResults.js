@@ -27,7 +27,7 @@ angular.module('myApp.viewSystemResults', [])
 						sys: function ($route, $location, Sys, Atck, Analysis, Description, _) {
 							return Sys.findAll({current: 'true'}, {cacheResponse: false}).then(function (syss) {
 								if (_.isUndefined(syss[0])) {
-									$location.path("/viewSTCs/");
+									$location.path("/viewSystems/");
 								} else {
 									return Sys.loadRelations(syss[0].id, []);
 								}
