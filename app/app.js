@@ -69,6 +69,12 @@ angular.module('myApp', [
 			desc: 'Description in terms of properties shared by the messages flowing between the attacker and the victim.',
 			fields: [
 				{
+					fieldName: 'Effect',
+					desc: 'The effect on the system',
+					type: 'text',
+					pr: 'false'
+				},
+				{
 					fieldName: 'Source',
 					desc: 'The principal that the user believes he is interacting with',
 					type: 'text',

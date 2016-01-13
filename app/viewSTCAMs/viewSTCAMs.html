@@ -9,18 +9,18 @@
 				<tr>
 					<th class="col-md-2">Attack Mode</th>
 					<th class="col-md-2">Error Mode</th>
-					<th class="col-md-3">Description</th>
-					<th class="col-md-4">Comment</th>
-					<th class="col-md-1">Specific</th>
+					<th class="col-md-1">Description</th>
+					<th class="col-md-6">Comment</th>
+					<th class="col-md-1 text-center">Specific</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="attackMode in display| filter:filterSpecifics()">
 					<td  class="col-md-2">{{attackMode.ant}}</td>
 					<td  class="col-md-2"><div ng-repeat="context in attackMode.modes">{{context[0].category}}-{{context[0].em}}</div></td>
-					<td  class="col-md-3"><div ng-repeat="context in attackMode.modes">{{context[1].type}}</div></td>
-					<td  class="col-md-4"><div ng-repeat="comment in attackMode.comments">{{comment}}</div></td>
-					<td  class="col-md-1"><input type="checkbox" ng-model="stc.specifics[attackMode.ant]"></td>
+					<td  class="col-md-1"><div ng-repeat="context in attackMode.modes">{{context[1].type}}</div></td>
+					<td  class="col-md-6"><div ng-repeat="comment in attackMode.comments">{{comment}}</div></td>
+					<td  class="col-md-1 text-center"><input type="checkbox" ng-model="stc.specifics[attackMode.ant]"></td>
 				</tr>
 			</tbody>
 		</table>
