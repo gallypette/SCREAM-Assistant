@@ -27,7 +27,7 @@ angular.module('myApp.viewSTCAMs', [])
 						stc: function ($route, $location, Stc, Atck, Analysis, Description, _) {
 							return Stc.findAll({current: 'true'}, {bypassCache: true}).then(function (stcs) {
 								if (_.isUndefined(stcs[0])) {
-									$location.path("/viewSTCs/");	
+									$location.path("/viewSTCs/");
 								} else {
 									return Stc.loadRelations(stcs[0].id, []);
 								}
@@ -37,7 +37,7 @@ angular.module('myApp.viewSTCAMs', [])
 				});
 		}])
 
-	.controller('ViewSTCAMsCtrl', function ($scope, $route, $q, stcMenu, Analysis, Atck, ErrorMode, errorModes) {
+	.controller('ViewSTCAMsCtrl', function (_, $scope, $route, $q, stcMenu, Analysis, Atck, ErrorMode, errorModes, Stc) {
 
 		$scope.areCompleted = function () {
 			_.each($scope.atck.analysis.ems, function (value, key, list) {
@@ -48,7 +48,14 @@ angular.module('myApp.viewSTCAMs', [])
 
 		// View var from resolve 
 		$scope.stc = $route.current.locals.stc;
-
+		
+		$scope.registerSpecifics = function (){
+			if(_.isUndefined($scope.stc.specifics)){
+				$scope.stc.specifics = {};
+			}
+			Stc.update($scope.stc.id, { specifics: $scope.stc.specifics});
+		}
+		
 		// lazy loading of nested relations does not work with localstorage
 		// so we resolve those here
 		var promises = [];

@@ -127,6 +127,7 @@ angular.module('myApp.viewSystemResults', [])
 										_.each(elementAtck.analysis.ems, function (value, key, list) {
 											// For each ErrorMode, we check that it reached an end state
 											value.completed = errorModes.analysisCompleted(value);
+
 											// For each ErrorMode, we compile the list of antecedents
 											if (value.completed) {
 												$scope.stcs[indexStc].antecedents.push({ant: errorModes.analysisResults(value), em: value, description: stcs[indexStc].atcks[indexAtck].description});
@@ -139,11 +140,23 @@ angular.module('myApp.viewSystemResults', [])
 						});
 						$q.all(promises).then(function () {
 							$scope.stcs[indexStc].antecedents = errorModes.analysisResultsSTC($scope.stcs[indexStc].antecedents);
+							// Just need to check is == true instead of getting the key
+							$scope.stcs[indexStc].specifics = _.allKeys($scope.stcs[indexStc].specifics);
 						});
 					});
 				});
 			});
 		});
+
+		$scope.specifics = ["SA-Multiple disturbances", "SA-Noise", "SA-Violation"];
+
+		// Filter the antecedents defined as specific by the STC
+		$scope.filterSpecifics = function (stc) {
+			console.log(stc)
+			return function (attackMode) {
+				return !_.contains(stc.specifics, attackMode.ant);
+			};
+		};
 
 		$scope.secondLine = true;
 		$scope.itemsMenu = screamMenu;
