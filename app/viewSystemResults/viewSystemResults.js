@@ -140,19 +140,22 @@ angular.module('myApp.viewSystemResults', [])
 						});
 						$q.all(promises).then(function () {
 							$scope.stcs[indexStc].antecedents = errorModes.analysisResultsSTC($scope.stcs[indexStc].antecedents);
-							// Just need to check is == true instead of getting the key
-							$scope.stcs[indexStc].specifics = _.allKeys($scope.stcs[indexStc].specifics);
+							var keys = [];
+							_.each($scope.stcs[indexStc].specifics, function (val, key) {
+								if (val) {
+									keys.push(key);
+								}
+							});
+							$scope.stcs[indexStc].specifics = keys;
 						});
 					});
 				});
 			});
 		});
 
-		$scope.specifics = ["SA-Multiple disturbances", "SA-Noise", "SA-Violation"];
-
 		// Filter the antecedents defined as specific by the STC
 		$scope.filterSpecifics = function (stc) {
-			console.log(stc)
+			console.log(stc.specifics)
 			return function (attackMode) {
 				return !_.contains(stc.specifics, attackMode.ant);
 			};
