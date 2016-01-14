@@ -1,11 +1,11 @@
 <div>
 	<accordion close-others="true">
-			<accordion-group ng-repeat="schema in descriptionTypes | filter:atck.description.type" is-open="status.open">
-				<accordion-heading>
-					<b>{{schema.name}}</b>: {{schema.desc}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-				</accordion-heading>
-				<form name="addForm" role="form" ng-submit="registerDescription(atckMod.id, schema.name)">
-					<div class="form-group">
+		<accordion-group ng-repeat="schema in descriptionTypes| filter:atck.description.type" is-open="status.open">
+			<accordion-heading>
+				<b>{{schema.name}}</b>: {{schema.desc}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			</accordion-heading>
+			<form name="addForm" role="form" ng-submit="registerDescription(atckMod.id, schema.name)">
+				<div class="form-group">
 					<table class="table table-hover">
 						<thead>
 							<tr>
@@ -19,16 +19,16 @@
 								<td>{{field.fieldName}}</td>
 								<td>{{field.desc}}</td>
 								<td ng-switch on="field.type">
-							
+
 									<div ng-switch-when="boolean">
 										<input disabled readonly type="radio" ng-model="atck.description[field.fieldName]" value="true">True
 										<input disabled readonly type="radio" ng-model="atck.description[field.fieldName]"  value="false">Fals
 									</div>
-								
+
 									<div ng-switch-when="text">
 										<input disabled readonly type="textarea" ng-model="atck.description[field.fieldName]" class="form-control">
 									</div>
-								
+
 									<div ng-switch-when="list">
 										<select disabled readonly ng-model="atck.description[field.fieldName]">
 											<option ng-repeat="value in field.value" value={{value}}>{{value}}</option>
@@ -38,7 +38,7 @@
 							</tr>
 						</tbody>
 					</table>
-				</form>
-			</accordion-group>
-		</accordion>
+			</form>
+		</accordion-group>
+	</accordion>
 </div>

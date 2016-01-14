@@ -84,6 +84,7 @@
 <!-- EM tree -->
 <div class="well" ng_if="current != null">
 	<attack-description atck="atck" ng_if="atck.description != null"></attack-description>
+	<attack-textualdescription atck="atck" ng-if="atck.desc != null"></attack-textualdescription>
 	<div error-mode-tree id="tree-container"></div>
 </div>
 

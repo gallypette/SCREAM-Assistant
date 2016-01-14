@@ -38,7 +38,7 @@ angular.module('myApp.viewAttacks', [])
 				atck.stcId = 'undefined';
 			});
 		}
-		
+
 		// Delete an Attack and its description.
 		$scope.deleteAtck = function (atck) {
 			if (!_.isUndefined($scope.current) && $scope.current.id === atck.id) {
@@ -93,7 +93,7 @@ angular.module('myApp.viewAttacks', [])
 					}
 
 				},
-				controller: function ($scope, $modalInstance, Description, atckDesc, _) {
+				controller: function ($scope, $modalInstance, Description, atckDesc, _, Atck) {
 
 					// The model that will get the description back
 					console.log(atckDesc.description);
@@ -107,6 +107,13 @@ angular.module('myApp.viewAttacks', [])
 
 					$scope.registerDescription = function (id, schema) {
 						$scope.addDescription(id, schema);
+						$modalInstance.close();
+					};
+
+					$scope.registerText = function (id) {
+						Atck.update($scope.atckMod.id, {desc: $scope.atckMod.desc}).then(function (desc) {
+							console.log('[+] '+atck.id + ' updated.');
+						});
 						$modalInstance.close();
 					};
 

@@ -6,20 +6,16 @@
 	<table class="table table-hover">
 		<thead>
 			<tr>
-				<th>Name</th>
-				<th>Description</th>
-				<th>Creation date</th>
+				<th class="col-md-3">Name</th>
+				<th class="col-md-2">Creation date</th>
+				<th class="col-md-4"></th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="atck in atcks">
 				<td>{{atck.name}}</td>
-				<td>{{atck.desc}}</td>
 				<td>{{atck.date| date:'MM/dd/yyyy @ h:mma'}}</td>
-				<td><button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAtck(atck)">Delete</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click="describeAtck(atck)">Describe</button></td>
-				<td><button type="button" class="btn btn-primary" ng-click='selectAction(atck, "viewRCA")'>Perform RCA</button></td>
-				<td><button type="button" class="btn btn-success" ng-click='selectAction(atck, "viewResults")'>View Results</button></td>
+				<td><button style="margin: 5px" type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAtck(atck)">Delete</button><button style="margin: 5px" type="button" class="btn btn-primary" ng-click="describeAtck(atck)">Describe</button><button style="margin: 5px" type="button" class="btn btn-primary" ng-click='selectAction(atck, "viewRCA")'>Perform RCA</button><button style="margin: 5px" type="button" class="btn btn-success" ng-click='selectAction(atck, "viewResults")'>View Results</button></td>
 			</tr>
 		<div class=""></div>
 		</tr>
@@ -34,7 +30,7 @@
 		<div class="row">
 
 			<div class="form-group">
-				<label for="stcName">Name of the new Attack</label>
+				<label for="stcName">Name of the Attack</label>
 				<div class="alert alert-warning" ng-show="!addForm.nameControl.$valid">
 					<span ng-show="addForm.nameControl.$error.required">Required!</span>
 					<span ng-show="addForm.nameControl.$error.minlength">Too short!</span>
@@ -42,8 +38,8 @@
 				<input type="text" ng-model="atck.name" name="nameControl" placeholder="Attack's name" class="form-control" required="required" ng-minlength="3">
 
 				<div class="form-group">
-					<label for="stcDesc">Description of the new Attack</label>
-					<input type="textarea" ng-model="atck.desc" placeholder="Description" class="form-control">
+					<label for="stcDesc">Textual description of the Attack</label>
+					<textarea ng-model="atck.desc" placeholder="Description" rows="5" class="form-control"></textarea>
 					<input type="hidden" ng-model="atck.date">
 				</div>
 
@@ -58,9 +54,10 @@
 <div>
 	<script type="text/ng-template" id="myDescriptionModal">
         <div class="modal-header">
-		<h3 class="modal-title">Select a Scheme to describe the attack <b>{{atckMod.name}}</b>:</h3>
+		<h3 class="modal-title">Description of <b>{{atckMod.name}}</b>:</h3>
         </div>
         <div class="modal-body">
+		<h4 class="modal-title" style="margin: 5px">Select a scheme to describe attacker's actions</h4>
 		<accordion close-others="true">
 			<accordion-group ng-repeat="schema in descriptionTypes" is-open="status.open">
 				<accordion-heading>
@@ -69,54 +66,69 @@
 				<p>Fill-out the following fields to describe the attack using <b>{{schema.name}}</b>:</p>
 				<form name="addForm" role="form" ng-submit="registerDescription(atckMod.id, schema.name)">
 					<div class="form-group">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>Field</th>
-								<th>Description</th>
-								<th>Value</th>
-								<th>PR</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="field in schema.fields">
-							<ng-form name="form">
-								<td>{{field.fieldName}}</td>
-								<td>{{field.desc}}</td>
-								<td ng-switch on="field.type">
-							
-									<div ng-switch-when="boolean">
-										<input type="radio" ng-model="model[field.fieldName]" value="true">True
-										<input type="radio" ng-model="model[field.fieldName]"  value="false">False
-									</div>
-								
-									<div ng-switch-when="text">
-										<input type="textarea" ng-model="model[field.fieldName]" class="form-control">
-									</div>
-								
-									<div ng-switch-when="list">
-										<select ng-model="model[field.fieldName]">
-											<option value = 'undef'>undefined</option>
-											<option ng-repeat="value in field.value" value={{value}}>{{value}}</option>
-										</select> 
-									</div>
-								</td>
-								<td ng-switch on="field.pr">
-									<div ng-switch-when="true">
-										<input type="checkbox" ng-model="model[field.fieldName+'-required']">
-									</div>
-								</td>
-							<ng-form>
-							</tr>
-						</tbody>
-					</table>
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>Field</th>
+									<th>Description</th>
+									<th>Value</th>
+									<th>PR</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="field in schema.fields">
+								<ng-form name="form">
+									<td>{{field.fieldName}}</td>
+									<td>{{field.desc}}</td>
+									<td ng-switch on="field.type">
 
-					<input type="submit" class="btn btn-primary" value="Register Description">
-					<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-			
+										<div ng-switch-when="boolean">
+											<input type="radio" ng-model="model[field.fieldName]" value="true">True
+											<input type="radio" ng-model="model[field.fieldName]"  value="false">False
+										</div>
+
+										<div ng-switch-when="text">
+											<input type="textarea" ng-model="model[field.fieldName]" class="form-control">
+										</div>
+
+										<div ng-switch-when="list">
+											<select ng-model="model[field.fieldName]">
+												<option value = 'undef'>undefined</option>
+												<option ng-repeat="value in field.value" value={{value}}>{{value}}</option>
+											</select> 
+										</div>
+									</td>
+									<td ng-switch on="field.pr">
+										<div ng-switch-when="true">
+											<input type="checkbox" ng-model="model[field.fieldName+'-required']">
+										</div>
+									</td>
+								<ng-form>
+								</tr>
+							</tbody>
+						</table>
+
+						<input type="submit" class="btn btn-primary" value="Register Description">
+						<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+					</div>
 				</form>
 			</accordion-group>
 		</accordion>
+	
+		<form name="updateTextualDescriptino" role="form" ng-submit="registerText(atckMod.id)">
+			<h4 class="modal-title" style="margin: 5px">Update textual description of the attack</h4>
+				<accordion close-others="true">
+				<accordion-group is-open="status.open">
+					<accordion-heading>
+						<b>Textual Description</b><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+					</accordion-heading>
+					<textarea ng-model="atckMod.desc" rows="5" class="form-control" style="margin: 5px"></textarea>
+					<input type="submit" class="btn btn-primary" value="Register Textual Description">
+					<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+				</accordion-group>
+				</accordion>
+			
+		</form>
         </div>
 	</script>
 </div>

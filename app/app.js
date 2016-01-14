@@ -13,6 +13,7 @@ angular.module('myApp', [
 	'xsltProcessor',
 	'myApp.navBar',
 	'myApp.attackDescription',
+	'myApp.attackTextualDescription',
 	'myApp.viewMain',
 	'myApp.viewSTC',
 	'myApp.viewInvestigation',
