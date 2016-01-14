@@ -1,4 +1,10 @@
 /* app css stylesheet */
+th{ 
+    vertical-align: middle !important;
+}
+td{
+    vertical-align: middle !important;
+}
 .btn-file {
     position: relative;
     overflow: hidden;

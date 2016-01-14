@@ -6,15 +6,15 @@
 	<table class="table table-hover">
 		<thead>
 			<tr>
-				<th class="col-md-3">Name</th>
-				<th class="col-md-2">Creation date</th>
-				<th class="col-md-4"></th>
+				<th class="col-md-6">Name</th>
+				<th class="col-md-1">Created</th>
+				<th class="col-md-5"></th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="atck in atcks">
 				<td>{{atck.name}}</td>
-				<td>{{atck.date| date:'MM/dd/yyyy @ h:mma'}}</td>
+				<td >{{atck.date| date:'MM/dd/yyyy'}}</td>
 				<td><button style="margin: 5px" type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="deleteAtck(atck)">Delete</button><button style="margin: 5px" type="button" class="btn btn-primary" ng-click="describeAtck(atck)">Describe</button><button style="margin: 5px" type="button" class="btn btn-primary" ng-click='selectAction(atck, "viewRCA")'>Perform RCA</button><button style="margin: 5px" type="button" class="btn btn-success" ng-click='selectAction(atck, "viewResults")'>View Results</button></td>
 			</tr>
 		<div class=""></div>
