@@ -172,7 +172,7 @@ angular.module('myApp.viewSystemResults', [])
 
 		// Filter the antecedents defined as specific by the STC
 		$scope.filterSpecifics = function (stc) {
-			console.log(stc.specifics)
+//			console.log(stc.specifics)
 			return function (attackMode) {
 				return !_.contains(stc.specifics, attackMode.ant);
 			};
