@@ -13,7 +13,7 @@
 		<tbody>
 			<tr ng-repeat="attackMode in stc.antecedents | filter:filterSpecifics(stc)">
 				<td  class="col-md-2">{{attackMode.ant}}</td>
-				<td  class="col-md-4"><pre ng-repeat="comment in attackMode.comments">{{comment}}</pre></td>
+				<td  class="col-md-4"><div class="well white" ng-repeat="comment in attackMode.comments">{{comment}}</div></td>
 			</tr>
 		</tbody>
 	</table>
@@ -44,11 +44,10 @@
 					<accordion-heading>
 						<b>{{antecedent.category}}</b>: {{antecedent.em}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 					</accordion-heading>
-					<form name="addForm" role="form">
-						<div class="form-group">
+						<div>
 							<label for="comment">Justification</label>
-							<pre>{{antecedent.comment}}</pre>
-					</form>
+							<div class="well white">{{antecedent.comment}}</div>
+						</div>
 				</accordion-group>
 			</accordion>
 			</td>
