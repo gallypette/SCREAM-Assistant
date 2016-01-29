@@ -101,7 +101,7 @@ angular.module('myApp', [
 				},
 				{
 					fieldName: 'Action',
-					desc: 'Describe the action, if it is a genuine action or if the action is loaded',
+					desc: "Is the action a genuine action spoofed for the attacker's benefit?",
 					type: 'boolean',
 					pr: 'true'
 				},
@@ -116,7 +116,7 @@ angular.module('myApp', [
 					fieldName: 'Medium',
 					desc: 'On which medium is the message issued',
 					type: 'list',
-					value: ['web', 'phone', 'paper'],
+					value: ['web', 'phone', 'paper', 'os'],
 					pr: 'true'
 				},
 			]
