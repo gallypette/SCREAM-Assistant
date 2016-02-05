@@ -116,7 +116,7 @@ angular.module('myApp', [
 					fieldName: 'Medium',
 					desc: 'On which medium is the message issued',
 					type: 'list',
-					value: ['web', 'phone', 'paper', 'os'],
+					value: ['web', 'phone', 'smartphone', 'paper', 'os', 'wifi'],
 					pr: 'true'
 				},
 			]
