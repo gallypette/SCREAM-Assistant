@@ -30,12 +30,12 @@ angular.module('myApp.viewAttacks', [])
 		$scope.addAtck = function (atck) {
 			// Set the date and stcId before injecting
 			atck.date = new Date();
+			atck.stcId = 'undefined';
 			// Inject and clear the view
 			return Atck.create(atck).then(function () {
 				atck.name = '';
 				atck.desc = '';
 				atck.id = null;
-				atck.stcId = 'undefined';
 			});
 		}
 
