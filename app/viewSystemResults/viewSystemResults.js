@@ -121,10 +121,13 @@ angular.module('myApp.viewSystemResults', [])
 						deferred.push(Stc.loadRelations(element.id, ['atck']));
 					});
 					$q.all(deferred).then(function (values) {
+						console.log(values)
 						// Now that the stc are populated by the attacks, we push
 						// only the compatible into the scope
 						_.each(values, function (element, index, list) {
-							stcs[index].atcks = _.intersection(element.atcks, atcksCompatibles);
+							stcs[index].comptAtcks = _.intersection(element.atcks, atcksCompatibles);
+							console.log('[+] STC: '+stcs[index].name+' List of ATCKS:');
+							console.log(stcs[index].comptAtcks);
 						});
 						return stcs;
 						// The list of Stc is now ready
@@ -133,7 +136,7 @@ angular.module('myApp.viewSystemResults', [])
 						var promises = [];
 						_.each($scope.stcs, function (elementStc, indexStc, listStc) {
 							elementStc.antecedents = [];
-							_.each(elementStc.atcks, function (elementAtck, indexAtck, listAtck) {
+							_.each(elementStc.comptAtcks, function (elementAtck, indexAtck, listAtck) {
 								promises.push(Atck.loadRelations(elementAtck.id, ['description', 'analysis']).then(function () {
 									return Analysis.loadRelations(elementAtck.analysis.id).then(function () {
 										if (_.isEmpty(elementAtck.analysis.ems)) {
