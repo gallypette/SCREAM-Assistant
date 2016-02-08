@@ -142,7 +142,21 @@ angular.module('myApp.errorModes', [])
 						"go": "false",
 						"stop": "false"});
 				}
-				if (_.isArray(pointer.ga)) {
+				if (_.isArray(pointer.sc)) {
+					_.each(pointer.sc, function (value, key, list) {
+						children.push({
+							"category": "SC",
+							"em": value.name,
+							"go": "false",
+							"desc": value.desc.replace(/[\n\r\s+\s]/g, ' ')});
+					});
+				} else if (_.isObject(pointer.sc) && (pointer.sc.name != 'None defined')) {
+					children.push({
+						"category": "SC",
+						"em": pointer.sc.name,
+						"go": "false",
+						"desc": pointer.sc.desc.replace(/[\n\r\s+\s]/g, ' ')});
+				}if (_.isArray(pointer.ga)) {
 					_.each(pointer.ga, function (value, key, list) {
 						children.push({
 							"category": "GA",
