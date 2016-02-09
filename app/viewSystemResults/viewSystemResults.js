@@ -110,7 +110,9 @@ angular.module('myApp.viewSystemResults', [])
 				$q.all(deferred).then(function (values) {
 					// We build the stcs array
 					_.each(values, function (element) {
-						stcs.push(element.stc);
+						if (!_.isUndefined(element.stc)) {
+							stcs.push(element.stc);
+						}
 					});
 					stcs = _.uniq(stcs);
 					return stcs;
@@ -126,7 +128,7 @@ angular.module('myApp.viewSystemResults', [])
 						// only the compatible into the scope
 						_.each(values, function (element, index, list) {
 							stcs[index].comptAtcks = _.intersection(element.atcks, atcksCompatibles);
-							console.log('[+] STC: '+stcs[index].name+' List of ATCKS:');
+							console.log('[+] STC: ' + stcs[index].name + ' List of ATCKS:');
 							console.log(stcs[index].comptAtcks);
 						});
 						return stcs;
